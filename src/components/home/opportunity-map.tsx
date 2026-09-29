@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { SourceNote } from "@/components/shared/source-note";
 
 type Status = "prospects" | "customers" | "all";
 type Size = "all" | "large" | "mid" | "small";
@@ -251,6 +252,7 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
             <span className="flex items-center gap-1.5">
               <span className="size-2.5 rounded-full border-2 border-slate-900 bg-white" /> Customer
             </span>
+            {mode === "season" && <SourceNote className="ml-auto text-xs text-muted-foreground" />}
           </div>
         </div>
 

@@ -1,15 +1,11 @@
 import type { User } from "@/types/salesforce";
 
-/** ThiboLiSoft sales team (fictional). The first user is the demo "current user". */
+/** App users (the first four can sign in) and the account owners. */
 export const USERS: User[] = [
-  {
-    Id: "005Hs00000000001AA",
-    Name: "Jordan Avery",
-    Title: "VP of Sales",
-    Email: "jordan.avery@thibolisoft.example",
-    Territory__c: "North America",
-    Regions__c: [],
-  },
+  { Id: "005Hs00000000001AA", Name: "Jeffrey Li", Title: "Sales", Email: "", Territory__c: "North America", Regions__c: [] },
+  { Id: "005Hs00000000008AA", Name: "Jesse Thibodeau", Title: "Sales", Email: "", Territory__c: "North America", Regions__c: [] },
+  { Id: "005Hs00000000009AA", Name: "Braydon Viragh", Title: "Sales", Email: "", Territory__c: "North America", Regions__c: [] },
+  { Id: "005Hs00000000010AA", Name: "Adam D’Cunha", Title: "Sales", Email: "", Territory__c: "North America", Regions__c: [] },
   {
     Id: "005Hs00000000002AA",
     Name: "Dana Kowalski",
@@ -60,6 +56,10 @@ export const USERS: User[] = [
   },
 ];
 
+/** Users who can sign in to the app */
+export const APP_USERS = USERS.slice(0, 4);
+
+/** Owner for records the seed script creates (campaigns) */
 export const CURRENT_USER_ID = USERS[0].Id;
 
 export const USER_BY_ID: Record<string, User> = Object.fromEntries(USERS.map((u) => [u.Id, u]));

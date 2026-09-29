@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/lib/data/store";
+import { AuthProvider } from "@/lib/auth";
 import { AppShell } from "@/components/layout/app-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -32,12 +33,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full bg-background">
-        <StoreProvider>
-          <TooltipProvider delayDuration={150}>
-            <AppShell>{children}</AppShell>
-            <Toaster position="bottom-right" richColors closeButton />
-          </TooltipProvider>
-        </StoreProvider>
+        <AuthProvider>
+          <StoreProvider>
+            <TooltipProvider delayDuration={150}>
+              <AppShell>{children}</AppShell>
+              <Toaster position="bottom-right" richColors closeButton />
+            </TooltipProvider>
+          </StoreProvider>
+        </AuthProvider>
       </body>
     </html>
   );

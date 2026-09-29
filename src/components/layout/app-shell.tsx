@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { USERS } from "@/data/reference/users";
-import { initials } from "@/lib/format";
+import { useAuth } from "@/lib/auth";
+import { Avatar } from "@/components/auth/avatar";
+import { LoginScreen } from "@/components/auth/login-screen";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -74,23 +75,24 @@ function DataBadge() {
 
 function UserMenu() {
   const { pendingChanges, resetData, readOnly } = useStore();
-  const me = USERS[0];
+  const { user, me: profile, signOut } = useAuth();
+  if (!user) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className="flex size-8 items-center justify-center rounded-md border bg-card text-xs font-semibold text-foreground outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
-          aria-label="User menu"
-        >
-          {initials(me.Name)}
+        <button type="button" className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50" aria-label="User menu">
+          <Avatar name={user.Name} photo={profile.photo} size={32} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel>
-          <span className="block">{me.Name}</span>
-          <span className="block text-xs font-normal text-muted-foreground">{me.Title}, ThiboLiSoft</span>
+          <span className="block">{user.Name}</span>
+          {profile.email && <span className="block text-xs font-normal text-muted-foreground">{profile.email}</span>}
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/settings">Settings</Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
           {readOnly ? "Read-only" : `${pendingChanges} local change${pendingChanges === 1 ? "" : "s"}`}
@@ -104,6 +106,8 @@ function UserMenu() {
         >
           Reset local changes
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={signOut}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -112,6 +116,9 @@ function UserMenu() {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { error } = useStore();
+  const auth = useAuth();
+  if (!auth.ready) return <div className="min-h-full bg-background" />;
+  if (!auth.user) return <LoginScreen />;
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/prospects" && (pathname.startsWith("/accounts") || pathname.startsWith("/leads")));
   return (

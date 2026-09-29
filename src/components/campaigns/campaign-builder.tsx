@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Download, Loader2, Rocket, Sparkles, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { REGIONS, REGION_BY_ID } from "@/data/reference/regions";
-import { CURRENT_USER_ID } from "@/data/reference/users";
+import { useSender, useUserId } from "@/lib/auth";
 import { useStore } from "@/lib/data/store";
 import { SEASON_PLAYS, PLAY_DESCRIPTIONS, type SeasonPlay } from "@/lib/content/messaging";
 import { templateCampaignContent, timingContext } from "@/lib/content/templates";
@@ -41,7 +41,7 @@ function webinarRecipients(data: DataSnapshot, s: ScoredTarget) {
   return people.slice(0, 2).map((c) => ({ ...base, whoId: c.Id, firstName: c.FirstName, lastName: c.LastName, title: c.Title, email: c.Email }));
 }
 import { COMMODITIES, FACILITY_TYPES, type CampaignContent, type Campaign, type Commodity, type FacilityType, type RegionId } from "@/types/salesforce";
-import { SENDER, announce } from "@/components/outreach/outreach-dialog";
+import { announce } from "@/components/outreach/outreach-dialog";
 import { ContentEditor } from "./content-editor";
 import { ScorePill, TierLabel } from "@/components/shared/badges";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -88,6 +88,8 @@ function Builder({ params }: { params: URLSearchParams }) {
   const router = useRouter();
   const { data, asOf, ranked, commit } = useStore();
   const aiAvailable = useAiAvailable();
+  const SENDER = useSender();
+  const userId = useUserId();
 
   const webinar = params.get("preset") === WEBINAR_PRESET;
   const initialRegions = (params.get("regions")?.split(",").filter((r) => r in REGION_BY_ID) ?? []) as RegionId[];
@@ -164,7 +166,7 @@ function Builder({ params }: { params: URLSearchParams }) {
   const launch = () => {
     if (!content || !selected.length) return;
     const { result, campaignId } = createCampaign(
-      { data, asOf, userId: CURRENT_USER_ID },
+      { data, asOf, userId },
       {
         name: effectiveName,
         type,

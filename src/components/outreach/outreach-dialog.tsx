@@ -6,11 +6,11 @@ import { Phone, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useStore } from "@/lib/data/store";
 import { contactsFor, findLead } from "@/lib/data/selectors";
-import { USERS, CURRENT_USER_ID } from "@/data/reference/users";
+import { useSender, useUserId } from "@/lib/auth";
 import { REGION_BY_ID } from "@/data/reference/regions";
 import type { ScoredTarget } from "@/lib/scoring";
 import { preferredContact } from "@/lib/nba";
-import { templateCampaignContent, templateOneToOneEmail, mergeFields, type Sender } from "@/lib/content/templates";
+import { templateCampaignContent, templateOneToOneEmail, mergeFields } from "@/lib/content/templates";
 import { playForDate } from "@/lib/content/messaging";
 import { blackoutStatus } from "@/lib/seasonality";
 import { aiEmail, useAiAvailable } from "@/lib/content/ai-client";
@@ -31,7 +31,6 @@ import { cn } from "@/lib/utils";
 
 export type OutreachTab = "email" | "call" | "campaign";
 
-export const SENDER: Sender = { name: USERS[0].Name, title: USERS[0].Title, email: USERS[0].Email, phone: "(515) 555-0142" };
 
 interface Recipient {
   id: string;
@@ -84,7 +83,8 @@ function OutreachBody({ s, tab, close }: { s: ScoredTarget; tab: OutreachTab; cl
   const defaultId = (t.kind === "account" ? preferredContact(s, contacts)?.Id : recipients[0]?.id) ?? recipients[0]?.id ?? "";
   const [whoId, setWhoId] = useState(defaultId);
   const who = recipients.find((r) => r.id === whoId) ?? recipients[0];
-  const ctx = { data, asOf, userId: CURRENT_USER_ID };
+  const userId = useUserId();
+  const ctx = { data, asOf, userId };
 
   return (
     <>
@@ -183,11 +183,12 @@ function OutreachWarnings({ s, readOnly }: { s: ScoredTarget; readOnly: boolean 
 
 function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient; contact?: Contact; onSend: (subject: string, body: string, scheduleFor?: string) => void }) {
   const { asOf, readOnly } = useStore();
+  const SENDER = useSender();
   const blackout = blackoutStatus({ Segment__c: s.target.segment, BillingLatitude: s.target.lat, BillingCountry: s.target.country }, asOf);
   const aiAvailable = useAiAvailable();
   const draft = useMemo(
     () => templateOneToOneEmail({ s, contact: contact ?? ({ FirstName: who.firstName } as Contact), sender: SENDER, asOf }),
-    [s, contact, who.firstName, asOf],
+    [s, contact, who.firstName, asOf, SENDER],
   );
   const [subject, setSubject] = useState(draft.subject);
   const [body, setBody] = useState(draft.body);
@@ -273,6 +274,7 @@ function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient
 
 function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: (outcome: CallOutcome, notes: string, demoDate?: string) => void }) {
   const { asOf, readOnly } = useStore();
+  const SENDER = useSender();
   const t = s.target;
   const script = useMemo(() => {
     const content = templateCampaignContent({
@@ -284,7 +286,7 @@ function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: 
       sender: SENDER,
     });
     return content.callScript;
-  }, [t.segment, t.regionId, t.facilityType, t.commodities, asOf]);
+  }, [t.segment, t.regionId, t.facilityType, t.commodities, asOf, SENDER]);
   const [outcome, setOutcome] = useState<CallOutcome>("Connected");
   const [notes, setNotes] = useState("");
   const [demoDate, setDemoDate] = useState(toISODate(businessDaysOut(asOf, 7)));

@@ -13,7 +13,7 @@ import { mailListCsv, recipientFor } from "@/lib/campaigns";
 import { downloadText } from "@/lib/csv";
 import type { Commodity } from "@/types/salesforce";
 import { LEGACY_PLAYS, SEASON_PLAYS, type SeasonPlay } from "@/lib/content/messaging";
-import { SENDER } from "@/components/outreach/outreach-dialog";
+import { useSender } from "@/lib/auth";
 import { ContentEditor } from "./content-editor";
 import { statusClass } from "./campaign-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,6 +35,7 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
 
 export function CampaignDetail({ id }: { id: string }) {
   const { ready, data, ranked } = useStore();
+  const SENDER = useSender();
   if (!ready) return <Skeleton className="h-[520px]" />;
   const c = data.campaigns.find((x) => x.Id === id);
   if (!c) {
