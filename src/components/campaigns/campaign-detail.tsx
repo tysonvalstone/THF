@@ -118,7 +118,7 @@ export function CampaignDetail({ id }: { id: string }) {
       </Card>
 
       <div className="grid gap-5 lg:grid-cols-5">
-        <Card className="lg:col-span-3">
+        <Card className="min-w-0 lg:col-span-3">
           <CardHeader>
             <CardTitle>Content</CardTitle>
             <CardDescription>{c.Content__c ? (c.Content__c.source === "ai" ? "AI-written copy saved with this campaign." : "Template copy saved with this campaign.") : "Reconstructed from the campaign's season, region and audience."}</CardDescription>
@@ -127,7 +127,7 @@ export function CampaignDetail({ id }: { id: string }) {
             <ContentEditor content={content} preview={rows[0] ? { FirstName: rows[0].person?.split(" ")[0], Company: rows[0].name } : undefined} />
           </CardContent>
         </Card>
-        <Card className="lg:col-span-2">
+        <Card className="min-w-0 lg:col-span-2">
           <CardHeader>
             <CardTitle>Members ({members.length})</CardTitle>
             <CardDescription>CampaignMember records and response status.</CardDescription>

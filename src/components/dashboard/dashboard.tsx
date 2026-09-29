@@ -116,7 +116,7 @@ export function Dashboard() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-12">
-        <Card className="lg:col-span-7">
+        <Card className="min-w-0 lg:col-span-7">
           <CardHeader className="flex flex-row items-start justify-between gap-4">
             <div>
               <CardTitle>Top prospects to reach now</CardTitle>
@@ -135,7 +135,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <div className="space-y-6 lg:col-span-5">
+        <div className="min-w-0 space-y-6 lg:col-span-5">
           <Card>
             <CardHeader>
               <CardTitle>Campaign launch windows</CardTitle>

@@ -93,7 +93,7 @@ export function RecordView({ id }: { id: string }) {
       <Highlights account={account} lead={lead} scored={scored} onAction={setTab} />
 
       <div className="grid gap-5 lg:grid-cols-12">
-        <div className="space-y-5 lg:col-span-8">
+        <div className="min-w-0 space-y-5 lg:col-span-8">
           <NbaCard nba={nba} onAction={setTab} />
           <Card>
             <CardHeader>
@@ -137,7 +137,7 @@ export function RecordView({ id }: { id: string }) {
           </Tabs>
         </div>
 
-        <div className="space-y-5 lg:col-span-4">
+        <div className="min-w-0 space-y-5 lg:col-span-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
