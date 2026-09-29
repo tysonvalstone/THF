@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { CalendarClock, History, RotateCcw } from "lucide-react";
 import { useStore } from "@/lib/data/store";
 import { Button } from "@/components/ui/button";
@@ -19,9 +20,14 @@ export const DEMO_PRESETS: { label: string; date: string; note: string }[] = [
 ];
 
 export function TimeTravel({ compact = false }: { compact?: boolean }) {
-  const { asOfISO, todayISO, isTimeTraveling, setAsOf } = useStore();
+  const { asOfISO, todayISO, isTimeTraveling, setAsOf: set } = useStore();
+  const [open, setOpen] = useState(false);
+  const setAsOf = (iso: string, close = true) => {
+    set(iso);
+    if (close) setOpen(false);
+  };
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -50,7 +56,7 @@ export function TimeTravel({ compact = false }: { compact?: boolean }) {
                 value={asOfISO}
                 min="2025-10-01"
                 max="2027-12-31"
-                onChange={(e) => e.target.value && setAsOf(e.target.value)}
+                onChange={(e) => e.target.value && setAsOf(e.target.value, false)}
               />
             </div>
             <Button variant="ghost" size="icon" disabled={!isTimeTraveling} onClick={() => setAsOf(todayISO)} aria-label="Back to today">

@@ -40,6 +40,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DocTitle } from "@/components/shared/doc-title";
 import { cn } from "@/lib/utils";
 
 export function RecordView({ id }: { id: string }) {
@@ -84,6 +85,7 @@ export function RecordView({ id }: { id: string }) {
 
   return (
     <div className="space-y-5">
+      <DocTitle title={target.name} />
       <Link href="/prospects" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Prospects
       </Link>

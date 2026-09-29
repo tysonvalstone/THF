@@ -12,7 +12,7 @@ import { userName } from "@/lib/data/selectors";
 import { recordHref, campaignBuilderHref } from "@/lib/links";
 import { toCSV, downloadText } from "@/lib/csv";
 import { fmtMoney } from "@/lib/format";
-import { COMMODITIES, FACILITY_TYPES, type Commodity, type FacilityType, type RegionId } from "@/types/salesforce";
+import { COMMODITIES, FACILITY_TYPES, type Commodity, type RegionId } from "@/types/salesforce";
 import { ScorePill, TierLabel } from "@/components/shared/badges";
 import { BreakdownLegend, MiniBreakdown, ScoreBreakdown } from "./score-breakdown";
 import { OutreachButtons } from "@/components/outreach/outreach-buttons";
@@ -108,7 +108,6 @@ export function ProspectList() {
   const pipeline = filtered.reduce((sum, s) => sum + s.engagement.openPipeline, 0);
 
   const sortBy = (k: SortKey) => f.set({ sort: k, dir: f.sort === k && f.dir === "desc" ? "asc" : "desc" });
-  const SortIcon = ({ k }: { k: SortKey }) => (f.sort === k ? f.dir === "desc" ? <ArrowDown className="size-3" /> : <ArrowUp className="size-3" /> : null);
 
   const exportCsv = () => {
     const csv = toCSV(filtered, [
@@ -258,12 +257,12 @@ export function ProspectList() {
             <tr>
               <th className="w-20 px-3 py-2.5 font-medium">
                 <button type="button" onClick={() => sortBy("total")} className="inline-flex items-center gap-1 hover:text-foreground">
-                  Score <SortIcon k="total" />
+                  Score <SortIcon k="total" sort={f.sort} dir={f.dir} />
                 </button>
               </th>
               <th className="px-3 py-2.5 font-medium">
                 <button type="button" onClick={() => sortBy("name")} className="inline-flex items-center gap-1 hover:text-foreground">
-                  Prospect <SortIcon k="name" />
+                  Prospect <SortIcon k="name" sort={f.sort} dir={f.dir} />
                 </button>
               </th>
               <th className="px-3 py-2.5 font-medium">Why now</th>
@@ -386,6 +385,11 @@ export function ProspectList() {
       )}
     </div>
   );
+}
+
+function SortIcon({ k, sort, dir }: { k: SortKey; sort: SortKey; dir: string }) {
+  if (sort !== k) return null;
+  return dir === "desc" ? <ArrowDown className="size-3" /> : <ArrowUp className="size-3" />;
 }
 
 function router_reset(set: (p: Record<string, string | null>) => void) {

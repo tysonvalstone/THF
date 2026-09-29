@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/generate-seed.ts",
-    "test": "tsx --test src/lib/scoring/scoring.test.ts"
+    "test": "tsx --test src/lib/scoring/scoring.test.ts src/lib/actions/outreach.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",

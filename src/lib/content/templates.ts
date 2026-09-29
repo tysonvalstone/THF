@@ -145,9 +145,7 @@ export function templateCampaignContent(brief: CampaignBrief): CampaignContent {
 
   const letterBody = `Dear {{FirstName}},
 
-${m.hook}
-
-Right now ${timing.line}. For ${audience} like {{Company}}, that usually means:
+Right now, ${timing.line}. For ${audience} like {{Company}}, that usually means:
 ${bullets(m.pains)}
 
 ThiboLiSoft builds software for exactly this. With ${productList}, you get:
