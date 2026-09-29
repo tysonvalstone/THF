@@ -30,6 +30,13 @@
 - **Map drill-down levels:** North America → region (the 12 sales regions) → state/province. Summary lines for regions come from `src/data/reference/regions.ts`, and for key states from `src/lib/regionInsights.ts`. Stats, top accounts and insights are computed from the loaded data.
 - **Estimated deal size** on the map panel uses the account's open deal if it has one, otherwise the segment's median won deal.
 - **"Accounts in No-Contact Period"** counts parent accounts (not co-op locations) in a harvest or planting blackout on the selected date.
+- **Season bar** (under the navigation, every page): step a week back or forward, press **Play** to run through the year, or click or drag the timeline. The track is coloured by grain selling window, and the date button opens exact dates and presets.
+- **Opportunity Map sidebar:** a **Prospects** tab (filters: status, commodity, size by revenue, segment; sort: score, estimated deal size, name) that drives the dots on the map. Hovering a row highlights its dot and hovering a dot highlights the row; clicking a dot selects its row. An **Area** tab holds the drill-down summary, stats and insights.
+- **Map interaction:** click to drill down (region, then state), scroll to zoom, drag to pan, +/−/Fit buttons, and hover outlines on states.
+- **Commodities view:** states tinted by their dominant crop, dots coloured by each account's primary commodity. **Colors** lets each user choose their own commodity colours (saved in the browser).
+- **Prospects page:** each row has an **Email** action and a **Last Activity** column. Sending logs a completed Email Task (simulated Salesforce sync in mock mode) and adds a follow-up Task.
+- **Coverage:** mock facilities now span every sales region (1,084 accounts; IL/IA core unchanged), with facility types weighted by each region's crops.
+- **Ranking confidence:** segments ranked on borrowed rates count for slightly less (Prior ×0.85, Blended ×0.92), so an untested segment doesn't outrank proven ones on the company average. Deal history uses its own random stream (`OPP_SEED`, default 42), so adding facilities doesn't reshuffle it.
 - Removed the unused commodity-price strip and stage chart from the old Today page.
 
 ## Seasonality rules
@@ -78,7 +85,7 @@ The browser loads everything once from `GET /api/data`; all ranking and slider m
 
 `npm run seed` regenerates everything from a fixed seed. Records are never hand-written.
 
-- **Facilities:** ~457 in Illinois (249) and Iowa (208, including 132 co-op locations under 8 parent co-ops, one of which, with 12 locations, is a customer) and 63 feed mills across both states. Each is placed in a real county using centroids from the bundled `us-atlas` county shapes, with county, railroad, river access, shuttle loader and capacity. There is also a lighter layer across the rest of the US and Canada, 665 accounts in total. Company and people names are fictional.
+- **Facilities:** ~457 in Illinois (249) and Iowa (208, including 132 co-op locations under 8 parent co-ops, one of which, with 12 locations, is a customer) and 63 feed mills across both states. Each is placed in a real county using centroids from the bundled `us-atlas` county shapes, with county, railroad, river access, shuttle loader and capacity. There is also a lighter layer across the rest of the US and Canada, 1,084 accounts in total. Company and people names are fictional.
 - **Opportunities:** ~3 years of history, 1,332 closed plus 148 open, across the eight segments. Elevator/co-op deals created Aug–Nov close far less often and more slowly; deals created Dec–Feb close best. Ethanol, feed and processors are steady. River Terminal is deliberately thin (<10 decided) and Seed Cleaner / Specialty Crop has no history.
 - Buying committees (GM, controller, merchandiser, board), fiscal year ends, board meeting months, activity history and campaigns.
 

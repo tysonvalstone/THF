@@ -210,7 +210,7 @@ export function sendEmail(
       Description: `To: ${input.toEmail}\n\n${input.body}`,
     }),
   });
-  out.summary.push(scheduled ? `Email scheduled for ${fmtShortDate(sendDate)}` : "Email sent and logged as a completed Task");
+  out.summary.push(scheduled ? `Email scheduled for ${fmtShortDate(sendDate)} · logged in Salesforce` : "Logged in Salesforce as a completed Email task");
 
   const followUp = businessDaysOut(new Date(`${sendDate}T00:00:00Z`), 3);
   out.mutations.push({
@@ -267,7 +267,7 @@ export function logCall(
       CallDurationInSeconds: connected ? 420 : 30,
     }),
   });
-  out.summary.push("Call logged as a completed Task");
+  out.summary.push("Logged in Salesforce as a completed Call task");
   completeOpenTasks(ctx, r, out);
 
   if (input.outcome === "Left Voicemail" || input.outcome === "No Answer") {

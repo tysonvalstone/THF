@@ -142,7 +142,9 @@ export function prioritize(data: DataSnapshot, asOf: Date, weights: Weights = DE
         weights.productFit * components.productFit.scaled +
         weights.expansion * components.expansion.scaled) /
       wSum;
-    const rateFactor = seasonal[i].rate / maxRate;
+    // Less certain rates count for a little less: Prior ×0.85, Blended ×0.92
+    const confidence = seasonal[i].tag === "Prior" ? 0.85 : seasonal[i].tag === "Blended" ? 0.92 : 1;
+    const rateFactor = (seasonal[i].rate * confidence) / maxRate;
     const openInSeg = open.filter((o) => seg.get(o.AccountId) === segment);
     return {
       segment,

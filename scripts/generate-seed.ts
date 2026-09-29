@@ -592,7 +592,7 @@ addCore("IA", "Seed Processor", 2);
 // Light layer elsewhere in the US and Canada
 for (const town of TOWNS) {
   if (town.state === "IL" || town.state === "IA") continue;
-  const n = weighted([[0, 45], [1, 47], [2, 8]]);
+  const n = weighted([[1, 30], [2, 42], [3, 22], [4, 6]]);
   for (let i = 0; i < n; i++) {
     const regionId = REGION_BY_STATE[town.state] as RegionId;
     accounts.push(makeAccount({ city: town.name, state: town.state, lat: town.lat, lon: town.lon }, weighted(TYPE_WEIGHTS[regionId])));
@@ -758,6 +758,8 @@ for (let i = 0; i < 120; i++) {
 // Seed Cleaner / Specialty Crop has no closed history at all.
 // ---------------------------------------------------------------------------
 const OPP_HISTORY_START = new Date(Date.UTC(2023, 8, 1));
+// Deal history uses its own random stream so adding facilities doesn't reshuffle it
+rngState = Number(process.env.OPP_SEED ?? 42);
 
 const STAGE_PROB: Record<OpportunityStage, number> = {
   Prospecting: 10, Qualification: 20, "Needs Analysis": 40, Proposal: 60, Negotiation: 75, "Board Approval": 90, "Closed Won": 100, "Closed Lost": 0,

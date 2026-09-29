@@ -21,6 +21,8 @@ export interface MapFacility {
   lon: number;
   label: string;
   covered: boolean;
+  /** Optional dot colour (e.g. by commodity) */
+  color?: string;
 }
 
 export interface SeasonalityMapProps {
@@ -44,6 +46,14 @@ export interface SeasonalityMapProps {
   onFacilityClick?: (id: string) => void;
   /** Hide the commodity select / layer toggles (the parent renders them). */
   hideControls?: boolean;
+  /** Hide the built-in phase legend (the parent renders its own). */
+  hideLegend?: boolean;
+  /** "season" = planting/harvest heat map; "commodity" = fill each state with regionColor(code) */
+  fillMode?: "season" | "commodity";
+  regionColor?: (code: string) => string | null;
+  /** Facility to emphasise (e.g. hovered in a list) */
+  highlightId?: string | null;
+  onFacilityHover?: (id: string | null) => void;
 }
 
 interface View {
@@ -221,6 +231,11 @@ export function SeasonalityMap({
   onAreaClick,
   onFacilityClick,
   hideControls = false,
+  hideLegend = false,
+  fillMode = "season",
+  regionColor,
+  highlightId = null,
+  onFacilityHover,
 }: SeasonalityMapProps): JSX.Element {
   const selectId = useId();
   const summaryId = useId();
@@ -243,6 +258,8 @@ export function SeasonalityMap({
   const [showFacilities, setShowFacilities] = useState(true);
   const [showWhitespace, setShowWhitespace] = useState(true);
   const [probe, setProbe] = useState<Probe | null>(null);
+  const [hoverCode, setHoverCode] = useState<string | null>(null);
+  const drag = useRef<{ x: number; y: number; tx: number; ty: number; moved: boolean } | null>(null);
 
   const hasFacilities = facilities !== undefined;
   const hasWhitespace = whitespaceCountyFips !== undefined;
@@ -368,8 +385,17 @@ export function SeasonalityMap({
     ctx.fillStyle = NOT_GROWN_COLOR;
     for (const p of projected.regionPath.values()) ctx.fill(p);
 
-    // 2. Growing regions: latitude bands coloured by phase, clipped to the region shape.
-    for (const r of regionsForCommodity) {
+    // 2a. Commodity view: each state/province filled with its colour.
+    if (fillMode === "commodity" && regionColor) {
+      for (const [code, p] of projected.regionPath) {
+        const c = regionColor(code);
+        if (!c) continue;
+        ctx.fillStyle = c;
+        ctx.fill(p);
+      }
+    }
+    // 2b. Season view: latitude bands coloured by phase, clipped to the region shape.
+    for (const r of fillMode === "season" ? regionsForCommodity : []) {
       const clip = projected.regionPath.get(r.code);
       if (!clip) continue;
       ctx.save();
@@ -394,6 +420,14 @@ export function SeasonalityMap({
       for (const code of focusSet) {
         const p = projected.regionPath.get(code);
         if (p) ctx.stroke(p);
+      }
+    }
+    if (hoverCode && onAreaClick) {
+      const p = projected.regionPath.get(hoverCode);
+      if (p) {
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 2 / k;
+        ctx.stroke(p);
       }
     }
 
@@ -423,7 +457,12 @@ export function SeasonalityMap({
         if (!pt || pt[0] < 0 || pt[1] < 0 || pt[0] > w || pt[1] > h) continue;
         ctx.beginPath();
         ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2);
-        if (f.covered) {
+        if (f.color) {
+          ctx.fillStyle = f.color;
+          ctx.fill();
+          ctx.strokeStyle = f.covered ? "#0f172a" : "#ffffff";
+          ctx.lineWidth = (f.covered ? 1.5 : 1) / k;
+        } else if (f.covered) {
           ctx.fillStyle = ACCENT;
           ctx.fill();
           ctx.strokeStyle = "#ffffff";
@@ -435,6 +474,21 @@ export function SeasonalityMap({
           ctx.lineWidth = 1.5 / k;
         }
         ctx.stroke();
+      }
+      const hl = highlightId ? facilities.find((x) => x.id === highlightId) : undefined;
+      const hp = hl ? projected.projection([hl.lon, hl.lat]) : null;
+      if (hl && hp) {
+        ctx.beginPath();
+        ctx.arc(hp[0], hp[1], r * 2.1, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(31, 95, 74, 0.18)";
+        ctx.fill();
+        ctx.lineWidth = 2.5 / k;
+        ctx.strokeStyle = "#0f172a";
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(hp[0], hp[1], r * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = hl.color ?? ACCENT;
+        ctx.fill();
       }
     }
   }, [
@@ -453,6 +507,11 @@ export function SeasonalityMap({
     facilities,
     view,
     focusKey,
+    fillMode,
+    regionColor,
+    highlightId,
+    hoverCode,
+    onAreaClick,
   ]);
 
   /* --- hover / tap --- */
@@ -518,6 +577,55 @@ export function SeasonalityMap({
     counties,
     view,
   ]);
+
+  const tipRegion = tooltip?.region?.code ?? null;
+  const tipFacility = tooltip?.facility?.id ?? null;
+  const [lastTip, setLastTip] = useState<{ r: string | null; f: string | null }>({ r: null, f: null });
+  if (lastTip.r !== tipRegion || lastTip.f !== tipFacility) {
+    setLastTip({ r: tipRegion, f: tipFacility });
+    setHoverCode(tipRegion);
+  }
+  useEffect(() => {
+    onFacilityHover?.(tipFacility);
+  }, [tipFacility, onFacilityHover]);
+
+  /* --- manual zoom / pan --- */
+  const applyView = useCallback((v: View) => {
+    viewRef.current = v;
+    setView(v);
+  }, []);
+  const zoomAt = useCallback(
+    (factor: number, cx: number, cy: number) => {
+      const v = viewRef.current;
+      const k = Math.min(24, Math.max(0.9, v.k * factor));
+      const f = k / v.k;
+      applyView({ k, tx: cx - (cx - v.tx) * f, ty: cy - (cy - v.ty) * f });
+    },
+    [applyView],
+  );
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      zoomAt(Math.exp(-e.deltaY * 0.0015), e.clientX - rect.left, e.clientY - rect.top);
+    };
+    canvas.addEventListener("wheel", onWheel, { passive: false });
+    return () => canvas.removeEventListener("wheel", onWheel);
+  }, [zoomAt]);
+  const fitToTarget = () => {
+    const from = viewRef.current;
+    const to = targetView;
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / ZOOM_MS);
+      const e = ease(t);
+      applyView({ k: from.k + (to.k - from.k) * e, tx: from.tx + (to.tx - from.tx) * e, ty: from.ty + (to.ty - from.ty) * e });
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
 
   // Drop the probe when the map geometry changes (resize).
   const [probeGeometry, setProbeGeometry] = useState(projected);
@@ -600,19 +708,36 @@ export function SeasonalityMap({
           role="img"
           aria-label={ariaLabel}
           aria-describedby={summary ? summaryId : undefined}
-          className={`absolute inset-0 block touch-manipulation ${tooltip && (onAreaClick || (onFacilityClick && tooltip.facility)) ? "cursor-pointer" : ""}`}
+          className={`absolute inset-0 block touch-none select-none ${tooltip && (onAreaClick || (onFacilityClick && tooltip.facility)) ? "cursor-pointer" : "cursor-grab"}`}
           style={{ width: width || "100%", height: mapHeight || "100%" }}
           onPointerMove={(e) => {
+            const d = drag.current;
+            if (d && e.buttons === 1) {
+              const dx = e.clientX - d.x;
+              const dy = e.clientY - d.y;
+              if (d.moved || Math.abs(dx) + Math.abs(dy) > 4) {
+                d.moved = true;
+                applyView({ k: viewRef.current.k, tx: d.tx + dx, ty: d.ty + dy });
+                setProbe(null);
+                return;
+              }
+            }
             if (e.pointerType === "mouse") probeAt(e.clientX, e.clientY, false);
           }}
           onPointerDown={(e) => {
+            drag.current = { x: e.clientX, y: e.clientY, tx: viewRef.current.tx, ty: viewRef.current.ty, moved: false };
             if (e.pointerType !== "mouse") probeAt(e.clientX, e.clientY, true);
           }}
+          onPointerUp={() => {
+            setTimeout(() => (drag.current = null), 0);
+          }}
           onPointerLeave={(e) => {
+            drag.current = null;
             if (e.pointerType === "mouse") setProbe(null);
           }}
           onClick={(e) => {
             if (!projected || !geo) return;
+            if (drag.current?.moved) return;
             const rect = e.currentTarget.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -643,6 +768,17 @@ export function SeasonalityMap({
             if (e.key === "Escape") setProbe(null);
           }}
         />
+        <div className="absolute top-2 right-2 z-10 flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white text-slate-700 shadow-sm">
+          <button type="button" aria-label="Zoom in" className="size-8 text-base hover:bg-slate-50" onClick={() => zoomAt(1.5, width / 2, mapHeight / 2)}>
+            +
+          </button>
+          <button type="button" aria-label="Zoom out" className="size-8 border-t border-slate-200 text-base hover:bg-slate-50" onClick={() => zoomAt(1 / 1.5, width / 2, mapHeight / 2)}>
+            −
+          </button>
+          <button type="button" aria-label="Fit" className="size-8 border-t border-slate-200 text-[11px] hover:bg-slate-50" onClick={fitToTarget}>
+            Fit
+          </button>
+        </div>
         {!geo && (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-500">
             {error ? "Map could not be loaded." : "Loading map…"}
@@ -687,7 +823,7 @@ export function SeasonalityMap({
         )}
       </div>
 
-      <div className="mt-2 flex flex-wrap items-end justify-between gap-x-6 gap-y-2 text-xs text-slate-600">
+      <div className={hideLegend ? "hidden" : "mt-2 flex flex-wrap items-end justify-between gap-x-6 gap-y-2 text-xs text-slate-600"}>
         <div className="min-w-0 flex-1 basis-56">
           <div className="flex h-2.5 w-full max-w-sm overflow-hidden rounded-sm border border-slate-200">
             {RDBU_STOPS.map((c) => (

@@ -14,7 +14,9 @@ import { toCSV, downloadText } from "@/lib/csv";
 import { fmtMoney } from "@/lib/format";
 import { COMMODITIES, FACILITY_TYPES, type Commodity, type RegionId } from "@/types/salesforce";
 import { ScorePill, TierLabel } from "@/components/shared/badges";
-import { BreakdownLegend, MiniBreakdown, ScoreBreakdown } from "./score-breakdown";
+import { MiniBreakdown, ScoreBreakdown } from "./score-breakdown";
+import { OutreachDialog } from "@/components/outreach/outreach-dialog";
+import { fmtRelative } from "@/lib/dates";
 import { OutreachButtons } from "@/components/outreach/outreach-buttons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +60,7 @@ export function ProspectList() {
   const { ready, ranked, asOf } = useStore();
   const f = useFilterState();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [emailFor, setEmailFor] = useState<ScoredTarget | null>(null);
   const [limit, setLimit] = useState(50);
   const [query, setQuery] = useState(f.q);
   const { set: setParams, q: urlQ } = f;
@@ -247,7 +250,6 @@ export function ProspectList() {
             </>
           )}
         </p>
-        <BreakdownLegend />
       </div>
 
       {/* Desktop table */}
@@ -265,23 +267,9 @@ export function ProspectList() {
                   Prospect <SortIcon k="name" sort={f.sort} dir={f.dir} />
                 </button>
               </th>
-              <th className="px-3 py-2.5 font-medium">Why now</th>
-              <th className="w-40 px-3 py-2.5 font-medium">
-                <select
-                  className="bg-transparent font-medium outline-none hover:text-foreground"
-                  value={FACTOR_KEYS.includes(f.sort as FactorKey) ? f.sort : ""}
-                  onChange={(e) => e.target.value && f.set({ sort: e.target.value, dir: "desc" })}
-                  aria-label="Sort by factor"
-                >
-                  <option value="">Breakdown</option>
-                  {FACTOR_KEYS.map((k) => (
-                    <option key={k} value={k}>
-                      Sort: {FACTOR_META[k].label}
-                    </option>
-                  ))}
-                </select>
-              </th>
-              <th className="w-10 px-3 py-2.5" />
+              <th className="px-3 py-2.5 font-medium">Why Now</th>
+              <th className="w-36 px-3 py-2.5 font-medium">Last Activity</th>
+              <th className="w-32 px-3 py-2.5 font-medium" />
             </tr>
           </thead>
           <tbody>
@@ -316,13 +304,27 @@ export function ProspectList() {
                     <td className="px-3 py-3 text-foreground/85">
                       <p className="line-clamp-3">{s.whyNow}</p>
                     </td>
-                    <td className="px-3 py-3">
-                      <MiniBreakdown s={s} className="mt-1.5" />
+                    <td className="px-3 py-3 text-xs">
+                      {s.engagement.lastTouch ? (
+                        <>
+                          <span className="block text-foreground">{fmtRelative(s.engagement.lastTouch, asOf).replace(/^./, (c) => c.toUpperCase())}</span>
+                          <span className="block truncate text-muted-foreground" title={s.engagement.lastTouchSubject}>
+                            {(s.engagement.lastTouchSubject ?? "").split(":")[0]} · Salesforce
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">None</span>
+                      )}
                     </td>
                     <td className="px-2 py-2.5">
-                      <Button variant="ghost" size="icon-sm" onClick={() => setExpanded(open ? null : t.id)} aria-expanded={open} aria-label={`${open ? "Hide" : "Show"} details for ${t.name}`}>
-                        <ChevronDown className={cn("transition-transform", open && "rotate-180")} />
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button variant="outline" size="sm" onClick={() => setEmailFor(s)}>
+                          Email
+                        </Button>
+                        <Button variant="ghost" size="icon-sm" onClick={() => setExpanded(open ? null : t.id)} aria-expanded={open} aria-label={`${open ? "Hide" : "Show"} details for ${t.name}`}>
+                          <ChevronDown className={cn("transition-transform", open && "rotate-180")} />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                   {open && (
@@ -331,7 +333,7 @@ export function ProspectList() {
                         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                           <ScoreBreakdown s={s} />
                           <div className="space-y-3">
-                            <p className="text-sm font-medium">Act now</p>
+                            <MiniBreakdown s={s} />
                             <OutreachButtons target={s} />
                             <p className="text-xs text-muted-foreground">
                               Commodities: {t.commodities.join(", ")} · Region: {REGION_BY_ID[t.regionId].name}
@@ -366,7 +368,6 @@ export function ProspectList() {
                 <TierLabel tier={s.tier} className="ml-auto self-start" />
               </div>
               <p className="text-sm">{s.whyNow}</p>
-              <MiniBreakdown s={s} />
               <OutreachButtons target={s} size="xs" />
             </CardContent>
           </Card>
@@ -384,6 +385,7 @@ export function ProspectList() {
         </div>
       )}
       </div>
+      {emailFor && <OutreachDialog s={emailFor} open onOpenChange={(o) => !o && setEmailFor(null)} tab="email" />}
     </div>
   );
 }

@@ -2,63 +2,62 @@
  {
   "Id": "00vHs0000000001AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000NGAAC",
-  "AccountId": "001Hs000000008HAAC",
+  "ContactId": "003Hs000000001bAAC",
+  "AccountId": "001Hs000000000UAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T13:00:00.000+0000"
+  "CreatedDate": "2025-10-24T20:15:00.000+0000"
  },
  {
   "Id": "00vHs0000000002AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DiAAC",
-  "AccountId": "001Hs000000004nAAC",
+  "ContactId": "003Hs00000000ExAAC",
+  "AccountId": "001Hs000000005mAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T17:45:00.000+0000"
+  "CreatedDate": "2025-10-22T18:00:00.000+0000"
  },
  {
   "Id": "00vHs0000000003AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000EdAAC",
-  "AccountId": "001Hs000000005WAAC",
+  "ContactId": "003Hs000000000gAAC",
+  "AccountId": "001Hs000000000EAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-20T19:15:00.000+0000"
+  "CreatedDate": "2025-10-23T14:30:00.000+0000"
  },
  {
   "Id": "00vHs0000000004AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000007bAAC",
-  "AccountId": "001Hs000000002aAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2025-12-04",
-  "CreatedDate": "2025-10-24T14:30:00.000+0000"
+  "ContactId": "003Hs00000000Z7AAC",
+  "AccountId": "001Hs00000000BRAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-20T17:00:00.000+0000"
  },
  {
   "Id": "00vHs0000000005AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DMAAC",
-  "AccountId": "001Hs000000004VAAC",
+  "ContactId": "003Hs000000002PAAC",
+  "AccountId": "001Hs000000000jAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T19:45:00.000+0000"
+  "CreatedDate": "2025-10-27T15:15:00.000+0000"
  },
  {
   "Id": "00vHs0000000006AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000CvAAC",
-  "AccountId": "001Hs0000000048AAC",
+  "ContactId": "003Hs00000000DOAAC",
+  "AccountId": "001Hs000000004XAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-21T14:30:00.000+0000"
+  "CreatedDate": "2025-10-23T17:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000007AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000006MAAC",
-  "AccountId": "001Hs000000001wAAC",
+  "ContactId": "003Hs00000000DTAAC",
+  "AccountId": "001Hs000000004cAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2025-10-27T16:15:00.000+0000"
@@ -66,890 +65,884 @@
  {
   "Id": "00vHs0000000008AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000009uAAC",
-  "AccountId": "001Hs000000003GAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T20:45:00.000+0000"
- },
- {
-  "Id": "00vHs0000000009AAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000004BAAC",
-  "AccountId": "001Hs000000001HAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T19:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000AAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000000oAAC",
-  "AccountId": "001Hs000000000GAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T13:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000BAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000EhAAC",
-  "AccountId": "001Hs000000005aAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T15:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000CAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000FOAAC",
-  "AccountId": "001Hs0000000069AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T15:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000DAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs0000000015AAC",
-  "AccountId": "001Hs000000000LAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T21:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000EAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000EQAAC",
-  "AccountId": "001Hs000000005NAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T18:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000FAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000008RAAC",
-  "AccountId": "001Hs000000002pAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000GAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs0000000093AAC",
-  "AccountId": "001Hs0000000031AAC",
+  "ContactId": "003Hs00000000FlAAC",
+  "AccountId": "001Hs000000006HAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2025-10-23T18:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000000HAAC",
+  "Id": "00vHs0000000009AAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000ClAAC",
-  "AccountId": "001Hs0000000042AAC",
+  "ContactId": "003Hs00000000VaAAC",
+  "AccountId": "001Hs00000000AXAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-20T15:15:00.000+0000"
+  "CreatedDate": "2025-10-24T17:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000000IAAC",
+  "Id": "00vHs000000000AAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000007lAAC",
-  "AccountId": "001Hs000000002dAAC",
+  "ContactId": "003Hs00000000FGAAC",
+  "AccountId": "001Hs0000000061AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-24T22:15:00.000+0000"
+  "CreatedDate": "2025-10-27T13:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000000JAAC",
+  "Id": "00vHs000000000BAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000005SAAC",
-  "AccountId": "001Hs000000001eAAC",
+  "ContactId": "003Hs000000007eAAC",
+  "AccountId": "001Hs000000002aAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T19:15:00.000+0000"
+  "CreatedDate": "2025-10-27T14:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000000KAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000F4AAC",
-  "AccountId": "001Hs000000005tAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T13:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000LAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000D1AAC",
-  "AccountId": "001Hs000000004EAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T20:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000MAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000009kAAC",
-  "AccountId": "001Hs000000003DAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T22:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000NAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000EmAAC",
-  "AccountId": "001Hs000000005fAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T15:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000OAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000008LAAC",
-  "AccountId": "001Hs000000002nAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T14:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000PAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000007UAAC",
-  "AccountId": "001Hs000000002YAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T15:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000QAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000006dAAC",
-  "AccountId": "001Hs0000000026AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-24T18:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000RAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000OuAAC",
-  "AccountId": "001Hs000000008gAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T17:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000SAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000007pAAC",
-  "AccountId": "001Hs000000002eAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000TAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000E1AAC",
-  "AccountId": "001Hs0000000052AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T14:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000UAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000004MAAC",
-  "AccountId": "001Hs000000001KAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T22:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000VAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs0000000007AAC",
-  "AccountId": "001Hs0000000003AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T19:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000WAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000EfAAC",
-  "AccountId": "001Hs000000005YAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T16:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000XAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000FZAAC",
-  "AccountId": "001Hs000000006DAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T14:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000YAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000001tAAC",
-  "AccountId": "001Hs000000000aAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-24T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000ZAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000GDAAC",
-  "AccountId": "001Hs000000006PAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-24T17:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000aAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DaAAC",
-  "AccountId": "001Hs000000004fAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T15:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000bAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000003KAAC",
-  "AccountId": "001Hs0000000011AAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2025-11-08",
-  "CreatedDate": "2025-10-20T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000cAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DbAAC",
-  "AccountId": "001Hs000000004gAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000dAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DEAAC",
-  "AccountId": "001Hs000000004NAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T20:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000eAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000004EAAC",
-  "AccountId": "001Hs000000001IAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T14:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000fAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000007sAAC",
-  "AccountId": "001Hs000000002fAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2025-10-28",
-  "CreatedDate": "2025-10-27T22:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000gAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DkAAC",
-  "AccountId": "001Hs000000004pAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T21:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000000hAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000ELAAC",
-  "AccountId": "001Hs000000005IAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-27T14:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000iAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000ElAAC",
-  "AccountId": "001Hs000000005eAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000jAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DyAAC",
-  "AccountId": "001Hs000000004zAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000kAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000006sAAC",
-  "AccountId": "001Hs000000002HAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-24T18:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000lAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000DIAAC",
-  "AccountId": "001Hs000000004RAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T22:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000mAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000006YAAC",
-  "AccountId": "001Hs0000000021AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-23T17:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000nAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000002fAAC",
-  "AccountId": "001Hs000000000pAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000oAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000006fAAC",
-  "AccountId": "001Hs0000000028AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T15:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000pAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000005qAAC",
-  "AccountId": "001Hs000000001mAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000qAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000006QAAC",
-  "AccountId": "001Hs000000001xAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T18:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000rAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000003DAAC",
-  "AccountId": "001Hs000000000zAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2025-11-08",
-  "CreatedDate": "2025-10-21T20:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000000sAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000CsAAC",
-  "AccountId": "001Hs0000000045AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-20T14:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000000tAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000FKAAC",
-  "AccountId": "001Hs0000000065AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-22T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000uAAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000001lAAC",
-  "AccountId": "001Hs000000000YAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2025-10-21T15:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000000vAAC",
+  "Id": "00vHs000000000CAAC",
   "CampaignId": "701Hs0000000001AAC",
   "ContactId": "003Hs00000000E4AAC",
   "AccountId": "001Hs0000000055AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T20:45:00.000+0000"
+  "CreatedDate": "2025-10-21T19:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000000wAAC",
+  "Id": "00vHs000000000DAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs000000005MAAC",
-  "AccountId": "001Hs000000001cAAC",
+  "ContactId": "003Hs000000007KAAC",
+  "AccountId": "001Hs000000002UAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-23T22:00:00.000+0000"
+  "CreatedDate": "2025-10-27T19:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000000xAAC",
+  "Id": "00vHs000000000EAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000GRAAC",
-  "AccountId": "001Hs000000006TAAC",
+  "ContactId": "003Hs00000000TjAAC",
+  "AccountId": "001Hs00000000A1AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T16:30:00.000+0000"
+  "CreatedDate": "2025-10-22T14:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000000yAAC",
+  "Id": "00vHs000000000FAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000NnAAC",
-  "AccountId": "001Hs000000008PAAC",
+  "ContactId": "003Hs000000001JAAC",
+  "AccountId": "001Hs000000000PAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-22T20:30:00.000+0000"
+  "CreatedDate": "2025-10-22T21:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000000zAAC",
+  "Id": "00vHs000000000GAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "ContactId": "003Hs00000000EKAAC",
-  "AccountId": "001Hs000000005HAAC",
+  "ContactId": "003Hs000000007sAAC",
+  "AccountId": "001Hs000000002eAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-23T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000HAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000005pAAC",
+  "AccountId": "001Hs000000001kAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T14:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000IAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000006hAAC",
+  "AccountId": "001Hs0000000025AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-22T18:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000JAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000FfAAC",
+  "AccountId": "001Hs000000006FAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-23T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000KAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs0000000021AAC",
+  "AccountId": "001Hs000000000cAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000LAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000D9AAC",
+  "AccountId": "001Hs000000004IAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-24T20:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000MAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000006vAAC",
+  "AccountId": "001Hs000000002FAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000NAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000VpAAC",
+  "AccountId": "001Hs00000000AbAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-24T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000OAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000008RAAC",
+  "AccountId": "001Hs000000002pAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000PAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000W8AAC",
+  "AccountId": "001Hs00000000AgAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-23T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000QAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000ZqAAC",
+  "AccountId": "001Hs00000000BdAAC",
   "Status": "Responded",
   "HasResponded": true,
-  "FirstRespondedDate": "2025-11-17",
-  "CreatedDate": "2025-10-22T18:15:00.000+0000"
+  "FirstRespondedDate": "2025-11-27",
+  "CreatedDate": "2025-10-24T14:00:00.000+0000"
  },
  {
-  "Id": "00vHs0000000010AAC",
+  "Id": "00vHs000000000RAAC",
   "CampaignId": "701Hs0000000001AAC",
-  "LeadId": "00QHs0000000017AAC",
+  "ContactId": "003Hs0000000047AAC",
+  "AccountId": "001Hs000000001EAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T13:30:00.000+0000"
+  "CreatedDate": "2025-10-21T17:45:00.000+0000"
  },
  {
-  "Id": "00vHs0000000011AAC",
+  "Id": "00vHs000000000SAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000UkAAC",
+  "AccountId": "001Hs00000000AIAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000TAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs00000000F5AAC",
+  "AccountId": "001Hs000000005uAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-22T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000UAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000000dAAC",
+  "AccountId": "001Hs000000000DAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-24T17:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000VAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000006lAAC",
+  "AccountId": "001Hs0000000029AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-24T17:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000WAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs0000000062AAC",
+  "AccountId": "001Hs000000001oAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-20T15:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000XAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000004YAAC",
+  "AccountId": "001Hs000000001MAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-24T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000YAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000006wAAC",
+  "AccountId": "001Hs000000002GAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-20T22:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000ZAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000006BAAC",
+  "AccountId": "001Hs000000001rAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-22T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000aAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "ContactId": "003Hs000000009FAAC",
+  "AccountId": "001Hs0000000034AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2025-11-02",
+  "CreatedDate": "2025-10-23T16:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000bAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "LeadId": "00QHs000000001kAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-21T21:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000cAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "LeadId": "00QHs0000000007AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-24T13:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000dAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "LeadId": "00QHs000000001QAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T18:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000eAAC",
   "CampaignId": "701Hs0000000001AAC",
   "LeadId": "00QHs000000001ZAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-27T14:00:00.000+0000"
+  "CreatedDate": "2025-10-23T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000fAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "LeadId": "00QHs000000000TAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-21T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000gAAC",
+  "CampaignId": "701Hs0000000001AAC",
+  "LeadId": "00QHs000000001KAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2025-10-27T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000hAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000YLAAC",
+  "AccountId": "001Hs00000000BFAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-04",
+  "CreatedDate": "2026-01-13T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000iAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000ZqAAC",
+  "AccountId": "001Hs00000000BdAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-19T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000jAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000X0AAC",
+  "AccountId": "001Hs00000000AvAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-13T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000kAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000S9AAC",
+  "AccountId": "001Hs000000009bAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-01-26",
+  "CreatedDate": "2026-01-19T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000lAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000RzAAC",
+  "AccountId": "001Hs000000009ZAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-12T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000mAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000R8AAC",
+  "AccountId": "001Hs000000009MAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-16T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000nAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000ErAAC",
+  "AccountId": "001Hs000000005kAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-19T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000oAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000Q4AAC",
+  "AccountId": "001Hs0000000094AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-09",
+  "CreatedDate": "2026-01-15T14:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000pAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs000000006lAAC",
+  "AccountId": "001Hs0000000029AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-14T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000qAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000Y1AAC",
+  "AccountId": "001Hs00000000BAAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-16T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000rAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000S4AAC",
+  "AccountId": "001Hs000000009aAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-12T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000sAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000QhAAC",
+  "AccountId": "001Hs000000009EAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-13T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000tAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000YQAAC",
+  "AccountId": "001Hs00000000BGAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-12T17:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000uAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000YGAAC",
+  "AccountId": "001Hs00000000BEAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-12T20:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000vAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs000000006VAAC",
+  "AccountId": "001Hs000000001xAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-13T19:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000wAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000SxAAC",
+  "AccountId": "001Hs000000009oAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-12T18:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000xAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs000000006zAAC",
+  "AccountId": "001Hs000000002JAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-15T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000yAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000POAAC",
+  "AccountId": "001Hs000000008sAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-14T22:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000000zAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000OSAAC",
+  "AccountId": "001Hs000000008dAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-14T19:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000010AAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000TjAAC",
+  "AccountId": "001Hs00000000A1AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-06",
+  "CreatedDate": "2026-01-16T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000011AAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000DTAAC",
+  "AccountId": "001Hs000000004cAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-08",
+  "CreatedDate": "2026-01-19T16:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000012AAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "LeadId": "00QHs000000000EAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000SfAAC",
+  "AccountId": "001Hs000000009jAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2025-10-20T19:30:00.000+0000"
+  "CreatedDate": "2026-01-19T13:00:00.000+0000"
  },
  {
   "Id": "00vHs0000000013AAC",
-  "CampaignId": "701Hs0000000001AAC",
-  "LeadId": "00QHs000000000JAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2025-11-03",
-  "CreatedDate": "2025-10-20T14:15:00.000+0000"
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000RPAAC",
+  "AccountId": "001Hs000000009QAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-13T18:00:00.000+0000"
  },
  {
   "Id": "00vHs0000000014AAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000EYAAC",
-  "AccountId": "001Hs000000005VAAC",
+  "ContactId": "003Hs00000000rTAAC",
+  "AccountId": "001Hs00000000GWAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-13T13:00:00.000+0000"
+  "CreatedDate": "2026-01-14T13:00:00.000+0000"
  },
  {
   "Id": "00vHs0000000015AAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000OBAAC",
-  "AccountId": "001Hs000000008VAAC",
+  "ContactId": "003Hs00000000TCAAC",
+  "AccountId": "001Hs000000009sAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-14T20:15:00.000+0000"
+  "CreatedDate": "2026-01-19T13:15:00.000+0000"
  },
  {
   "Id": "00vHs0000000016AAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000NaAAC",
-  "AccountId": "001Hs000000008MAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-01-28",
-  "CreatedDate": "2026-01-19T20:15:00.000+0000"
- },
- {
-  "Id": "00vHs0000000017AAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000NRAAC",
-  "AccountId": "001Hs000000008KAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-19T14:15:00.000+0000"
- },
- {
-  "Id": "00vHs0000000018AAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000MOAAC",
-  "AccountId": "001Hs0000000083AAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-17",
-  "CreatedDate": "2026-01-12T14:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000019AAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs000000006uAAC",
-  "AccountId": "001Hs000000002JAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-08",
-  "CreatedDate": "2026-01-19T15:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001AAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs000000006gAAC",
-  "AccountId": "001Hs0000000029AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-13T15:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000001BAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000OSAAC",
-  "AccountId": "001Hs000000008ZAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-19T17:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000001CAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000DrAAC",
-  "AccountId": "001Hs000000004wAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-14T18:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000001DAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000ClAAC",
-  "AccountId": "001Hs0000000042AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-16T16:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000001EAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000F9AAC",
-  "AccountId": "001Hs000000005yAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-01-21",
-  "CreatedDate": "2026-01-15T18:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000001FAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000D1AAC",
-  "AccountId": "001Hs000000004EAAC",
+  "ContactId": "003Hs00000000YxAAC",
+  "AccountId": "001Hs00000000BPAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-01-12T14:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000001GAAC",
+  "Id": "00vHs0000000017AAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000MEAAC",
-  "AccountId": "001Hs0000000081AAC",
+  "ContactId": "003Hs00000000D1AAC",
+  "AccountId": "001Hs000000004EAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-13T18:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000018AAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000EDAAC",
+  "AccountId": "001Hs000000005EAAC",
   "Status": "Responded",
   "HasResponded": true,
-  "FirstRespondedDate": "2026-02-07",
-  "CreatedDate": "2026-01-12T14:30:00.000+0000"
+  "FirstRespondedDate": "2026-02-16",
+  "CreatedDate": "2026-01-16T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000019AAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000ZMAAC",
+  "AccountId": "001Hs00000000BVAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-14T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001AAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000EYAAC",
+  "AccountId": "001Hs000000005VAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-15T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001BAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000XDAAC",
+  "AccountId": "001Hs00000000AyAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-19T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001CAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000QJAAC",
+  "AccountId": "001Hs0000000098AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-16T13:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001DAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000F9AAC",
+  "AccountId": "001Hs000000005yAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-19T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001EAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000ClAAC",
+  "AccountId": "001Hs0000000042AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-15T20:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001FAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000DrAAC",
+  "AccountId": "001Hs000000004wAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-12T16:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001GAAC",
+  "CampaignId": "701Hs0000000002AAC",
+  "ContactId": "003Hs00000000RfAAC",
+  "AccountId": "001Hs000000009UAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-19T20:00:00.000+0000"
  },
  {
   "Id": "00vHs000000001HAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000OXAAC",
-  "AccountId": "001Hs000000008aAAC",
+  "ContactId": "003Hs00000000ZcAAC",
+  "AccountId": "001Hs00000000BZAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-15T22:00:00.000+0000"
+  "CreatedDate": "2026-01-15T16:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001IAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000DTAAC",
-  "AccountId": "001Hs000000004cAAC",
+  "ContactId": "003Hs00000000ONAAC",
+  "AccountId": "001Hs000000008cAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-19T16:15:00.000+0000"
+  "CreatedDate": "2026-01-12T20:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001JAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs000000006QAAC",
-  "AccountId": "001Hs000000001xAAC",
+  "ContactId": "003Hs00000000VpAAC",
+  "AccountId": "001Hs00000000AbAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-16T16:45:00.000+0000"
+  "CreatedDate": "2026-01-12T13:30:00.000+0000"
  },
  {
   "Id": "00vHs000000001KAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000ErAAC",
-  "AccountId": "001Hs000000005kAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-14",
-  "CreatedDate": "2026-01-12T17:15:00.000+0000"
+  "LeadId": "00QHs000000000mAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-01-13T20:30:00.000+0000"
  },
  {
   "Id": "00vHs000000001LAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000MYAAC",
-  "AccountId": "001Hs0000000085AAC",
+  "LeadId": "00QHs000000000iAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-15T15:15:00.000+0000"
+  "CreatedDate": "2026-01-16T13:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001MAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000MJAAC",
-  "AccountId": "001Hs0000000082AAC",
+  "LeadId": "00QHs000000001kAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-12T21:15:00.000+0000"
+  "CreatedDate": "2026-01-15T16:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001NAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000OKAAC",
-  "AccountId": "001Hs000000008XAAC",
+  "LeadId": "00QHs0000000006AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-19T17:15:00.000+0000"
+  "CreatedDate": "2026-01-16T18:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001OAAC",
   "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000EDAAC",
-  "AccountId": "001Hs000000005EAAC",
+  "LeadId": "00QHs000000000rAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-15T22:00:00.000+0000"
+  "CreatedDate": "2026-01-13T19:30:00.000+0000"
  },
  {
   "Id": "00vHs000000001PAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000NnAAC",
-  "AccountId": "001Hs000000008PAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000RrAAC",
+  "AccountId": "001Hs000000009XAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-01-13T22:15:00.000+0000"
+  "CreatedDate": "2026-02-23T20:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001QAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "ContactId": "003Hs00000000MzAAC",
-  "AccountId": "001Hs000000008CAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-19T22:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001RAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "LeadId": "00QHs000000000PAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-15T17:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000001SAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "LeadId": "00QHs000000001EAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-19T22:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000001TAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "LeadId": "00QHs000000001dAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-16T13:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001UAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "LeadId": "00QHs0000000006AAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-02",
-  "CreatedDate": "2026-01-19T20:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001VAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "LeadId": "00QHs0000000019AAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-01-24",
-  "CreatedDate": "2026-01-14T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001WAAC",
-  "CampaignId": "701Hs0000000002AAC",
-  "LeadId": "00QHs000000001lAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-01-16T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001XAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000GYAAC",
-  "AccountId": "001Hs000000006VAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-23T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000001YAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000AcAAC",
-  "AccountId": "001Hs000000003RAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-20",
-  "CreatedDate": "2026-02-18T22:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000001ZAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000GqAAC",
-  "AccountId": "001Hs000000006ZAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-19T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000001aAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000GyAAC",
-  "AccountId": "001Hs000000006bAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-23T22:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000001bAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000HAAAC",
-  "AccountId": "001Hs000000006eAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-23T21:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000001cAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000AkAAC",
+  "ContactId": "003Hs00000000AnAAC",
   "AccountId": "001Hs000000003TAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-23T22:00:00.000+0000"
+  "CreatedDate": "2026-02-18T20:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000001dAAC",
+  "Id": "00vHs000000001RAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000A9AAC",
-  "AccountId": "001Hs000000003KAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-19",
-  "CreatedDate": "2026-02-23T18:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000001eAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000GcAAC",
-  "AccountId": "001Hs000000006WAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-24T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000001fAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000AVAAC",
-  "AccountId": "001Hs000000003PAAC",
+  "ContactId": "003Hs00000000UfAAC",
+  "AccountId": "001Hs00000000AHAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-02-23T14:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000001gAAC",
+  "Id": "00vHs000000001SAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000GuAAC",
-  "AccountId": "001Hs000000006aAAC",
+  "ContactId": "003Hs00000000XwAAC",
+  "AccountId": "001Hs00000000B9AAC",
   "Status": "Responded",
   "HasResponded": true,
-  "FirstRespondedDate": "2026-02-23",
-  "CreatedDate": "2026-02-24T15:45:00.000+0000"
+  "FirstRespondedDate": "2026-02-19",
+  "CreatedDate": "2026-02-23T13:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001TAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000AJAAC",
+  "AccountId": "001Hs000000003MAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001UAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000ASAAC",
+  "AccountId": "001Hs000000003OAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-18T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001VAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000ANAAC",
+  "AccountId": "001Hs000000003NAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001WAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000XUAAC",
+  "AccountId": "001Hs00000000B2AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001XAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000AWAAC",
+  "AccountId": "001Hs000000003PAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-24T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001YAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000VSAAC",
+  "AccountId": "001Hs00000000AVAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-24T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001ZAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000axAAC",
+  "AccountId": "001Hs00000000BvAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T20:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001aAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000P2AAC",
+  "AccountId": "001Hs000000008mAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T16:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001bAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000A0AAC",
+  "AccountId": "001Hs000000003IAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-19T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001cAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000AeAAC",
+  "AccountId": "001Hs000000003RAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-19T21:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001dAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000AaAAC",
+  "AccountId": "001Hs000000003QAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-21",
+  "CreatedDate": "2026-02-23T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001eAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000OsAAC",
+  "AccountId": "001Hs000000008kAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T22:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001fAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000aPAAC",
+  "AccountId": "001Hs00000000BmAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T13:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001gAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000TSAAC",
+  "AccountId": "001Hs000000009wAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-18",
+  "CreatedDate": "2026-02-18T21:30:00.000+0000"
  },
  {
   "Id": "00vHs000000001hAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000MrAAC",
-  "AccountId": "001Hs000000008AAAC",
+  "ContactId": "003Hs00000000aAAAC",
+  "AccountId": "001Hs00000000BiAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-23T18:45:00.000+0000"
+  "CreatedDate": "2026-02-23T21:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001iAAC",
@@ -958,1840 +951,2494 @@
   "AccountId": "001Hs000000006fAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-18T18:00:00.000+0000"
+  "CreatedDate": "2026-02-20T16:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001jAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000NfAAC",
-  "AccountId": "001Hs000000008NAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-19T20:30:00.000+0000"
+  "ContactId": "003Hs00000000VIAAC",
+  "AccountId": "001Hs00000000ASAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-18",
+  "CreatedDate": "2026-02-18T21:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001kAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000A4AAC",
-  "AccountId": "001Hs000000003JAAC",
+  "ContactId": "003Hs00000000STAAC",
+  "AccountId": "001Hs000000009gAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-23T20:45:00.000+0000"
+  "CreatedDate": "2026-02-19T17:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001lAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000NsAAC",
-  "AccountId": "001Hs000000008QAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-19T21:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000001mAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000AYAAC",
-  "AccountId": "001Hs000000003QAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-23T18:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000001nAAC",
-  "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000ANAAC",
-  "AccountId": "001Hs000000003NAAC",
+  "ContactId": "003Hs00000000X8AAC",
+  "AccountId": "001Hs00000000AxAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-02-23T20:00:00.000+0000"
  },
  {
+  "Id": "00vHs000000001mAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000GXAAC",
+  "AccountId": "001Hs000000006VAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-20T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000001nAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000GkAAC",
+  "AccountId": "001Hs000000006YAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-19T21:15:00.000+0000"
+ },
+ {
   "Id": "00vHs000000001oAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000AEAAC",
-  "AccountId": "001Hs000000003LAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-24",
-  "CreatedDate": "2026-02-23T22:00:00.000+0000"
+  "ContactId": "003Hs00000000WaAAC",
+  "AccountId": "001Hs00000000AoAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-24T16:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001pAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000AJAAC",
-  "AccountId": "001Hs000000003MAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-02-18T22:45:00.000+0000"
+  "ContactId": "003Hs00000000WiAAC",
+  "AccountId": "001Hs00000000AqAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-02-19",
+  "CreatedDate": "2026-02-20T18:00:00.000+0000"
  },
  {
   "Id": "00vHs000000001qAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000MTAAC",
-  "AccountId": "001Hs0000000084AAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-02-18",
-  "CreatedDate": "2026-02-20T17:00:00.000+0000"
+  "ContactId": "003Hs00000000OaAAC",
+  "AccountId": "001Hs000000008fAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-02-23T22:30:00.000+0000"
  },
  {
   "Id": "00vHs000000001rAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "ContactId": "003Hs00000000PeAAC",
-  "AccountId": "001Hs000000008sAAC",
+  "ContactId": "003Hs00000000SHAAC",
+  "AccountId": "001Hs000000009dAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-23T21:00:00.000+0000"
+  "CreatedDate": "2026-02-19T21:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001sAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "LeadId": "00QHs000000001DAAC",
+  "ContactId": "003Hs00000000H0AAC",
+  "AccountId": "001Hs000000006cAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-23T21:15:00.000+0000"
+  "CreatedDate": "2026-02-19T13:15:00.000+0000"
  },
  {
   "Id": "00vHs000000001tAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "LeadId": "00QHs000000000MAAC",
+  "ContactId": "003Hs00000000H4AAC",
+  "AccountId": "001Hs000000006dAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-24T22:45:00.000+0000"
+  "CreatedDate": "2026-02-20T18:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001uAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "LeadId": "00QHs000000000BAAC",
+  "ContactId": "003Hs00000000AAAAC",
+  "AccountId": "001Hs000000003KAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-23T17:45:00.000+0000"
+  "CreatedDate": "2026-02-23T19:30:00.000+0000"
  },
  {
   "Id": "00vHs000000001vAAC",
   "CampaignId": "701Hs0000000003AAC",
-  "LeadId": "00QHs000000001pAAC",
+  "ContactId": "003Hs00000000QOAAC",
+  "AccountId": "001Hs0000000099AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-02-18T14:15:00.000+0000"
+  "CreatedDate": "2026-02-24T13:00:00.000+0000"
  },
  {
   "Id": "00vHs000000001wAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000FgAAC",
-  "AccountId": "001Hs000000006FAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000VWAAC",
+  "AccountId": "001Hs00000000AWAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-10T20:45:00.000+0000"
+  "CreatedDate": "2026-02-23T20:00:00.000+0000"
  },
  {
   "Id": "00vHs000000001xAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs0000000090AAC",
-  "AccountId": "001Hs0000000030AAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "ContactId": "003Hs00000000TOAAC",
+  "AccountId": "001Hs000000009vAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-10T13:30:00.000+0000"
+  "CreatedDate": "2026-02-23T15:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001yAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000KhAAC",
-  "AccountId": "001Hs000000007cAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000000dAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-09T13:00:00.000+0000"
+  "CreatedDate": "2026-02-18T20:45:00.000+0000"
  },
  {
   "Id": "00vHs000000001zAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000EIAAC",
-  "AccountId": "001Hs000000005FAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-11T18:00:00.000+0000"
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000001TAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-03-04",
+  "CreatedDate": "2026-02-20T22:15:00.000+0000"
  },
  {
   "Id": "00vHs0000000020AAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000006bAAC",
-  "AccountId": "001Hs0000000024AAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000001qAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-09T19:45:00.000+0000"
+  "CreatedDate": "2026-02-20T18:15:00.000+0000"
  },
  {
   "Id": "00vHs0000000021AAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs0000000028AAC",
-  "AccountId": "001Hs000000000fAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000000hAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-06T15:30:00.000+0000"
+  "CreatedDate": "2026-02-23T16:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000022AAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000004dAAC",
-  "AccountId": "001Hs000000001PAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000001EAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-05T15:30:00.000+0000"
+  "CreatedDate": "2026-02-20T18:30:00.000+0000"
  },
  {
   "Id": "00vHs0000000023AAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000007zAAC",
-  "AccountId": "001Hs000000002hAAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000000eAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-11T15:15:00.000+0000"
+  "CreatedDate": "2026-02-19T20:15:00.000+0000"
  },
  {
   "Id": "00vHs0000000024AAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000003bAAC",
-  "AccountId": "001Hs0000000016AAC",
+  "CampaignId": "701Hs0000000003AAC",
+  "LeadId": "00QHs000000001YAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-10T19:00:00.000+0000"
+  "CreatedDate": "2026-02-23T18:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000025AAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000DOAAC",
-  "AccountId": "001Hs000000004XAAC",
+  "ContactId": "003Hs00000000W1AAC",
+  "AccountId": "001Hs00000000AeAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-09T17:45:00.000+0000"
+  "CreatedDate": "2026-03-05T15:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000026AAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000E6AAC",
-  "AccountId": "001Hs0000000057AAC",
+  "ContactId": "003Hs000000008XAAC",
+  "AccountId": "001Hs000000002rAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-11T22:15:00.000+0000"
+  "CreatedDate": "2026-03-09T20:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000027AAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000F0AAC",
-  "AccountId": "001Hs000000005pAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-03-13",
-  "CreatedDate": "2026-03-06T21:00:00.000+0000"
+  "ContactId": "003Hs000000004YAAC",
+  "AccountId": "001Hs000000001MAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-05T14:45:00.000+0000"
  },
  {
   "Id": "00vHs0000000028AAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000EUAAC",
-  "AccountId": "001Hs000000005RAAC",
+  "ContactId": "003Hs00000000WIAAC",
+  "AccountId": "001Hs00000000AjAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-05T13:00:00.000+0000"
+  "CreatedDate": "2026-03-11T16:30:00.000+0000"
  },
  {
   "Id": "00vHs0000000029AAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000003DAAC",
-  "AccountId": "001Hs000000000zAAC",
+  "ContactId": "003Hs00000000ZnAAC",
+  "AccountId": "001Hs00000000BcAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-09T18:15:00.000+0000"
+  "CreatedDate": "2026-03-09T18:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002AAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000003tAAC",
-  "AccountId": "001Hs000000001BAAC",
+  "ContactId": "003Hs00000000DpAAC",
+  "AccountId": "001Hs000000004uAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-06T18:45:00.000+0000"
+  "CreatedDate": "2026-03-09T15:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002BAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000EfAAC",
-  "AccountId": "001Hs000000005YAAC",
+  "ContactId": "003Hs000000002PAAC",
+  "AccountId": "001Hs000000000jAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-05T13:00:00.000+0000"
+  "CreatedDate": "2026-03-09T15:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002CAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000LSAAC",
-  "AccountId": "001Hs000000007nAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-09T21:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002DAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000001OAAC",
-  "AccountId": "001Hs000000000RAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-06T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000002EAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000003zAAC",
-  "AccountId": "001Hs000000001DAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-09T19:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002FAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000CcAAC",
-  "AccountId": "001Hs000000003zAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-09T22:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000002GAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000DTAAC",
-  "AccountId": "001Hs000000004cAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-09T18:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002HAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000CwAAC",
-  "AccountId": "001Hs0000000049AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-10T17:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002IAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000004MAAC",
-  "AccountId": "001Hs000000001KAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-11T14:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000002JAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000003fAAC",
-  "AccountId": "001Hs0000000017AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-11T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000002KAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000005eAAC",
-  "AccountId": "001Hs000000001iAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-09T19:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002LAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000007RAAC",
-  "AccountId": "001Hs000000002XAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-06T20:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000002MAAC",
   "CampaignId": "701Hs0000000004AAC",
   "ContactId": "003Hs00000000DBAAC",
   "AccountId": "001Hs000000004KAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-10T17:00:00.000+0000"
+  "CreatedDate": "2026-03-09T15:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002DAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000YDAAC",
+  "AccountId": "001Hs00000000BDAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T17:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002EAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000QmAAC",
+  "AccountId": "001Hs000000009FAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-10T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002FAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs000000004VAAC",
+  "AccountId": "001Hs000000001LAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002GAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs000000008IAAC",
+  "AccountId": "001Hs000000002mAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-11T22:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002HAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000QFAAC",
+  "AccountId": "001Hs0000000097AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-03-18",
+  "CreatedDate": "2026-03-09T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002IAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000FOAAC",
+  "AccountId": "001Hs0000000069AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-05T16:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002JAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs0000000062AAC",
+  "AccountId": "001Hs000000001oAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T17:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002KAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000E1AAC",
+  "AccountId": "001Hs0000000052AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-03-10",
+  "CreatedDate": "2026-03-05T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002LAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000SQAAC",
+  "AccountId": "001Hs000000009fAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002MAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000KrAAC",
+  "AccountId": "001Hs000000007eAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T18:15:00.000+0000"
  },
  {
   "Id": "00vHs000000002NAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000ERAAC",
-  "AccountId": "001Hs000000005OAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-03-16",
-  "CreatedDate": "2026-03-10T15:00:00.000+0000"
+  "ContactId": "003Hs000000003yAAC",
+  "AccountId": "001Hs000000001BAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-11T13:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002OAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs00000000N4AAC",
-  "AccountId": "001Hs000000008DAAC",
+  "ContactId": "003Hs00000000ENAAC",
+  "AccountId": "001Hs000000005KAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-10T13:30:00.000+0000"
+  "CreatedDate": "2026-03-09T16:15:00.000+0000"
  },
  {
   "Id": "00vHs000000002PAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000001EAAC",
-  "AccountId": "001Hs000000000OAAC",
+  "ContactId": "003Hs000000004DAAC",
+  "AccountId": "001Hs000000001GAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-05T22:30:00.000+0000"
+  "CreatedDate": "2026-03-09T21:00:00.000+0000"
  },
  {
   "Id": "00vHs000000002QAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "ContactId": "003Hs000000009eAAC",
-  "AccountId": "001Hs000000003BAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-06T13:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000002RAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs000000000QAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-06T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000002SAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs000000001IAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-06T17:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002TAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs000000001KAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-03-10T20:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000002UAAC",
-  "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs000000001lAAC",
+  "ContactId": "003Hs00000000FGAAC",
+  "AccountId": "001Hs0000000061AAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-03-10T13:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000002VAAC",
+  "Id": "00vHs000000002RAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs000000001UAAC",
+  "ContactId": "003Hs000000003aAAC",
+  "AccountId": "001Hs0000000014AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-09T20:30:00.000+0000"
+  "CreatedDate": "2026-03-09T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002SAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs000000002ZAAC",
+  "AccountId": "001Hs000000000mAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-11T14:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002TAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs00000000KdAAC",
+  "AccountId": "001Hs000000007aAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-05T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002UAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs000000000EAAC",
+  "AccountId": "001Hs0000000005AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-03-26",
+  "CreatedDate": "2026-03-06T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002VAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs000000006aAAC",
+  "AccountId": "001Hs000000001yAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T22:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002WAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs000000000EAAC",
+  "ContactId": "003Hs00000000DeAAC",
+  "AccountId": "001Hs000000004jAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-11T18:15:00.000+0000"
+  "CreatedDate": "2026-03-09T15:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002XAAC",
   "CampaignId": "701Hs0000000004AAC",
-  "LeadId": "00QHs0000000009AAC",
+  "ContactId": "003Hs000000004kAAC",
+  "AccountId": "001Hs000000001PAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-03-09T18:45:00.000+0000"
+  "CreatedDate": "2026-03-06T14:00:00.000+0000"
  },
  {
   "Id": "00vHs000000002YAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000R8AAC",
-  "AccountId": "001Hs000000009HAAC",
-  "Status": "Opened",
+  "CampaignId": "701Hs0000000004AAC",
+  "ContactId": "003Hs0000000053AAC",
+  "AccountId": "001Hs000000001VAAC",
+  "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-07T15:45:00.000+0000"
+  "CreatedDate": "2026-03-05T17:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002ZAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000QnAAC",
-  "AccountId": "001Hs000000009BAAC",
-  "Status": "Opened",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs0000000006AAC",
+  "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T16:00:00.000+0000"
+  "CreatedDate": "2026-03-09T17:45:00.000+0000"
  },
  {
   "Id": "00vHs000000002aAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RPAAC",
-  "AccountId": "001Hs000000009MAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000001TAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T16:30:00.000+0000"
+  "CreatedDate": "2026-03-05T20:00:00.000+0000"
  },
  {
   "Id": "00vHs000000002bAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000SVAAC",
-  "AccountId": "001Hs000000009fAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000000gAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-10T16:00:00.000+0000"
+  "CreatedDate": "2026-03-09T16:45:00.000+0000"
  },
  {
   "Id": "00vHs000000002cAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000S4AAC",
-  "AccountId": "001Hs000000009YAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000001BAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-08T14:45:00.000+0000"
+  "CreatedDate": "2026-03-05T19:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002dAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RyAAC",
-  "AccountId": "001Hs000000009WAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000000UAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T22:45:00.000+0000"
+  "CreatedDate": "2026-03-11T16:15:00.000+0000"
  },
  {
   "Id": "00vHs000000002eAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000SfAAC",
-  "AccountId": "001Hs000000009hAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000000pAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T14:45:00.000+0000"
+  "CreatedDate": "2026-03-06T14:30:00.000+0000"
  },
  {
   "Id": "00vHs000000002fAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000Q1AAC",
-  "AccountId": "001Hs000000008yAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000001OAAC",
   "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-05T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002gAAC",
+  "CampaignId": "701Hs0000000004AAC",
+  "LeadId": "00QHs000000001pAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-03-09T13:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002hAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000iRAAC",
+  "AccountId": "001Hs00000000E2AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-04-22",
+  "CreatedDate": "2026-04-06T20:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002iAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000eiAAC",
+  "AccountId": "001Hs00000000CxAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-05-14",
+  "CreatedDate": "2026-04-07T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002jAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000cVAAC",
+  "AccountId": "001Hs00000000CLAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-08T18:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002kAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000jvAAC",
+  "AccountId": "001Hs00000000ERAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T14:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002lAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000dSAAC",
+  "AccountId": "001Hs00000000CdAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T18:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002mAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gXAAC",
+  "AccountId": "001Hs00000000DUAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002nAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000i0AAC",
+  "AccountId": "001Hs00000000DvAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002oAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000kAAAC",
+  "AccountId": "001Hs00000000EVAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T22:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002pAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000fmAAC",
+  "AccountId": "001Hs00000000DGAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002qAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000dzAAC",
+  "AccountId": "001Hs00000000ClAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002rAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000iXAAC",
+  "AccountId": "001Hs00000000E4AAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T21:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002sAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000h1AAC",
+  "AccountId": "001Hs00000000DdAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-10T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002tAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000jBAAC",
+  "AccountId": "001Hs00000000EFAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-07T14:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002uAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gTAAC",
+  "AccountId": "001Hs00000000DTAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-07T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002vAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000hJAAC",
+  "AccountId": "001Hs00000000DiAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-09T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002wAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000hMAAC",
+  "AccountId": "001Hs00000000DjAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002xAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gNAAC",
+  "AccountId": "001Hs00000000DRAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002yAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gQAAC",
+  "AccountId": "001Hs00000000DSAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000002zAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000j8AAC",
+  "AccountId": "001Hs00000000EEAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000030AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000jXAAC",
+  "AccountId": "001Hs00000000ELAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T20:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000031AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000hcAAC",
+  "AccountId": "001Hs00000000DnAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-10T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000032AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000dqAAC",
+  "AccountId": "001Hs00000000CjAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-08T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000033AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gAAAC",
+  "AccountId": "001Hs00000000DNAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-08T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000034AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000h4AAC",
+  "AccountId": "001Hs00000000DeAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-09T18:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000035AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000i6AAC",
+  "AccountId": "001Hs00000000DxAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-08T14:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000036AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000guAAC",
+  "AccountId": "001Hs00000000DbAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000037AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gHAAC",
+  "AccountId": "001Hs00000000DPAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T21:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000038AAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000fTAAC",
+  "AccountId": "001Hs00000000DBAAC",
+  "Status": "Opened",
   "HasResponded": false,
   "CreatedDate": "2026-04-07T21:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000002gAAC",
+  "Id": "00vHs0000000039AAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RJAAC",
-  "AccountId": "001Hs000000009KAAC",
+  "ContactId": "003Hs00000000kOAAC",
+  "AccountId": "001Hs00000000EZAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T16:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003AAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000cyAAC",
+  "AccountId": "001Hs00000000CUAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T15:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003BAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000fCAAC",
+  "AccountId": "001Hs00000000D6AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003CAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000gEAAC",
+  "AccountId": "001Hs00000000DOAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-04-20",
+  "CreatedDate": "2026-04-13T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003DAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000kIAAC",
+  "AccountId": "001Hs00000000EXAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-08T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003EAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000hrAAC",
+  "AccountId": "001Hs00000000DsAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-04-07T16:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000002hAAC",
+  "Id": "00vHs000000003FAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000SMAAC",
-  "AccountId": "001Hs000000009dAAC",
+  "ContactId": "003Hs00000000itAAC",
+  "AccountId": "001Hs00000000EAAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-08T13:30:00.000+0000"
+  "CreatedDate": "2026-04-08T16:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000002iAAC",
+  "Id": "00vHs000000003GAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000PqAAC",
-  "AccountId": "001Hs000000008vAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-05-09",
-  "CreatedDate": "2026-04-09T17:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000002jAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RrAAC",
-  "AccountId": "001Hs000000009UAAC",
+  "ContactId": "003Hs00000000iDAAC",
+  "AccountId": "001Hs00000000DzAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T17:30:00.000+0000"
+  "CreatedDate": "2026-04-09T22:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000002kAAC",
+  "Id": "00vHs000000003HAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RFAAC",
-  "AccountId": "001Hs000000009JAAC",
+  "ContactId": "003Hs00000000deAAC",
+  "AccountId": "001Hs00000000CgAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-09T21:00:00.000+0000"
+  "CreatedDate": "2026-04-08T16:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000002lAAC",
+  "Id": "00vHs000000003IAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RvAAC",
-  "AccountId": "001Hs000000009VAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-13T17:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000002mAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000S1AAC",
-  "AccountId": "001Hs000000009XAAC",
-  "Status": "Opened",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-07T17:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000002nAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RZAAC",
-  "AccountId": "001Hs000000009PAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-13T13:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000002oAAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RoAAC",
-  "AccountId": "001Hs000000009TAAC",
+  "ContactId": "003Hs00000000jhAAC",
+  "AccountId": "001Hs00000000EOAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-04-08T20:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000002pAAC",
+  "Id": "00vHs000000003JAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RVAAC",
-  "AccountId": "001Hs000000009OAAC",
+  "ContactId": "003Hs00000000fsAAC",
+  "AccountId": "001Hs00000000DIAAC",
   "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T16:45:00.000+0000"
+  "CreatedDate": "2026-04-06T21:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000002qAAC",
+  "Id": "00vHs000000003KAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000QXAAC",
-  "AccountId": "001Hs0000000096AAC",
+  "ContactId": "003Hs00000000evAAC",
+  "AccountId": "001Hs00000000D1AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003LAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000jLAAC",
+  "AccountId": "001Hs00000000EIAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-10T22:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003MAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000fGAAC",
+  "AccountId": "001Hs00000000D7AAC",
   "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T20:30:00.000+0000"
+  "CreatedDate": "2026-04-08T14:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000002rAAC",
+  "Id": "00vHs000000003NAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000QHAAC",
-  "AccountId": "001Hs0000000092AAC",
+  "ContactId": "003Hs00000000cRAAC",
+  "AccountId": "001Hs00000000CKAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-10T15:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003OAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000faAAC",
+  "AccountId": "001Hs00000000DDAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T13:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003PAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000hAAAC",
+  "AccountId": "001Hs00000000DgAAC",
   "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T22:30:00.000+0000"
+  "CreatedDate": "2026-04-07T14:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000002sAAC",
+  "Id": "00vHs000000003QAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RCAAC",
-  "AccountId": "001Hs000000009IAAC",
+  "ContactId": "003Hs00000000ikAAC",
+  "AccountId": "001Hs00000000E8AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-04-18",
+  "CreatedDate": "2026-04-06T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003RAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000kLAAC",
+  "AccountId": "001Hs00000000EYAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-10T13:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003SAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000ibAAC",
+  "AccountId": "001Hs00000000E5AAC",
   "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-06T17:00:00.000+0000"
+  "CreatedDate": "2026-04-08T20:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000002tAAC",
+  "Id": "00vHs000000003TAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000RSAAC",
-  "AccountId": "001Hs000000009NAAC",
+  "ContactId": "003Hs00000000hlAAC",
+  "AccountId": "001Hs00000000DqAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-10T19:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003UAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000chAAC",
+  "AccountId": "001Hs00000000CPAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003VAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000k7AAC",
+  "AccountId": "001Hs00000000EUAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T15:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003WAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000jdAAC",
+  "AccountId": "001Hs00000000ENAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T13:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003XAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000jaAAC",
+  "AccountId": "001Hs00000000EMAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003YAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000fiAAC",
+  "AccountId": "001Hs00000000DFAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-09T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003ZAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "ContactId": "003Hs00000000fzAAC",
+  "AccountId": "001Hs00000000DKAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-13T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003aAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "LeadId": "00QHs000000001eAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-06T22:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003bAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "LeadId": "00QHs000000000JAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-08T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003cAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "LeadId": "00QHs000000000CAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-07T15:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003dAAC",
+  "CampaignId": "701Hs0000000005AAC",
+  "LeadId": "00QHs000000001RAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-04-13T15:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000002uAAC",
+  "Id": "00vHs000000003eAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "ContactId": "003Hs00000000S7AAC",
-  "AccountId": "001Hs000000009ZAAC",
+  "LeadId": "00QHs000000000aAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-10T21:45:00.000+0000"
+  "CreatedDate": "2026-04-09T21:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000002vAAC",
+  "Id": "00vHs000000003fAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000001oAAC",
+  "LeadId": "00QHs000000001vAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T16:45:00.000+0000"
+  "CreatedDate": "2026-04-13T17:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000002wAAC",
+  "Id": "00vHs000000003gAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs0000000008AAC",
+  "LeadId": "00QHs000000001mAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-13T13:15:00.000+0000"
+  "CreatedDate": "2026-04-13T17:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000002xAAC",
+  "Id": "00vHs000000003hAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000000qAAC",
+  "LeadId": "00QHs000000000vAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-08T20:45:00.000+0000"
+  "CreatedDate": "2026-04-09T18:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000002yAAC",
+  "Id": "00vHs000000003iAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000001LAAC",
+  "LeadId": "00QHs000000001cAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-10T14:15:00.000+0000"
+  "CreatedDate": "2026-04-13T14:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000002zAAC",
+  "Id": "00vHs000000003jAAC",
   "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs0000000016AAC",
+  "LeadId": "00QHs000000000yAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-10T15:45:00.000+0000"
+  "CreatedDate": "2026-04-07T15:00:00.000+0000"
  },
  {
-  "Id": "00vHs0000000030AAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000000cAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-08T13:00:00.000+0000"
- },
- {
-  "Id": "00vHs0000000031AAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000001HAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-13T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs0000000032AAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000000hAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-06T17:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000033AAC",
-  "CampaignId": "701Hs0000000005AAC",
-  "LeadId": "00QHs000000000DAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-07T16:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000034AAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KxAAC",
-  "AccountId": "001Hs000000007gAAC",
-  "Status": "Opened",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-24T15:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000035AAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KIAAC",
-  "AccountId": "001Hs000000007VAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-27T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs0000000036AAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LGAAC",
-  "AccountId": "001Hs000000007kAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-27T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs0000000037AAC",
+  "Id": "00vHs000000003kAAC",
   "CampaignId": "701Hs0000000006AAC",
   "ContactId": "003Hs00000000KuAAC",
   "AccountId": "001Hs000000007fAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-05-19",
-  "CreatedDate": "2026-04-27T13:00:00.000+0000"
- },
- {
-  "Id": "00vHs0000000038AAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LBAAC",
-  "AccountId": "001Hs000000007jAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-05-24",
-  "CreatedDate": "2026-04-22T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000039AAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000K5AAC",
-  "AccountId": "001Hs000000007SAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-24T15:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003AAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000JvAAC",
-  "AccountId": "001Hs000000007PAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-23T21:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003BAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KaAAC",
-  "AccountId": "001Hs000000007aAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-27T14:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003CAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000L7AAC",
-  "AccountId": "001Hs000000007iAAC",
   "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-20T20:00:00.000+0000"
+  "CreatedDate": "2026-04-21T16:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003DAAC",
+  "Id": "00vHs000000003lAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KhAAC",
-  "AccountId": "001Hs000000007cAAC",
-  "Status": "Sent",
+  "ContactId": "003Hs00000000KYAAC",
+  "AccountId": "001Hs000000007ZAAC",
+  "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-20T14:15:00.000+0000"
+  "CreatedDate": "2026-04-23T15:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000003EAAC",
+  "Id": "00vHs000000003mAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000JsAAC",
-  "AccountId": "001Hs000000007OAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-05-20",
-  "CreatedDate": "2026-04-24T19:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000003FAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LbAAC",
-  "AccountId": "001Hs000000007qAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-27T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003GAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KlAAC",
-  "AccountId": "001Hs000000007dAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-04-25",
-  "CreatedDate": "2026-04-23T14:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000003HAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LOAAC",
+  "ContactId": "003Hs00000000LLAAC",
   "AccountId": "001Hs000000007mAAC",
   "Status": "Opened",
   "HasResponded": false,
-  "CreatedDate": "2026-04-21T21:30:00.000+0000"
+  "CreatedDate": "2026-04-24T14:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003IAAC",
+  "Id": "00vHs000000003nAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KLAAC",
-  "AccountId": "001Hs000000007WAAC",
-  "Status": "Opened",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-27T13:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000003JAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LSAAC",
-  "AccountId": "001Hs000000007nAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-05-02",
-  "CreatedDate": "2026-04-24T18:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000003KAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KXAAC",
-  "AccountId": "001Hs000000007ZAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-21T20:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000003LAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LLAAC",
-  "AccountId": "001Hs000000007lAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-24T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000003MAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KUAAC",
+  "ContactId": "003Hs00000000KVAAC",
   "AccountId": "001Hs000000007YAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-27T20:30:00.000+0000"
+  "CreatedDate": "2026-04-20T15:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003NAAC",
+  "Id": "00vHs000000003oAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000L2AAC",
-  "AccountId": "001Hs000000007hAAC",
+  "ContactId": "003Hs00000000L6AAC",
+  "AccountId": "001Hs000000007iAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-21T18:45:00.000+0000"
+  "CreatedDate": "2026-04-24T18:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000003OAAC",
+  "Id": "00vHs000000003pAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000LYAAC",
-  "AccountId": "001Hs000000007pAAC",
+  "ContactId": "003Hs00000000NHAAC",
+  "AccountId": "001Hs000000008IAAC",
   "Status": "Opened",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-22T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003PAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "ContactId": "003Hs00000000KPAAC",
-  "AccountId": "001Hs000000007XAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-24T20:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000003QAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "LeadId": "00QHs0000000004AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-04-21T19:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000003RAAC",
-  "CampaignId": "701Hs0000000006AAC",
-  "LeadId": "00QHs000000001OAAC",
-  "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-04-27T20:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003SAAC",
+  "Id": "00vHs000000003qAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "LeadId": "00QHs000000001GAAC",
+  "ContactId": "003Hs00000000MTAAC",
+  "AccountId": "001Hs0000000084AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-27T18:00:00.000+0000"
+  "CreatedDate": "2026-04-20T20:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003TAAC",
+  "Id": "00vHs000000003rAAC",
   "CampaignId": "701Hs0000000006AAC",
-  "LeadId": "00QHs000000000QAAC",
+  "ContactId": "003Hs00000000NpAAC",
+  "AccountId": "001Hs000000008SAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003sAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000OGAAC",
+  "AccountId": "001Hs000000008aAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003tAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000MDAAC",
+  "AccountId": "001Hs0000000080AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003uAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KdAAC",
+  "AccountId": "001Hs000000007aAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T17:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003vAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000L9AAC",
+  "AccountId": "001Hs000000007jAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-23T15:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003wAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000MqAAC",
+  "AccountId": "001Hs000000008AAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T22:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003xAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000L3AAC",
+  "AccountId": "001Hs000000007hAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003yAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000MGAAC",
+  "AccountId": "001Hs0000000081AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-05-18",
+  "CreatedDate": "2026-04-24T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000003zAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000MLAAC",
+  "AccountId": "001Hs0000000082AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-24T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000040AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000MtAAC",
+  "AccountId": "001Hs000000008BAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000041AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000NzAAC",
+  "AccountId": "001Hs000000008VAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-04-27T22:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000003UAAC",
+  "Id": "00vHs0000000042AAC",
   "CampaignId": "701Hs0000000006AAC",
-  "LeadId": "00QHs000000001qAAC",
+  "ContactId": "003Hs00000000NMAAC",
+  "AccountId": "001Hs000000008JAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-04-24T17:15:00.000+0000"
+  "CreatedDate": "2026-04-20T21:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000003VAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000VYAAC",
-  "AccountId": "001Hs00000000AVAAC",
+  "Id": "00vHs0000000043AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KjAAC",
+  "AccountId": "001Hs000000007cAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-26T17:45:00.000+0000"
+  "CreatedDate": "2026-04-20T13:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003WAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000V2AAC",
-  "AccountId": "001Hs00000000ALAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-06-29T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003XAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UXAAC",
-  "AccountId": "001Hs00000000ADAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-06-29T17:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003YAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000VIAAC",
-  "AccountId": "001Hs00000000AQAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-06-29T15:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003ZAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UwAAC",
-  "AccountId": "001Hs00000000AJAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-06-26T21:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000003aAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000TvAAC",
-  "AccountId": "001Hs00000000A2AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-06-26T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000003bAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000URAAC",
-  "AccountId": "001Hs00000000ABAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-06-26T13:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000003cAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000VEAAC",
-  "AccountId": "001Hs00000000APAAC",
+  "Id": "00vHs0000000044AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000NmAAC",
+  "AccountId": "001Hs000000008RAAC",
   "Status": "Responded",
   "HasResponded": true,
-  "FirstRespondedDate": "2026-08-08",
-  "CreatedDate": "2026-06-26T22:00:00.000+0000"
+  "FirstRespondedDate": "2026-05-11",
+  "CreatedDate": "2026-04-24T16:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003dAAC",
-  "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000TnAAC",
-  "AccountId": "001Hs00000000A0AAC",
+  "Id": "00vHs0000000045AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000JtAAC",
+  "AccountId": "001Hs000000007PAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-25T14:45:00.000+0000"
+  "CreatedDate": "2026-04-20T22:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000003eAAC",
+  "Id": "00vHs0000000046AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LUAAC",
+  "AccountId": "001Hs000000007pAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-20T14:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000047AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000JyAAC",
+  "AccountId": "001Hs000000007QAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T17:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000048AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000M1AAC",
+  "AccountId": "001Hs000000007xAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000049AAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LYAAC",
+  "AccountId": "001Hs000000007qAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004AAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000NvAAC",
+  "AccountId": "001Hs000000008UAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-04-26",
+  "CreatedDate": "2026-04-23T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004BAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000NcAAC",
+  "AccountId": "001Hs000000008OAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004CAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000NWAAC",
+  "AccountId": "001Hs000000008MAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-24T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004DAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000N3AAC",
+  "AccountId": "001Hs000000008EAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-23T19:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004EAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000OCAAC",
+  "AccountId": "001Hs000000008ZAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-24T21:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004FAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000N8AAC",
+  "AccountId": "001Hs000000008FAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004GAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000O9AAC",
+  "AccountId": "001Hs000000008YAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T20:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004HAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LkAAC",
+  "AccountId": "001Hs000000007tAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-23T15:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004IAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KLAAC",
+  "AccountId": "001Hs000000007WAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004JAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LCAAC",
+  "AccountId": "001Hs000000007kAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T16:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004KAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000K8AAC",
+  "AccountId": "001Hs000000007TAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-24T13:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004LAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000JqAAC",
+  "AccountId": "001Hs000000007OAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004MAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000O6AAC",
+  "AccountId": "001Hs000000008XAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004NAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KrAAC",
+  "AccountId": "001Hs000000007eAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T13:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004OAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LOAAC",
+  "AccountId": "001Hs000000007nAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-04-27",
+  "CreatedDate": "2026-04-23T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004PAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KHAAC",
+  "AccountId": "001Hs000000007VAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T21:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004QAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KQAAC",
+  "AccountId": "001Hs000000007XAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004RAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000NBAAC",
+  "AccountId": "001Hs000000008GAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-23T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004SAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000O2AAC",
+  "AccountId": "001Hs000000008WAAC",
+  "Status": "Opened",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T15:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004TAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000McAAC",
+  "AccountId": "001Hs0000000086AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T14:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004UAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KyAAC",
+  "AccountId": "001Hs000000007gAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004VAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000MAAAC",
+  "AccountId": "001Hs000000007zAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T20:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004WAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000KgAAC",
+  "AccountId": "001Hs000000007bAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-23T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004XAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LcAAC",
+  "AccountId": "001Hs000000007rAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-24T21:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004YAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "ContactId": "003Hs00000000LtAAC",
+  "AccountId": "001Hs000000007vAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T15:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004ZAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs000000001pAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T13:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004aAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs0000000002AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T16:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004bAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs000000000jAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004cAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs0000000008AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-21T15:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004dAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs0000000001AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-20T17:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004eAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs000000001IAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-22T18:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004fAAC",
+  "CampaignId": "701Hs0000000006AAC",
+  "LeadId": "00QHs0000000003AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-04-27T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004gAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UbAAC",
-  "AccountId": "001Hs00000000AEAAC",
+  "ContactId": "003Hs00000000oZAAC",
+  "AccountId": "001Hs00000000FhAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-06-29T20:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003fAAC",
+  "Id": "00vHs000000004hAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000ULAAC",
-  "AccountId": "001Hs00000000A9AAC",
+  "ContactId": "003Hs00000000sOAAC",
+  "AccountId": "001Hs00000000GlAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-25T16:15:00.000+0000"
+  "CreatedDate": "2026-06-26T17:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003gAAC",
+  "Id": "00vHs000000004iAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UEAAC",
-  "AccountId": "001Hs00000000A7AAC",
+  "ContactId": "003Hs00000000nWAAC",
+  "AccountId": "001Hs00000000FOAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-24T14:15:00.000+0000"
+  "CreatedDate": "2026-06-29T18:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003hAAC",
+  "Id": "00vHs000000004jAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000V8AAC",
-  "AccountId": "001Hs00000000ANAAC",
+  "ContactId": "003Hs00000000pJAAC",
+  "AccountId": "001Hs00000000FuAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-29T19:15:00.000+0000"
+  "CreatedDate": "2026-06-23T15:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003iAAC",
+  "Id": "00vHs000000004kAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000VSAAC",
-  "AccountId": "001Hs00000000ATAAC",
+  "ContactId": "003Hs00000000sDAAC",
+  "AccountId": "001Hs00000000GiAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-06-28",
+  "CreatedDate": "2026-06-22T15:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004lAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000qXAAC",
+  "AccountId": "001Hs00000000GGAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-29T13:15:00.000+0000"
+  "CreatedDate": "2026-06-25T15:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000003jAAC",
+  "Id": "00vHs000000004mAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UzAAC",
-  "AccountId": "001Hs00000000AKAAC",
+  "ContactId": "003Hs00000000oCAAC",
+  "AccountId": "001Hs00000000FaAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-22T14:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004nAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000pcAAC",
+  "AccountId": "001Hs00000000G0AAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-06-28",
+  "CreatedDate": "2026-06-24T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004oAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000plAAC",
+  "AccountId": "001Hs00000000G3AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-29T21:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004pAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000sSAAC",
+  "AccountId": "001Hs00000000GmAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-06-29",
+  "CreatedDate": "2026-06-23T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004qAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000o1AAC",
+  "AccountId": "001Hs00000000FXAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-29T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004rAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000pWAAC",
+  "AccountId": "001Hs00000000FyAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-07-08",
+  "CreatedDate": "2026-06-25T14:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004sAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000oTAAC",
+  "AccountId": "001Hs00000000FfAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-29T18:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004tAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000nsAAC",
+  "AccountId": "001Hs00000000FVAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-25T20:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004uAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000oKAAC",
+  "AccountId": "001Hs00000000FcAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-06-29T19:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000003kAAC",
+  "Id": "00vHs000000004vAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UOAAC",
-  "AccountId": "001Hs00000000AAAAC",
+  "ContactId": "003Hs00000000scAAC",
+  "AccountId": "001Hs00000000GpAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-26T21:15:00.000+0000"
+  "CreatedDate": "2026-06-29T19:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000003lAAC",
+  "Id": "00vHs000000004wAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UkAAC",
-  "AccountId": "001Hs00000000AGAAC",
+  "ContactId": "003Hs00000000opAAC",
+  "AccountId": "001Hs00000000FlAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-29T16:00:00.000+0000"
+  "CreatedDate": "2026-06-29T20:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003mAAC",
+  "Id": "00vHs000000004xAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000TkAAC",
-  "AccountId": "001Hs000000009zAAC",
+  "ContactId": "003Hs00000000rIAAC",
+  "AccountId": "001Hs00000000GTAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-29T16:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000004yAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000sZAAC",
+  "AccountId": "001Hs00000000GoAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-06-29T22:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003nAAC",
+  "Id": "00vHs000000004zAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UnAAC",
-  "AccountId": "001Hs00000000AHAAC",
+  "ContactId": "003Hs00000000qUAAC",
+  "AccountId": "001Hs00000000GFAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-22T15:00:00.000+0000"
+  "CreatedDate": "2026-06-29T17:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000003oAAC",
+  "Id": "00vHs0000000050AAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000TyAAC",
-  "AccountId": "001Hs00000000A3AAC",
+  "ContactId": "003Hs00000000o4AAC",
+  "AccountId": "001Hs00000000FYAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-07-20",
+  "CreatedDate": "2026-06-29T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000051AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000s3AAC",
+  "AccountId": "001Hs00000000GfAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-29T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000052AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000s0AAC",
+  "AccountId": "001Hs00000000GeAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-25T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000053AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000pMAAC",
+  "AccountId": "001Hs00000000FvAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-06-26T15:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000003pAAC",
+  "Id": "00vHs0000000054AAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000V5AAC",
-  "AccountId": "001Hs00000000AMAAC",
+  "ContactId": "003Hs00000000oHAAC",
+  "AccountId": "001Hs00000000FbAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-26T19:45:00.000+0000"
+  "CreatedDate": "2026-06-23T16:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003qAAC",
+  "Id": "00vHs0000000055AAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000U6AAC",
-  "AccountId": "001Hs00000000A5AAC",
+  "ContactId": "003Hs00000000pTAAC",
+  "AccountId": "001Hs00000000FxAAC",
   "Status": "Sent",
   "HasResponded": false,
+  "CreatedDate": "2026-06-29T22:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000056AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000p6AAC",
+  "AccountId": "001Hs00000000FqAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-07-24",
+  "CreatedDate": "2026-06-26T16:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000057AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000qwAAC",
+  "AccountId": "001Hs00000000GNAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-08-03",
+  "CreatedDate": "2026-06-29T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000058AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000qqAAC",
+  "AccountId": "001Hs00000000GLAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-07-24",
+  "CreatedDate": "2026-06-29T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000059AAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000oQAAC",
+  "AccountId": "001Hs00000000FeAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-22T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005AAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000s9AAC",
+  "AccountId": "001Hs00000000GhAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-22T21:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005BAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000okAAC",
+  "AccountId": "001Hs00000000FkAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-26T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005CAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000piAAC",
+  "AccountId": "001Hs00000000G2AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-23T18:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005DAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000pxAAC",
+  "AccountId": "001Hs00000000G6AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-22T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005EAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000nxAAC",
+  "AccountId": "001Hs00000000FWAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-29T16:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005FAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000r4AAC",
+  "AccountId": "001Hs00000000GPAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-22T13:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005GAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000ohAAC",
+  "AccountId": "001Hs00000000FjAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-06-26T15:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005HAAC",
+  "CampaignId": "701Hs0000000007AAC",
+  "ContactId": "003Hs00000000rxAAC",
+  "AccountId": "001Hs00000000GdAAC",
+  "Status": "Responded",
+  "HasResponded": true,
+  "FirstRespondedDate": "2026-07-10",
   "CreatedDate": "2026-06-29T14:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003rAAC",
+  "Id": "00vHs000000005IAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000VBAAC",
-  "AccountId": "001Hs00000000AOAAC",
+  "ContactId": "003Hs00000000pPAAC",
+  "AccountId": "001Hs00000000FwAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-24T22:30:00.000+0000"
+  "CreatedDate": "2026-06-23T19:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003sAAC",
+  "Id": "00vHs000000005JAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UBAAC",
-  "AccountId": "001Hs00000000A6AAC",
+  "ContactId": "003Hs00000000oNAAC",
+  "AccountId": "001Hs00000000FdAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-22T14:30:00.000+0000"
+  "CreatedDate": "2026-06-23T21:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003tAAC",
+  "Id": "00vHs000000005KAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000U3AAC",
-  "AccountId": "001Hs00000000A4AAC",
+  "ContactId": "003Hs00000000njAAC",
+  "AccountId": "001Hs00000000FSAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-25T14:15:00.000+0000"
+  "CreatedDate": "2026-06-25T15:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000003uAAC",
+  "Id": "00vHs000000005LAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "ContactId": "003Hs00000000UgAAC",
-  "AccountId": "001Hs00000000AFAAC",
+  "LeadId": "00QHs000000000IAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-26T15:00:00.000+0000"
+  "CreatedDate": "2026-06-23T21:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000003vAAC",
+  "Id": "00vHs000000005MAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "LeadId": "00QHs000000000UAAC",
+  "LeadId": "00QHs000000001CAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-23T15:15:00.000+0000"
+  "CreatedDate": "2026-06-29T16:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003wAAC",
+  "Id": "00vHs000000005NAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "LeadId": "00QHs000000001YAAC",
+  "LeadId": "00QHs000000000HAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-29T17:15:00.000+0000"
+  "CreatedDate": "2026-06-25T19:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000003xAAC",
+  "Id": "00vHs000000005OAAC",
   "CampaignId": "701Hs0000000007AAC",
-  "LeadId": "00QHs0000000001AAC",
+  "LeadId": "00QHs000000000AAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-06-26T19:00:00.000+0000"
+  "CreatedDate": "2026-06-24T13:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000003yAAC",
+  "Id": "00vHs000000005PAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000002PAAC",
-  "AccountId": "001Hs000000000kAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T19:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000003zAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000003bAAC",
-  "AccountId": "001Hs0000000016AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T19:00:00.000+0000"
- },
- {
-  "Id": "00vHs0000000040AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000GRAAC",
-  "AccountId": "001Hs000000006TAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T20:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000041AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000D0AAC",
-  "AccountId": "001Hs000000004DAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T14:15:00.000+0000"
- },
- {
-  "Id": "00vHs0000000042AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs0000000007AAC",
-  "AccountId": "001Hs0000000003AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T19:45:00.000+0000"
- },
- {
-  "Id": "00vHs0000000043AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000006gAAC",
-  "AccountId": "001Hs0000000029AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T17:45:00.000+0000"
- },
- {
-  "Id": "00vHs0000000044AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000007eAAC",
-  "AccountId": "001Hs000000002bAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T14:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000045AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000001UAAC",
-  "AccountId": "001Hs000000000TAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T18:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000046AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000006nAAC",
-  "AccountId": "001Hs000000002CAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T21:30:00.000+0000"
- },
- {
-  "Id": "00vHs0000000047AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000FZAAC",
-  "AccountId": "001Hs000000006DAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T18:15:00.000+0000"
- },
- {
-  "Id": "00vHs0000000048AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000OrAAC",
-  "AccountId": "001Hs000000008fAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs0000000049AAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000003jAAC",
-  "AccountId": "001Hs0000000018AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T20:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004AAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000000XAAC",
-  "AccountId": "001Hs000000000BAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-12T14:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000004BAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000DaAAC",
-  "AccountId": "001Hs000000004fAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T21:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004CAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000O8AAC",
-  "AccountId": "001Hs000000008UAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004DAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000003AAAC",
-  "AccountId": "001Hs000000000yAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T14:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004EAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000008UAAC",
-  "AccountId": "001Hs000000002qAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004FAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000000tAAC",
+  "ContactId": "003Hs000000000sAAC",
   "AccountId": "001Hs000000000HAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-17T20:45:00.000+0000"
+  "CreatedDate": "2026-08-13T14:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000004GAAC",
+  "Id": "00vHs000000005QAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000DfAAC",
-  "AccountId": "001Hs000000004kAAC",
+  "ContactId": "003Hs000000007vAAC",
+  "AccountId": "001Hs000000002fAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-10T13:45:00.000+0000"
+  "CreatedDate": "2026-08-10T21:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000004HAAC",
+  "Id": "00vHs000000005RAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000E1AAC",
-  "AccountId": "001Hs0000000052AAC",
+  "ContactId": "003Hs0000000097AAC",
+  "AccountId": "001Hs0000000032AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-17T22:00:00.000+0000"
+  "CreatedDate": "2026-08-17T17:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000004IAAC",
+  "Id": "00vHs000000005SAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000CuAAC",
-  "AccountId": "001Hs0000000047AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T19:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004JAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000008AAAC",
-  "AccountId": "001Hs000000002kAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T22:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004KAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000ENAAC",
-  "AccountId": "001Hs000000005KAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T15:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000004LAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000DoAAC",
-  "AccountId": "001Hs000000004tAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004MAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000004PAAC",
-  "AccountId": "001Hs000000001LAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T15:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004NAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000002mAAC",
-  "AccountId": "001Hs000000000rAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-12T17:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004OAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000DjAAC",
-  "AccountId": "001Hs000000004oAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T20:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004PAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000004vAAC",
-  "AccountId": "001Hs000000001UAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T22:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004QAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000002VAAC",
-  "AccountId": "001Hs000000000mAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T17:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004RAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000FGAAC",
-  "AccountId": "001Hs0000000061AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T19:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004SAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000DMAAC",
-  "AccountId": "001Hs000000004VAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T13:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004TAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000008RAAC",
-  "AccountId": "001Hs000000002pAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T19:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000004UAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000001ZAAC",
-  "AccountId": "001Hs000000000UAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T20:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000004VAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000FNAAC",
-  "AccountId": "001Hs0000000068AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T20:00:00.000+0000"
- },
- {
-  "Id": "00vHs000000004WAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000005kAAC",
-  "AccountId": "001Hs000000001kAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T14:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004XAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000CrAAC",
-  "AccountId": "001Hs0000000044AAC",
+  "ContactId": "003Hs000000006rAAC",
+  "AccountId": "001Hs000000002BAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-08-13T22:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000004YAAC",
+  "Id": "00vHs000000005TAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000005FAAC",
-  "AccountId": "001Hs000000001aAAC",
+  "ContactId": "003Hs000000001FAAC",
+  "AccountId": "001Hs000000000OAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-17T15:15:00.000+0000"
+  "CreatedDate": "2026-08-17T19:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000004ZAAC",
+  "Id": "00vHs000000005UAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000PVAAC",
-  "AccountId": "001Hs000000008qAAC",
+  "ContactId": "003Hs00000000EhAAC",
+  "AccountId": "001Hs000000005aAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-11T16:00:00.000+0000"
+  "CreatedDate": "2026-08-11T18:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000004aAAC",
+  "Id": "00vHs000000005VAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000E6AAC",
-  "AccountId": "001Hs0000000057AAC",
+  "ContactId": "003Hs00000000F2AAC",
+  "AccountId": "001Hs000000005rAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-14T19:00:00.000+0000"
+  "CreatedDate": "2026-08-17T14:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000004bAAC",
+  "Id": "00vHs000000005WAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000003XAAC",
-  "AccountId": "001Hs0000000015AAC",
+  "ContactId": "003Hs00000000TgAAC",
+  "AccountId": "001Hs00000000A0AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-10T16:30:00.000+0000"
+  "CreatedDate": "2026-08-13T16:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000004cAAC",
+  "Id": "00vHs000000005XAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000NnAAC",
-  "AccountId": "001Hs000000008PAAC",
+  "ContactId": "003Hs0000000031AAC",
+  "AccountId": "001Hs000000000uAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-10T21:30:00.000+0000"
+  "CreatedDate": "2026-08-11T15:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000004dAAC",
+  "Id": "00vHs000000005YAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000CqAAC",
-  "AccountId": "001Hs0000000043AAC",
+  "ContactId": "003Hs000000009fAAC",
+  "AccountId": "001Hs000000003CAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-17T15:15:00.000+0000"
+  "CreatedDate": "2026-08-10T21:15:00.000+0000"
  },
  {
-  "Id": "00vHs000000004eAAC",
+  "Id": "00vHs000000005ZAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000000AAAC",
-  "AccountId": "001Hs0000000004AAC",
+  "ContactId": "003Hs00000000Y1AAC",
+  "AccountId": "001Hs00000000BAAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-11T20:15:00.000+0000"
+  "CreatedDate": "2026-08-17T18:30:00.000+0000"
  },
  {
-  "Id": "00vHs000000004fAAC",
+  "Id": "00vHs000000005aAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs0000000070AAC",
-  "AccountId": "001Hs000000002LAAC",
+  "ContactId": "003Hs00000000FfAAC",
+  "AccountId": "001Hs000000006FAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-11T16:15:00.000+0000"
+  "CreatedDate": "2026-08-11T17:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000004gAAC",
+  "Id": "00vHs000000005bAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000005wAAC",
-  "AccountId": "001Hs000000001oAAC",
-  "Status": "Responded",
-  "HasResponded": true,
-  "FirstRespondedDate": "2026-09-14",
-  "CreatedDate": "2026-08-10T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004hAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs0000000076AAC",
-  "AccountId": "001Hs000000002RAAC",
+  "ContactId": "003Hs00000000YGAAC",
+  "AccountId": "001Hs00000000BEAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-11T21:15:00.000+0000"
+  "CreatedDate": "2026-08-11T21:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000004iAAC",
+  "Id": "00vHs000000005cAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000DKAAC",
-  "AccountId": "001Hs000000004TAAC",
+  "ContactId": "003Hs00000000UVAAC",
+  "AccountId": "001Hs00000000AEAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-11T21:15:00.000+0000"
+  "CreatedDate": "2026-08-17T15:45:00.000+0000"
  },
  {
-  "Id": "00vHs000000004jAAC",
+  "Id": "00vHs000000005dAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000006tAAC",
-  "AccountId": "001Hs000000002IAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T21:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004kAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000GHAAC",
-  "AccountId": "001Hs000000006QAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T15:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004lAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs0000000058AAC",
-  "AccountId": "001Hs000000001YAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T19:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004mAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000EgAAC",
-  "AccountId": "001Hs000000005ZAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T22:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004nAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000001cAAC",
-  "AccountId": "001Hs000000000VAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T13:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004oAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000006YAAC",
-  "AccountId": "001Hs0000000021AAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-12T18:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004pAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000009rAAC",
-  "AccountId": "001Hs000000003FAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-11T16:45:00.000+0000"
- },
- {
-  "Id": "00vHs000000004qAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000005hAAC",
-  "AccountId": "001Hs000000001jAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T22:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004rAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000D9AAC",
-  "AccountId": "001Hs000000004IAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T19:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004sAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs0000000015AAC",
-  "AccountId": "001Hs000000000LAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T20:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004tAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000F9AAC",
-  "AccountId": "001Hs000000005yAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-17T13:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004uAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs0000000042AAC",
-  "AccountId": "001Hs000000001EAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T13:15:00.000+0000"
- },
- {
-  "Id": "00vHs000000004vAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000EVAAC",
-  "AccountId": "001Hs000000005SAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-13T16:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004wAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs00000000EyAAC",
-  "AccountId": "001Hs000000005nAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-10T14:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004xAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000007iAAC",
-  "AccountId": "001Hs000000002cAAC",
-  "Status": "Sent",
-  "HasResponded": false,
-  "CreatedDate": "2026-08-14T22:30:00.000+0000"
- },
- {
-  "Id": "00vHs000000004yAAC",
-  "CampaignId": "701Hs0000000008AAC",
-  "ContactId": "003Hs000000006WAAC",
-  "AccountId": "001Hs000000001zAAC",
+  "ContactId": "003Hs00000000DlAAC",
+  "AccountId": "001Hs000000004qAAC",
   "Status": "Sent",
   "HasResponded": false,
   "CreatedDate": "2026-08-14T17:00:00.000+0000"
  },
  {
-  "Id": "00vHs000000004zAAC",
+  "Id": "00vHs000000005eAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "LeadId": "00QHs000000000CAAC",
+  "ContactId": "003Hs00000000E4AAC",
+  "AccountId": "001Hs0000000055AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-13T15:30:00.000+0000"
+  "CreatedDate": "2026-08-10T19:15:00.000+0000"
  },
  {
-  "Id": "00vHs0000000050AAC",
+  "Id": "00vHs000000005fAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "LeadId": "00QHs000000001NAAC",
+  "ContactId": "003Hs000000008aAAC",
+  "AccountId": "001Hs000000002sAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-13T13:45:00.000+0000"
+  "CreatedDate": "2026-08-10T22:15:00.000+0000"
  },
  {
-  "Id": "00vHs0000000051AAC",
+  "Id": "00vHs000000005gAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "LeadId": "00QHs000000001PAAC",
+  "ContactId": "003Hs000000000EAAC",
+  "AccountId": "001Hs0000000005AAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-11T20:30:00.000+0000"
+  "CreatedDate": "2026-08-11T17:30:00.000+0000"
  },
  {
-  "Id": "00vHs0000000052AAC",
+  "Id": "00vHs000000005hAAC",
   "CampaignId": "701Hs0000000008AAC",
-  "LeadId": "00QHs000000000EAAC",
+  "ContactId": "003Hs00000000ERAAC",
+  "AccountId": "001Hs000000005OAAC",
   "Status": "Sent",
   "HasResponded": false,
-  "CreatedDate": "2026-08-10T15:00:00.000+0000"
+  "CreatedDate": "2026-08-11T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005iAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs000000002EAAC",
+  "AccountId": "001Hs000000000gAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-11T18:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005jAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000CwAAC",
+  "AccountId": "001Hs0000000049AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-14T13:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005kAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs000000005fAAC",
+  "AccountId": "001Hs000000001hAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T19:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005lAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000ZRAAC",
+  "AccountId": "001Hs00000000BWAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-14T17:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005mAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000DmAAC",
+  "AccountId": "001Hs000000004rAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-14T22:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005nAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000YLAAC",
+  "AccountId": "001Hs00000000BFAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-10T20:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005oAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs000000005vAAC",
+  "AccountId": "001Hs000000001mAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-12T18:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005pAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000YeAAC",
+  "AccountId": "001Hs00000000BKAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T16:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005qAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000apAAC",
+  "AccountId": "001Hs00000000BtAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-11T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005rAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000CvAAC",
+  "AccountId": "001Hs0000000048AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-10T19:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005sAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs000000007oAAC",
+  "AccountId": "001Hs000000002dAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-17T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005tAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000D6AAC",
+  "AccountId": "001Hs000000004FAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005uAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs000000004KAAC",
+  "AccountId": "001Hs000000001IAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T17:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005vAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000DrAAC",
+  "AccountId": "001Hs000000004wAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-11T17:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005wAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs0000000015AAC",
+  "AccountId": "001Hs000000000LAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-17T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005xAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs000000008UAAC",
+  "AccountId": "001Hs000000002qAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-14T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005yAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000VPAAC",
+  "AccountId": "001Hs00000000AUAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T16:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000005zAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000VyAAC",
+  "AccountId": "001Hs00000000AdAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-14T22:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000060AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000EeAAC",
+  "AccountId": "001Hs000000005XAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-14T20:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000061AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000V6AAC",
+  "AccountId": "001Hs00000000AOAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-11T17:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000062AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000DGAAC",
+  "AccountId": "001Hs000000004PAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-17T14:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000063AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "ContactId": "003Hs00000000XcAAC",
+  "AccountId": "001Hs00000000B4AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000064AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs0000000005AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-11T21:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000065AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000001DAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-17T22:45:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000066AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000001QAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-10T22:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000067AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000000rAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-11T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000068AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000001uAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-10T19:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs0000000069AAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000001iAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-12T22:30:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000006AAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000001kAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-17T13:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000006BAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs0000000017AAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T14:00:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000006CAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000000FAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-17T16:15:00.000+0000"
+ },
+ {
+  "Id": "00vHs000000006DAAC",
+  "CampaignId": "701Hs0000000008AAC",
+  "LeadId": "00QHs000000001KAAC",
+  "Status": "Sent",
+  "HasResponded": false,
+  "CreatedDate": "2026-08-13T15:00:00.000+0000"
  }
 ]

@@ -199,3 +199,18 @@ export function computeAreaInsights(
     insights: insights.slice(0, 3),
   };
 }
+
+/** Estimated deal size: the account's open deal, else its segment's median won deal */
+export function estimateDeal(account: Account, openAmountByAccount: Map<string, number>, prio: Prioritization): number {
+  const open = openAmountByAccount.get(account.Id);
+  if (open) return open;
+  const seg = prio.segments.find((s) => s.segment === account.Segment__c);
+  return seg?.stats.medianWonAmount ?? prio.stats.companyMedianWonAmount ?? 50_000;
+}
+
+export function blackoutLabel(account: Account, asOf: Date): { text: string; blocked: boolean } {
+  const b = blackoutStatus(account, asOf);
+  if (b.status === "hard") return { text: `No contact to ${fmtShortDate(b.blackout!.end)}`, blocked: true };
+  if (b.status === "light") return { text: "Planting (light)", blocked: false };
+  return { text: "Open", blocked: false };
+}
