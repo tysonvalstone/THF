@@ -1,0 +1,3 @@
+SELECT Id, Name, Type, Status, IsActive, StartDate, EndDate, BudgetedCost, ActualCost, ExpectedRevenue, ExpectedResponse, NumberSent, Description, OwnerId, CreatedDate, Season__c, Target_Regions__c, Target_Facility_Types__c, Target_Commodity__c, Content__c
+FROM Campaign
+ORDER BY StartDate DESC

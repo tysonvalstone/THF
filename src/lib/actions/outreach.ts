@@ -36,15 +36,53 @@ export interface ActionResult {
   summary: string[];
 }
 
-const STAGES: OpportunityStage[] = ["Prospecting", "Qualification", "Needs Analysis", "Proposal", "Negotiation"];
-const PROBABILITY: Record<string, number> = { Prospecting: 10, Qualification: 20, "Needs Analysis": 40, Proposal: 60, Negotiation: 80 };
+const STAGES: OpportunityStage[] = ["Prospecting", "Qualification", "Needs Analysis", "Proposal", "Negotiation", "Board Approval"];
+const PROBABILITY: Record<string, number> = { Prospecting: 10, Qualification: 20, "Needs Analysis": 40, Proposal: 60, Negotiation: 75, "Board Approval": 90 };
 const FORECAST: Record<string, Opportunity["ForecastCategoryName"]> = {
   Prospecting: "Pipeline",
   Qualification: "Pipeline",
   "Needs Analysis": "Pipeline",
   Proposal: "Best Case",
   Negotiation: "Commit",
+  "Board Approval": "Commit",
 };
+
+export const ECONOMIC_BUYER_GATE = "Identify the economic buyer (controller or GM) before moving past Prospecting.";
+
+/** The contact on this call/email, if they are the account's economic buyer */
+function economicBuyerOnCall(ctx: ActionContext, whoId?: string) {
+  if (!whoId) return undefined;
+  const c = ctx.data.contacts.find((x) => x.Id === whoId);
+  return c?.Buying_Role__c === "Economic Buyer" ? c : undefined;
+}
+
+/**
+ * Advance a deal one stage, honoring the buying-committee rule: a deal can't
+ * leave Prospecting until the economic buyer is identified.
+ */
+function advance(ctx: ActionContext, opp: Opportunity, target: OpportunityStage, whoId: string | undefined, nextStep: string, out: ActionResult) {
+  const eb = economicBuyerOnCall(ctx, whoId);
+  const identified = opp.Economic_Buyer_Identified__c || !!eb;
+  const blocked = opp.StageName === "Prospecting" && target !== "Prospecting" && !identified;
+  const stage = blocked ? opp.StageName : target;
+  out.mutations.push({
+    op: "update",
+    object: "Opportunity",
+    id: opp.Id,
+    changes: {
+      StageName: stage,
+      Probability: PROBABILITY[stage] ?? opp.Probability,
+      ForecastCategoryName: FORECAST[stage] ?? opp.ForecastCategoryName,
+      NextStep: blocked ? "Identify the economic buyer (controller or GM)" : nextStep,
+      LastModifiedDate: stamp(ctx.asOf),
+      ...(eb && !opp.Economic_Buyer_Identified__c ? { Economic_Buyer_Identified__c: true, Economic_Buyer__c: eb.Id } : {}),
+    },
+  });
+  if (eb && !opp.Economic_Buyer_Identified__c) out.summary.push(`Economic buyer identified: ${eb.Name}`);
+  if (blocked) out.summary.push(`Stayed in Prospecting. ${ECONOMIC_BUYER_GATE}`);
+  else if (stage !== opp.StageName) out.summary.push(`Opportunity advanced to ${stage}`);
+  else out.summary.push("Opportunity next step updated");
+}
 
 /** "Now" on the as-of date, keeping today's clock time so records sort naturally */
 function stamp(asOf: Date): string {
@@ -142,6 +180,7 @@ function estimateOpportunity(ctx: ActionContext, account: Account, nextStep: str
     IsWon: false,
     CreatedDate: stamp(ctx.asOf),
     LastModifiedDate: stamp(ctx.asOf),
+    Economic_Buyer_Identified__c: false,
   };
   return { opp, lines };
 }
@@ -262,24 +301,16 @@ export function logCall(
     if (r.openOpp) {
       const idx = STAGES.indexOf(r.openOpp.StageName);
       const nextStage = idx >= 0 && idx < 2 ? STAGES[idx + 1] : r.openOpp.StageName;
-      out.mutations.push({
-        op: "update",
-        object: "Opportunity",
-        id: r.openOpp.Id,
-        changes: {
-          StageName: nextStage,
-          Probability: PROBABILITY[nextStage] ?? r.openOpp.Probability,
-          ForecastCategoryName: FORECAST[nextStage] ?? r.openOpp.ForecastCategoryName,
-          NextStep: `Demo ${fmtShortDate(demo)}`,
-          LastModifiedDate: stamp(ctx.asOf),
-        },
-      });
-      out.summary.push(nextStage !== r.openOpp.StageName ? `Opportunity advanced to ${nextStage}` : "Opportunity next step updated");
+      advance(ctx, r.openOpp, nextStage, input.whoId, `Demo ${fmtShortDate(demo)}`, out);
     } else if (r.account) {
-      const { opp, lines } = estimateOpportunity(ctx, r.account, `Demo ${fmtShortDate(demo)}`, "Qualification");
+      const eb = economicBuyerOnCall(ctx, input.whoId);
+      const stage: OpportunityStage = eb ? "Qualification" : "Prospecting";
+      const { opp, lines } = estimateOpportunity(ctx, r.account, eb ? `Demo ${fmtShortDate(demo)}` : "Identify the economic buyer (controller or GM)", stage);
+      if (eb) Object.assign(opp, { Economic_Buyer_Identified__c: true, Economic_Buyer__c: eb.Id });
       oppId = opp.Id;
       out.mutations.push({ op: "create", object: "Opportunity", record: opp }, ...lines);
-      out.summary.push(`New opportunity created (Qualification, ${Math.round(opp.Amount / 1000)}K)`);
+      out.summary.push(`New opportunity created (${stage}, ${Math.round(opp.Amount / 1000)}K)`);
+      if (!eb) out.summary.push(ECONOMIC_BUYER_GATE);
     }
     const ev: Event = {
       Id: newId("Event"),
@@ -328,19 +359,7 @@ export function logCall(
   // Connected
   if (r.openOpp) {
     const nextStage = r.openOpp.StageName === "Prospecting" ? "Qualification" : r.openOpp.StageName;
-    out.mutations.push({
-      op: "update",
-      object: "Opportunity",
-      id: r.openOpp.Id,
-      changes: {
-        StageName: nextStage,
-        Probability: PROBABILITY[nextStage],
-        ForecastCategoryName: FORECAST[nextStage],
-        NextStep: "Send recap and confirm next meeting",
-        LastModifiedDate: stamp(ctx.asOf),
-      },
-    });
-    out.summary.push(nextStage !== r.openOpp.StageName ? `Opportunity advanced to ${nextStage}` : "Opportunity next step updated");
+    advance(ctx, r.openOpp, nextStage, input.whoId, "Send recap and confirm next meeting", out);
   }
   const due = businessDaysOut(ctx.asOf, 1);
   out.mutations.push({

@@ -1,0 +1,4 @@
+SELECT Id, Subject, Type, StartDateTime, EndDateTime, Location, WhoId, WhatId, AccountId, OwnerId, Description, CreatedDate
+FROM Event
+WHERE StartDateTime = LAST_N_DAYS:365 OR StartDateTime > TODAY
+ORDER BY StartDateTime DESC

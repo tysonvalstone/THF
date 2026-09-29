@@ -1,134 +1,142 @@
 # HarvestSignal
 
-**Season-aware prospecting for ThiboLiSoft's sales team.** HarvestSignal tells ag-software reps _who to call right now, why now, and what to send_, based on each prospect's crop calendar, region, this year's weather and commodity markets. It then makes the admin work disappear: one click logs the activity and updates the Salesforce-style records.
+**Segment prioritization and seasonal selling for ThiboLiSoft's sales team.** HarvestSignal reads Salesforce opportunity history, works out which market segments close best *for deals started this month*, and tells reps who to call now, and who not to call because they're in harvest.
 
-Built for the ThiboLiSoft hackathon (Quality · Completeness · Originality).
-
-- **Live:** https://thf-tawny.vercel.app
-- **Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · shadcn/ui · Recharts · Anthropic Claude API (optional)
+- **Live:** https://thf-tawny.vercel.app (mock data, no environment variables needed)
+- **Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · shadcn/ui · d3-geo + TopoJSON · Recharts · jsforce (read-only) · Claude API (optional)
 
 ---
 
-## What it does
+## What's in the app
 
-| Screen | What you get |
+| Page | What it does |
 |---|---|
-| **Right Now** (`/`) | Today's season in one sentence, pipeline KPIs, a US + Canada tile map colored by crop phase, the top 8 prospects with "why now" reasons, open campaign launch windows, pipeline by stage and a market strip (corn, soybeans, HRW wheat, canola, ethanol crush margin). |
-| **Prospects** (`/prospects`) | Every prospect account and open lead, scored 0–100. Filter by region, state/province, facility type, commodity, record type and minimum score; sort by any factor; expand a row for the full breakdown; export CSV. |
-| **Account / Lead** (`/accounts/[id]`, `/leads/[id]`) | Salesforce-style record: highlights, next best action, the facility's own 12-month seasonal strip, activity timeline, contacts, opportunities (stage path + line items), campaign history, details. |
-| **Campaign builder** (`/campaigns/new`) | Pick season play, regions, facility types and commodity → ranked target list → direct-mail letter + 3-email sequence + call script tied to that region's harvest timing → launch. Creates Campaign, CampaignMember and Task records and exports the mail list CSV for a mail house. |
-| **Campaigns** (`/campaigns`, `/campaigns/[id]`) | Campaign history with response tracking, saved copy and members. |
-| **Season calendar** (`/calendar`) | Month-by-month planting, harvest (climate-shifted), launch windows (6–4 weeks pre-harvest) and settlement windows for 12 regions, plus a 120-day launch schedule. |
-| **Time travel** (header) | Pretend it's another day. Rankings, reasons, the map, pipeline, launch windows and campaign copy all recalculate. Presets for the key demo moments. |
+| **Segments** (`/`, home) | Segment prioritization. Left panel: sliders for the four weights (deal size, cycle speed, product fit, expansion potential) and prior strength *k*, plus Reset. Right: ranked segment cards showing close rate for deals created this month with a Wilson 95% interval bar and a `Measured` / `Blended` / `Prior` tag, sample size, median cycle, median won deal, a 12-month close-rate strip (hatched = not enough data) and the priority score. Below: the top 25 open deals by expected value, linking to the record. Every number has a plain-English tooltip. |
+| **Today** (`/today`) | Pipeline KPIs, the current selling window, top prospects to call, pipeline by stage, commodity markets. |
+| **Prospects** (`/prospects`, `/accounts/[id]`, `/leads/[id]`) | Every prospect scored 0–100 with reasons. The account page shows the segment, harvest window, calculated blackout status, fiscal year end, board meeting months, parent co-op and locations, and the buying committee. |
+| **Opportunity** (`/opportunities/[id]`) | In-app record for mock mode: stage path incl. **Board Approval**, buying committee, and close-date checks (before the next board meeting, inside a no-contact period, no economic buyer). |
+| **Map** (`/map`) | Seasonality heat map with real US state + Canadian province shapes. Commodity dropdown (Wheat, Corn, Soybeans, Rice, Lentils); colour varies within states by latitude; diverging blue (planting) → neutral → red (harvest peak); legend, hover tooltips, facility dots and whitespace-county layers. |
+| **Facilities** (`/facilities`) | ~457 IL/IA target facilities plus a lighter layer elsewhere. Coverage figures ("12 of 132 Iowa co-op locations"), whitespace counties, and Salesforce-ready CSV export/import. |
+| **Campaigns** (`/campaigns`, `/campaigns/new`) | Campaign builder with the four selling-window plays, template or AI copy, mail-list CSV, and Campaign / CampaignMember / Task creation (mock mode). |
+| **Calendar** (`/calendar`) | The four selling windows and the campaign for each, starting with the **Price-Later Contract Compliance Webinar** (invite copy, controller + GM target list, follow-up sequence). Crop calendar by region for reference. |
+| **Time travel** (header) | Pick any date: close rates, rankings, blackouts, the map and the campaign plays all recalculate. Presets: October, December, March, July, early August. |
 
-### One-click outreach ("make admin disappear")
+## Seasonality rules
 
-From any prospect (dashboard, list, record page) reps can **email**, **log a call** or **add to a campaign**. Each action writes the records a rep would otherwise type into Salesforce:
+- **Elevators, co-ops, river terminals, shuttle loaders, seed cleaners:** hard no-contact from mid-August to Thanksgiving (harvest), light no-contact mid-April to early June (planting). Both shift about a week later per ~4° north (0 days at 38°N, up to 14 days), and a further week in Canada.
+- **Ethanol plants, feed mills, processors:** no blackout; they are worked year-round and rise to the top during harvest.
+- **Selling windows:** Dec–Feb prime (year-end, audits, boards, budgets) · late Feb–Mar implementation ("live before planting") · Jun–Jul budget window (fiscal years often end Aug 31 / Sep 30) · early Aug quick wins only (mobile add-ons, pilots) · harvest = support customers, collect NPS, sell to year-round segments.
+- Outreach during a blackout shows a warning, e.g. *"In harvest blackout until Nov 26. Schedule for Nov 30?"* in southern Illinois, *"…until Dec 5. Schedule for Dec 7?"* in northern Iowa, and pre-fills the scheduled date.
+- **Buying committee:** GM (decision maker), controller (economic buyer), merchandiser (champion), board. A deal can't leave Prospecting until the economic buyer is identified. Co-ops go through a **Board Approval** stage.
+- Co-op locations are child accounts (`ParentId`); deals and pipeline roll up to the parent.
 
-| Action | Records created / updated |
-|---|---|
-| Send email | Completed Email **Task** · follow-up **Task** in 3 business days · overdue follow-ups closed · **Opportunity.NextStep** updated · **Lead.Status** → Working |
-| Schedule email | Not-started Email **Task** on the send date + follow-up |
-| Call: connected | Completed Call **Task** · Prospecting deal → **Qualification** · recap **Task** |
-| Call: interested, book demo | Demo **Event** · deal advanced, or a **new Opportunity** with line items if none exists · Lead rated Hot |
-| Call: voicemail / no answer | Call-back **Task** in 2 business days · NextStep updated |
-| Add to campaign / create campaign | **Campaign** · **CampaignMember** per target · mail-drop / email / call **Tasks** on the start date |
+## How the statistics work (`src/lib/stats.ts`, unit-tested)
 
-Scores react: a prospect touched in the last 7 days is penalized so nobody gets over-contacted.
+Per segment, from closed opportunity history up to the as-of date:
 
----
+- **Close rate** = won ÷ (won + lost), with a **Wilson 95% interval** (z = 1.96).
+- **Fewer than 10 decided deals** → shown as "Not enough data", never a bare %. The rate used for ranking is **blended**: (won + k × company rate) ÷ (n + k), k = 10 by default (slider).
+- **No history** (Seed Cleaner / Specialty Crop) → the company-wide rate, tagged **Prior**. Never 0%, never a crash.
+- Median days Created → Close, median won Amount, and the close rate by **month created** (12 buckets). Month buckets blend toward the segment's own rate when thin.
+- Every number carries a tag: `Measured`, `Blended` or `Prior`.
 
-## How prospect scoring works
+**Ranking (`src/lib/prioritization.ts`)**
 
-`src/lib/scoring/index.ts` — pure, unit-tested, runs for any as-of date.
+- Segment priority = (this creation month's close rate ÷ best segment's) × (0.25 + 0.75 × weighted blend). The blend is a weighted average of deal size (log-scaled median won amount), cycle speed (inverse median days), product fit (editable table in `src/data/reference/product-fit.ts`) and expansion potential (average locations per parent account), each scaled 0–1 across segments.
+- Because the rate is seasonal, in **October** ethanol plants and feed mills rise to the top on their own, and in **December** co-ops take over.
+- Open-deal expected value = applicable close rate (for the deal's creation month) × Amount ÷ segment median days → expected dollars per day of cycle.
 
-| Factor | Max | Logic |
-|---|---:|---|
-| **Season timing** | 30 | Days to the facility's next busy window: harvest (elevators, co-ops, seed plants), new-crop buying (crushers, flour mills), spring/fall application (agronomy), winter feeding (feed mills). Peaks 3–8 weeks before; low mid-harvest; high again post-harvest (settlements). Ethanol plants score on crush-margin percentile + new-crop corn. |
-| **Market signal** | 15 | 3-month price moves, local basis vs. typical, crop size (yield index), DDGS/ethanol, ration costs. |
-| **Fit & size** | 20 | Facility-type fit + log-scaled revenue + number of locations. |
-| **Displacement** | 15 | Paper/spreadsheets and legacy systems highest; competitor contracts scored by months to renewal; legacy end-of-support dates. |
-| **Engagement** | 15 | Recency and volume of touches, campaign responses, open deals, lead rating; penalties for a recent loss or a touch in the last 7 days. |
-| **Climate** | 5 | This season's regional condition (early & dry, wet delays, drought, record yields) — it also shifts harvest dates. |
-
-The **why-now** line combines the two strongest factors in plain English, e.g. _"Corn harvest starts in about 3 weeks around Ames (running ~1 week early this year). Still on Paper tickets + Excel…"_
-
-Tiers: **Hot** ≥ 72 · **Warm** ≥ 60 · **Cool** below. Customers are excluded from prospect ranking.
+Run the tests: `npm test` (stats, crop calendar, scoring and outreach: 28 tests).
 
 ---
 
-## Data
+## Data: mock vs. live
 
-No live Salesforce connection. The app ships with realistic, **Salesforce-shaped mock data** using standard object/field API names (`Account`, `Contact`, `Lead`, `Opportunity`, `OpportunityLineItem`, `Product2`, `Campaign`, `CampaignMember`, `Task`, `Event`, `User`) and `__c` custom fields (`Facility_Type__c`, `Primary_Commodities__c`, `Storage_Capacity_Bu__c`, `Current_Software__c`, …).
+The UI never knows the mode, apart from the **Mock data / Live Salesforce** badge in the header.
 
-- 424 facilities in ~300 **real** US and Canadian ag towns (company and people names are fictional), 120 open leads, ~1,400 contacts
-- 40 open opportunities ($7.3M pipeline) + 60 closed in the last 12 months
-- 12 months of calls, emails, mail drops and meetings; 8 historical campaigns with responses
-- 12 regions with crop calendars, 2025–2027 climate signals, monthly price series 2024–2027
-- A fictional ThiboLiSoft product catalog and fictional competitor systems
+| | Mock (default) | Live Salesforce |
+|---|---|---|
+| Enabled when | always, with no env vars | all of `SF_LOGIN_URL`, `SF_CLIENT_ID`, `SF_CLIENT_SECRET`, `SF_USERNAME`, `SF_PASSWORD` are set |
+| Source | `src/data/seed/*.json`, generated by `scripts/generate-seed.ts` | jsforce, `src/lib/data/salesforce.ts` |
+| Writes | demo changes (emails, calls, campaigns, CSV imports) are kept in the browser's localStorage | **Read-only.** No insert/update/delete anywhere in the code; outreach actions are disabled |
+| Caching | static | queried once on the server, cached for 1 hour (`unstable_cache`, tag `salesforce-data`); **Refresh data** expires it |
 
-**Editing data:** reference data is typed TypeScript in `src/data/reference/` (regions, crop calendars, towns, climate, vendors, products, users). Generated records are JSON in `src/data/seed/`. Change the generator and run `npm run seed` (deterministic: same seed, same data), or hand-edit the JSON.
+The browser loads everything once from `GET /api/data`; all ranking and slider math runs in memory, so sliders never re-query.
 
-**Demo state:** changes you make (emails, calls, campaigns) are stored in the browser's `localStorage` as a log of Salesforce-style mutations, so they survive a refresh. Reset them from the avatar menu → _Reset demo data_.
+### Mock data (one seeded script)
 
-**Going live:** all reads/writes go through one seam, `SalesRepository` in `src/lib/data/types.ts`. The mutations are already in insert/update-by-Id form, so a Salesforce (REST/Composite API) or Supabase implementation can replace `local-repository.ts` without touching the UI.
+`npm run seed` regenerates everything from a fixed seed. Records are never hand-written.
+
+- **Facilities:** ~457 in Illinois (249) and Iowa (208, including 132 co-op locations under 8 parent co-ops, one of which, with 12 locations, is a customer) and 63 feed mills across both states. Each is placed in a real county using centroids from the bundled `us-atlas` county shapes, with county, railroad, river access, shuttle loader and capacity. There is also a lighter layer across the rest of the US and Canada, 665 accounts in total. Company and people names are fictional.
+- **Opportunities:** ~3 years of history, 1,332 closed plus 148 open, across the eight segments. Elevator/co-op deals created Aug–Nov close far less often and more slowly; deals created Dec–Feb close best. Ethanol, feed and processors are steady. River Terminal is deliberately thin (<10 decided) and Seed Cleaner / Specialty Crop has no history.
+- Buying committees (GM, controller, merchandiser, board), fiscal year ends, board meeting months, activity history and campaigns.
+
+### `/soql`
+
+Every query the live adapter sends, runnable by hand (`sf data query --file soql/opportunities.soql`). See `soql/README.md`.
+
+### Salesforce setup (live mode)
+
+Step-by-step guide: **[docs/salesforce-setup.md](docs/salesforce-setup.md)**. It covers:
+
+1. Creating the Connected App (or External Client App) and its OAuth scopes (`api`, `refresh_token offline_access`), and allowing the username-password flow.
+2. Creating a read-only integration user and profile or permission set, with Read on Account, Contact, Opportunity, Campaign, CampaignMember, Task and Event.
+3. Security token and IP restrictions.
+4. The custom fields the app expects (`Account.Segment__c` and others, all optional), plus the "Board Approval" stage.
+5. The Vercel env vars: `vercel env add SF_LOGIN_URL production`, and the same for the other four, then redeploy.
+
+> **Important:** this Vercel project is public (Deployment Protection is off, so anyone with the link can see it). **Turn Vercel Authentication back on before adding Salesforce credentials**, or real customer data will be visible to anyone with the URL.
 
 ---
 
-## AI content (optional)
-
-`POST /api/generate` rewrites campaign copy and 1:1 emails with **Claude (`claude-opus-5-5`)** using structured JSON output, with server-side refusal fallback enabled (`fallbacks: "default"`). The key stays on the server.
-
-- Set `ANTHROPIC_API_KEY` to enable it. The UI shows "AI-written" vs "Built-in template".
-- **Without a key the app works fully**: the built-in messaging matrix (facility group × season play) produces tailored letters, sequences and call scripts. Any API error or refusal also falls back to the template.
-
----
-
-## Run it locally
-
-Requires Node.js 20+ (24 recommended).
+## Run, test, deploy
 
 ```bash
 npm install
 npm run dev          # http://localhost:3000
-npm test             # scoring + outreach unit tests
-npm run build        # production build
-npm run seed         # regenerate src/data/seed/*.json
+npm test             # 28 unit tests
+npm run build
+npm run seed         # regenerate mock data
+npx tsx scripts/build-geo.ts   # regenerate /public/geo map files
 ```
 
-On Windows PowerShell, use `npm.cmd` if script execution is disabled.
+(Windows PowerShell: use `npm.cmd` if script execution is blocked.)
 
-## Deploy to Vercel
-
-The repo is already connected to the Vercel project **thf**; every push to `main` deploys to production.
-
-1. Push to `main` (or open a PR for a preview deployment).
-2. Optional AI: `vercel env add ANTHROPIC_API_KEY production` (and `preview`), then redeploy.
-3. `vercel.json` pins the framework to Next.js; no other setup is needed.
-
-Fresh setup: import the GitHub repo at vercel.com/new → Framework: Next.js → Deploy.
+**Deploy:** push to `main`, and Vercel project `thf` deploys automatically (`vercel.json` pins Next.js). It works with **zero environment variables**. Optional extras: `ANTHROPIC_API_KEY` for AI copy (Claude, server-side, with template fallback) and the five `SF_*` variables for live mode.
 
 ---
 
-## Project structure
+## Assumptions
 
-```
-scripts/generate-seed.ts        deterministic mock-data generator
-src/
-  app/                          routes (dashboard, prospects, accounts, leads, campaigns, calendar, api/generate)
-  components/
-    layout/                     app shell, time travel
-    dashboard/ prospects/ records/ campaigns/ calendar/ outreach/ season/ shared/ ui/
-  data/
-    reference/                  typed regions, crop calendars, towns, climate, vendors, products, users
-    seed/                       generated Salesforce-shaped JSON + typed loader
-  lib/
-    data/                       SalesRepository seam, local repository, React store, selectors
-    scoring/                    engine, engagement index, tests
-    season/                     crop phases, busy windows, launch windows
-    market/                     prices, basis, crush margin
-    actions/                    one-click outreach → record mutations (+ tests)
-    content/                    messaging matrix, templates, AI client
-    nba.ts                      next best action rules
-  types/                        Salesforce + reference data models
-```
+- **Segments** come from `Account.Segment__c`. When the field is missing in a live org, they are derived from the account name, Industry and Type (see `deriveSegment` in `salesforce.ts`).
+- **"Thin"** means fewer than 10 decided deals. Month buckets use the same threshold and blend toward the segment's own rate.
+- **Priority score:** the seasonal close rate is multiplied in (rather than being a fifth weight) so seasonality always moves the ranking. The 0.25 floor stops a strong segment from vanishing in its off month.
+- **Expected value:** for open deals it uses the close rate for the month the deal was *created*, divided by the segment's median cycle, i.e. expected dollars per day.
+- **Blackouts:** the northward shift is linear in latitude and capped at 14 days, with Canada a further 7 days. Thanksgiving is US Thanksgiving for all accounts. Boards are assumed to meet on the second Tuesday of their meeting months.
+- **Whitespace:** a county that has target facilities but no ThiboLiSoft customer.
+- **Map colours:** they are a model (a planting/harvest bell per crop, shifted by latitude), not observed crop-progress data.
+- **Mock-mode actions** (outreach, CSV import, campaigns) change browser-only state. Live mode never writes.
+- **Price book:** prices on the ThiboLiSoft modules (Ceres, GrainSight, ScaleTrac, GrainSight Mobile, ScaleTrac Mobile) are illustrative.
+
+## Next (Tier 3, not built yet)
+
+- Price book per module (per location / user / bushel), quote builder, discount approval thresholds, simulated e-signature.
+- Closed Won → contracts with Active / Committed / Pipeline MRR, onboarding tasks, account NPS (fall average 48.1), promoters at multi-location co-ops flagged for expansion, auto-renewal opportunities.
+- Reports: stage-to-stage conversion, cycle length by segment, coverage by territory.
+- Live mode: JWT bearer auth instead of username-password, and write-back behind an explicit feature flag.
+
+---
+
+## 5-minute demo script
+
+**0:00 – Setup (20 s).** "Vertical Software's CEO told us harvest isn't an opportunity, it's a no-contact period. So we built the tool around that." Point at the **Mock data** badge: it runs on Salesforce-shaped history, and the same code reads a real org read-only.
+
+**0:20 – October (75 s).** Time travel → **October: harvest**. On **Segments**, **ethanol plants and feed mills** are ranked first, and elevators and co-ops drop to the bottom. Hover the co-op close rate: *7% for deals created in October*, measured, with a 95% interval. "In October the tool says call ethanol plants and feed mills." Point at the hatched months in the strip and at River Terminal's **Not enough data · blended** tag: "We never show a bare percentage we can't back up."
+
+**1:35 – December (60 s).** Time travel → **December: year-end**. The ranking flips: **Multi-Location Co-op moves to #1**. "In December it flips to co-ops: audits, boards, budgets." Move the **deal size** slider and **k**: the ranking updates instantly with no re-query. Scroll to the top 25 open deals and point out the "Before board" flag.
+
+**2:35 – Blackout and buying committee (60 s).** Go back to October and open an Iowa co-op prospect. The header shows **Harvest blackout** to early December (later the further north). Click **Email**: *"In harvest blackout until Dec 5. Schedule for Dec 7?"* Then open a deal: stage path with **Board Approval**, and "economic buyer not identified". Log a connected call with a non-economic buyer and the deal *stays in Prospecting*.
+
+**3:35 – Facilities (30 s).** "**12 of 132 Iowa co-op locations**" covered; whitespace counties; export a Salesforce-ready CSV.
+
+**4:05 – Map (55 s).** Open **Map** on October 12, Corn: red harvest band across Iowa and Illinois, and southern Illinois deeper than northern. Switch the dropdown to **Wheat**, then time travel to **July**: winter wheat harvest lights up Kansas and Oklahoma. Switch to **Lentils** in **August**: Saskatchewan and Montana. End: "Same data, different day, a different plan."

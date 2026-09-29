@@ -33,7 +33,13 @@ import type {
   RegionId,
   Task,
 } from "../src/types/salesforce";
-import type { PriceSeries, PriceSeriesKey, Town } from "../src/types/reference";
+import type { PriceSeries, PriceSeriesKey } from "../src/types/reference";
+import { SEGMENTS, OPEN_STAGES, type Segment } from "../src/types/salesforce";
+import countiesTopoJson from "us-atlas/counties-10m.json";
+import { feature } from "topojson-client";
+import { geoCentroid } from "d3-geo";
+import type { GeometryCollection, Topology } from "topojson-specification";
+import type { FeatureCollection, Geometry } from "geojson";
 
 const OUT_DIR = join(__dirname, "..", "src", "data", "seed");
 /** Demo "today". Activity history covers the 12 months before this date. */
@@ -156,18 +162,18 @@ const STREETS = [
 // Facility mix by region
 // ---------------------------------------------------------------------------
 const TYPE_WEIGHTS: Record<RegionId, [FacilityType, number][]> = {
-  "southern-plains": [["Grain Elevator", 36], ["Cooperative", 14], ["Feed Mill", 12], ["Flour Mill", 7], ["Ethanol Plant", 5], ["Agronomy Retailer", 16], ["Seed Processor", 5], ["Oilseed Crusher", 1]],
-  "northern-plains": [["Grain Elevator", 34], ["Cooperative", 12], ["Ethanol Plant", 8], ["Oilseed Crusher", 5], ["Flour Mill", 4], ["Agronomy Retailer", 15], ["Seed Processor", 10], ["Feed Mill", 3]],
-  "western-corn-belt": [["Grain Elevator", 30], ["Cooperative", 14], ["Ethanol Plant", 16], ["Feed Mill", 12], ["Oilseed Crusher", 5], ["Agronomy Retailer", 14], ["Seed Processor", 8]],
-  "eastern-corn-belt": [["Grain Elevator", 34], ["Cooperative", 10], ["Ethanol Plant", 12], ["Feed Mill", 8], ["Oilseed Crusher", 6], ["Flour Mill", 3], ["Agronomy Retailer", 16], ["Seed Processor", 8]],
-  "great-lakes": [["Grain Elevator", 26], ["Cooperative", 12], ["Feed Mill", 28], ["Ethanol Plant", 8], ["Agronomy Retailer", 16], ["Seed Processor", 6]],
-  delta: [["Grain Elevator", 36], ["Feed Mill", 22], ["Agronomy Retailer", 18], ["Seed Processor", 8], ["Cooperative", 8], ["Oilseed Crusher", 4], ["Flour Mill", 2]],
-  southeast: [["Feed Mill", 50], ["Grain Elevator", 22], ["Agronomy Retailer", 16], ["Cooperative", 6], ["Flour Mill", 3], ["Oilseed Crusher", 2]],
-  "mid-atlantic": [["Feed Mill", 48], ["Grain Elevator", 22], ["Agronomy Retailer", 14], ["Cooperative", 8], ["Flour Mill", 4], ["Seed Processor", 2]],
-  "pacific-northwest": [["Grain Elevator", 34], ["Cooperative", 18], ["Flour Mill", 8], ["Seed Processor", 12], ["Agronomy Retailer", 16], ["Feed Mill", 10]],
-  "western-prairies": [["Grain Elevator", 36], ["Oilseed Crusher", 7], ["Seed Processor", 12], ["Agronomy Retailer", 18], ["Cooperative", 8], ["Flour Mill", 4], ["Feed Mill", 7], ["Ethanol Plant", 2]],
-  manitoba: [["Grain Elevator", 34], ["Oilseed Crusher", 6], ["Seed Processor", 12], ["Agronomy Retailer", 18], ["Cooperative", 8], ["Feed Mill", 12], ["Flour Mill", 3], ["Ethanol Plant", 2]],
-  "central-canada": [["Grain Elevator", 28], ["Feed Mill", 26], ["Cooperative", 12], ["Agronomy Retailer", 16], ["Ethanol Plant", 6], ["Oilseed Crusher", 4], ["Flour Mill", 3], ["Seed Processor", 5]],
+  "southern-plains": [["Grain Elevator", 36], ["Cooperative", 14], ["Feed Mill", 12], ["Flour Mill", 7], ["Ethanol Plant", 5], ["Seed Processor", 5], ["Oilseed Crusher", 1]],
+  "northern-plains": [["Grain Elevator", 34], ["Cooperative", 12], ["Ethanol Plant", 8], ["Oilseed Crusher", 5], ["Flour Mill", 4], ["Seed Processor", 10], ["Feed Mill", 3]],
+  "western-corn-belt": [["Grain Elevator", 30], ["Cooperative", 14], ["Ethanol Plant", 16], ["Feed Mill", 12], ["Oilseed Crusher", 5], ["Seed Processor", 8]],
+  "eastern-corn-belt": [["Grain Elevator", 34], ["Cooperative", 10], ["Ethanol Plant", 12], ["Feed Mill", 8], ["Oilseed Crusher", 6], ["Flour Mill", 3], ["Seed Processor", 8]],
+  "great-lakes": [["Grain Elevator", 26], ["Cooperative", 12], ["Feed Mill", 28], ["Ethanol Plant", 8], ["Seed Processor", 6]],
+  delta: [["Grain Elevator", 36], ["Feed Mill", 22], ["Seed Processor", 8], ["Cooperative", 8], ["Oilseed Crusher", 4], ["Flour Mill", 2]],
+  southeast: [["Feed Mill", 50], ["Grain Elevator", 22], ["Cooperative", 6], ["Flour Mill", 3], ["Oilseed Crusher", 2]],
+  "mid-atlantic": [["Feed Mill", 48], ["Grain Elevator", 22], ["Cooperative", 8], ["Flour Mill", 4], ["Seed Processor", 2]],
+  "pacific-northwest": [["Grain Elevator", 34], ["Cooperative", 18], ["Flour Mill", 8], ["Seed Processor", 12], ["Feed Mill", 10]],
+  "western-prairies": [["Grain Elevator", 36], ["Oilseed Crusher", 7], ["Seed Processor", 12], ["Cooperative", 8], ["Flour Mill", 4], ["Feed Mill", 7], ["Ethanol Plant", 2]],
+  manitoba: [["Grain Elevator", 34], ["Oilseed Crusher", 6], ["Seed Processor", 12], ["Cooperative", 8], ["Feed Mill", 12], ["Flour Mill", 3], ["Ethanol Plant", 2]],
+  "central-canada": [["Grain Elevator", 28], ["Feed Mill", 26], ["Cooperative", 12], ["Ethanol Plant", 6], ["Oilseed Crusher", 4], ["Flour Mill", 3], ["Seed Processor", 5]],
 };
 
 function commoditiesFor(type: FacilityType, regionId: RegionId): Commodity[] {
@@ -364,66 +370,283 @@ function livestockFor(regionId: RegionId): LivestockFocus {
 
 // ---------------------------------------------------------------------------
 // Accounts
+//
+// Core market: ~457 facilities in Illinois (~249) and Iowa (~208, including
+// 132 co-op locations under parent co-ops, and ~63 feed mills across both
+// states), placed in real counties (centroids from the bundled us-atlas
+// county shapes). Plus a lighter layer across the rest of the US and Canada.
 // ---------------------------------------------------------------------------
 const usedNames = new Set<string>();
 const accounts: Account[] = [];
 
-function makeAccount(town: Town): Account {
-  const regionId = REGION_BY_STATE[town.state] as RegionId;
-  const type = weighted(TYPE_WEIGHTS[regionId]);
-  const commodities = commoditiesFor(type, regionId);
+interface CountyInfo {
+  fips: string;
+  name: string;
+  state: "IL" | "IA";
+  lat: number;
+  lon: number;
+}
+
+const countyTopo = countiesTopoJson as unknown as Topology<{ counties: GeometryCollection<{ name: string }> }>;
+const COUNTIES: CountyInfo[] = (feature(countyTopo, countyTopo.objects.counties) as FeatureCollection<Geometry, { name: string }>).features
+  .filter((f) => String(f.id).startsWith("17") || String(f.id).startsWith("19"))
+  .map((f) => {
+    const [lon, lat] = geoCentroid(f);
+    return { fips: String(f.id), name: f.properties.name, state: String(f.id).startsWith("17") ? "IL" : "IA", lat, lon } as CountyInfo;
+  })
+  .sort((a, b) => a.fips.localeCompare(b.fips));
+
+/** Counties on the Illinois / Mississippi / Ohio rivers (barge-loading country) */
+const RIVER_COUNTIES = new Set([
+  "Peoria", "Tazewell", "Fulton", "Mason", "Marshall", "Putnam", "LaSalle", "Woodford", "Cass", "Morgan", "Scott", "Pike",
+  "Calhoun", "Greene", "Jersey", "Madison", "Adams", "Hancock", "Henderson", "Mercer", "Rock Island", "Whiteside", "Carroll",
+  "Jo Daviess", "Alexander", "Union", "Jackson", "Randolph", "Monroe", "St. Clair", "Massac", "Pope", "Hardin", "Gallatin",
+  "Lee", "Des Moines", "Louisa", "Muscatine", "Clinton", "Dubuque", "Clayton", "Allamakee",
+]);
+const RAILROADS_ILIA = ["BNSF", "Union Pacific", "CN", "Norfolk Southern", "CSX", "CPKC", "Iowa Interstate", "Iowa Northern", "Illinois Central"];
+const RAILROADS_OTHER = ["BNSF", "Union Pacific", "CPKC", "CN", "Norfolk Southern", "CSX"];
+
+function nearestTown(state: string, lat: number, lon: number): { name: string; km: number } {
+  let best = { name: "", km: Infinity };
+  for (const t of TOWNS) {
+    if (t.state !== state) continue;
+    const km = Math.hypot((t.lat - lat) * 111, (t.lon - lon) * 111 * Math.cos((lat * Math.PI) / 180));
+    if (km < best.km) best = { name: t.name, km };
+  }
+  return best;
+}
+
+function segmentFor(type: FacilityType, flags: { river: boolean; shuttle: boolean }): Segment {
+  switch (type) {
+    case "Cooperative":
+      return "Multi-Location Co-op";
+    case "Ethanol Plant":
+      return "Ethanol Plant";
+    case "Feed Mill":
+      return "Feed Mill";
+    case "Oilseed Crusher":
+    case "Flour Mill":
+      return "Processor";
+    case "Seed Processor":
+      return "Seed Cleaner / Specialty Crop";
+    default:
+      return flags.river ? "River Terminal" : flags.shuttle ? "Rail/Shuttle Loader" : "Country Elevator";
+  }
+}
+
+const FY_ENDS = ["08-31", "08-31", "09-30", "12-31", "06-30"];
+function boardMonths(segment: Segment): number[] {
+  if (segment === "Multi-Location Co-op") return [1, 3, 5, 7, 9, 11];
+  if (segment === "Country Elevator" || segment === "Rail/Shuttle Loader" || segment === "River Terminal") return pick([[1, 4, 7, 10], [2, 5, 8, 11], [3, 6, 9, 12]]);
+  return pick([[3, 9], [1, 6, 11], [2, 8]]);
+}
+
+interface Place {
+  city: string;
+  state: string;
+  lat: number;
+  lon: number;
+  county?: CountyInfo;
+}
+
+function makeAccount(
+  place: Place,
+  type: FacilityType,
+  opts: { river?: boolean; shuttle?: boolean; parent?: Account; name?: string; locationNo?: number } = {},
+): Account {
+  const regionId = REGION_BY_STATE[place.state] as RegionId;
+  const river = opts.river ?? (type === "Grain Elevator" && !!place.county && RIVER_COUNTIES.has(place.county.name) && chance(0.35));
+  const shuttle = opts.shuttle ?? (type === "Grain Elevator" && !river && chance(0.14));
+  const segment = segmentFor(type, { river, shuttle });
+  const commodities = opts.parent ? opts.parent.Primary_Commodities__c : commoditiesFor(type, regionId);
   const size = sizeFor(type);
-  const rail = chance(size.revenue > 80e6 ? 0.8 : 0.35);
+  if (river) size.storage = roundTo(logUniform(2_000_000, 9_000_000), 50_000);
+  if (shuttle) size.storage = roundTo(logUniform(1_500_000, 6_000_000), 50_000);
+  if (opts.parent) {
+    // A single co-op location: elevator-sized, reports up to the parent
+    size.storage = roundTo(logUniform(600_000, 5_000_000), 50_000);
+    size.locations = 1;
+    size.revenue = roundTo(size.storage * 2.4 * 5.2, 100_000);
+    size.employees = Math.round(5 + size.storage / 300_000);
+  }
+  const rail = river || shuttle || chance(size.revenue > 80e6 ? 0.8 : 0.4);
   const livestock = type === "Feed Mill" ? livestockFor(regionId) : undefined;
-  const name = companyName(type, town.state, usedNames);
-  const isCustomer = chance(0.15);
-  const software = isCustomer ? { name: "ThiboLiSoft" } : pickSoftware(type);
-  const created = randomDateBetween(new Date(Date.UTC(2019, 0, 1)), new Date(Date.UTC(2026, 6, 1)));
-  const jitter = () => (rand() - 0.5) * 0.08;
+  const name =
+    opts.name ??
+    (opts.parent ? `${opts.parent.Name} - ${place.city === "" ? place.county?.name : place.city} Location` : river ? companyNameTerminal(place.state) : companyName(type, place.state, usedNames));
+  usedNames.add(name);
+  const created = randomDateBetween(new Date(Date.UTC(2016, 0, 1)), new Date(Date.UTC(2025, 6, 1)));
+  const jitter = () => (rand() - 0.5) * (place.county ? 0.28 : 0.08);
+  const country = CANADIAN_PROVINCES.includes(place.state) ? "Canada" : "United States";
   return {
     Id: sfId("001"),
     Name: name,
-    Type: isCustomer ? "Customer - Direct" : "Prospect",
+    Type: "Prospect",
     Industry: "Agriculture",
-    Phone: phone(town.state),
-    Website: `www.${domainFor(name)}`,
+    Phone: opts.parent ? opts.parent.Phone.slice(0, -2) + String(int(0, 99)).padStart(2, "0") : phone(place.state),
+    Website: opts.parent ? opts.parent.Website : `www.${domainFor(name)}`,
     BillingStreet: street(),
-    BillingCity: town.name,
-    BillingState: town.state,
-    BillingPostalCode: postalCode(town.state),
-    BillingCountry: CANADIAN_PROVINCES.includes(town.state) ? "Canada" : "United States",
-    BillingLatitude: +(town.lat + jitter()).toFixed(4),
-    BillingLongitude: +(town.lon + jitter()).toFixed(4),
+    BillingCity: place.city,
+    BillingState: place.state,
+    BillingPostalCode: postalCode(place.state),
+    BillingCountry: country,
+    BillingLatitude: +(place.lat + jitter()).toFixed(4),
+    BillingLongitude: +(place.lon + jitter()).toFixed(4),
     AnnualRevenue: size.revenue,
     NumberOfEmployees: size.employees,
     OwnerId: ownerForRegion(regionId),
     CreatedDate: isoDateTime(created),
-    Description: describe(type, commodities, size, rail, livestock),
+    Description: opts.parent
+      ? `Location ${opts.locationNo ?? ""} of ${opts.parent.Name}; ${fmtBu(size.storage!)} of storage${rail ? ", rail-served" : ""}. Buying decisions are made at the parent co-op.`
+      : river
+        ? `River terminal on the ${place.state === "IA" || ["Rock Island", "Mercer", "Henderson", "Hancock", "Adams", "Pike", "Calhoun", "Jo Daviess", "Carroll", "Whiteside"].includes(place.county?.name ?? "") ? "Mississippi" : "Illinois"} River loading barges for export; ${fmtBu(size.storage!)} of storage.`
+        : shuttle
+          ? `Shuttle loader: 110-car unit trains on the ${pick(RAILROADS_ILIA)}; ${fmtBu(size.storage!)} of storage.`
+          : describe(type, commodities, size, rail, livestock),
     Facility_Type__c: type,
     Primary_Commodities__c: commodities,
     ...(size.storage ? { Storage_Capacity_Bu__c: size.storage } : {}),
     ...(size.gallons ? { Annual_Production_Gal__c: size.gallons } : {}),
     ...(size.tons ? { Annual_Production_Tons__c: size.tons } : {}),
     Number_of_Locations__c: size.locations,
-    Current_Software__c: software.name,
-    ...(software.end ? { Software_Contract_End__c: software.end } : {}),
+    Current_Software__c: opts.parent ? opts.parent.Current_Software__c : pickSoftware(type).name,
     ...(livestock ? { Livestock_Focus__c: livestock } : {}),
     Region__c: regionId,
     Rail_Served__c: rail,
+    Segment__c: segment,
+    ...(opts.parent ? { ParentId: opts.parent.Id } : {}),
+    ...(place.county ? { County__c: place.county.name, County_FIPS__c: place.county.fips } : {}),
+    ...(rail ? { Railroad__c: pick(place.county ? RAILROADS_ILIA : RAILROADS_OTHER) } : {}),
+    River_Access__c: river,
+    Shuttle_Loader__c: shuttle,
+    Fiscal_Year_End__c: segment === "Multi-Location Co-op" ? pick(["08-31", "08-31", "09-30"]) : pick(FY_ENDS),
+    Board_Meeting_Months__c: boardMonths(segment),
   };
 }
 
+function companyNameTerminal(state: string): string {
+  for (let i = 0; i < 200; i++) {
+    const n = pick([`${pick(PREFIXES)} River Terminal`, `${pick(PREFIXES)} Barge & Grain`, `${pick(SURNAMES)} River Grain`, `${pick(PREFIXES)} Port Terminal`]);
+    if (!usedNames.has(n)) return n;
+  }
+  return `${pick(PREFIXES)} River Terminal ${state}`;
+}
+
+function countyPlace(state: "IL" | "IA", preferRiver = false): Place {
+  const pool = COUNTIES.filter((c) => c.state === state && (!preferRiver || RIVER_COUNTIES.has(c.name)));
+  const county = pick(pool.length ? pool : COUNTIES.filter((c) => c.state === state));
+  const town = nearestTown(state, county.lat, county.lon);
+  return { city: town.km <= 40 ? town.name : `${county.name} County`, state, lat: county.lat, lon: county.lon, county };
+}
+
+function addCore(state: "IL" | "IA", type: FacilityType, n: number, opts: { river?: boolean; shuttle?: boolean } = {}) {
+  for (let i = 0; i < n; i++) {
+    const place = countyPlace(state, opts.river);
+    accounts.push(makeAccount(place, type, { river: opts.river ?? false, shuttle: opts.shuttle ?? false }));
+  }
+}
+
+/** Parent co-op with child locations spread across nearby counties */
+function addCoop(state: "IL" | "IA", totalLocations: number) {
+  const hq = countyPlace(state);
+  const parent = makeAccount(hq, "Cooperative");
+  parent.Number_of_Locations__c = totalLocations;
+  parent.Storage_Capacity_Bu__c = roundTo(totalLocations * logUniform(1_500_000, 3_500_000), 100_000);
+  parent.AnnualRevenue = roundTo(parent.Storage_Capacity_Bu__c * 2.6 * 5.2 * 1.25, 1_000_000);
+  parent.NumberOfEmployees = Math.round(60 + totalLocations * 11);
+  parent.Description = `Farmer-owned cooperative (HQ) with grain, agronomy and energy divisions across ${totalLocations} locations. Board meets every other month.`;
+  accounts.push(parent);
+  const near = COUNTIES.filter((c) => c.state === state).sort(
+    (a, b) => Math.hypot(a.lat - hq.lat, a.lon - hq.lon) - Math.hypot(b.lat - hq.lat, b.lon - hq.lon),
+  );
+  for (let i = 1; i < totalLocations; i++) {
+    const county = near[Math.min(near.length - 1, Math.floor(rand() * Math.min(near.length, 6 + totalLocations)))];
+    const town = nearestTown(state, county.lat, county.lon);
+    const place: Place = { city: town.km <= 40 ? town.name : `${county.name} County`, state, lat: county.lat, lon: county.lon, county };
+    accounts.push(makeAccount(place, "Grain Elevator", { parent, river: false, shuttle: chance(0.1), locationNo: i + 1 }));
+  }
+  return parent;
+}
+
+// Illinois (~249)
+addCore("IL", "Grain Elevator", 120);
+const ilCoops = [addCoop("IL", 12), addCoop("IL", 10), addCoop("IL", 8)];
+addCore("IL", "Grain Elevator", 25, { river: true });
+addCore("IL", "Grain Elevator", 28, { shuttle: true });
+addCore("IL", "Ethanol Plant", 12);
+addCore("IL", "Feed Mill", 24);
+addCore("IL", "Oilseed Crusher", 3);
+addCore("IL", "Flour Mill", 3);
+addCore("IL", "Seed Processor", 4);
+// Iowa (~208, 132 of them co-op locations)
+const iaCoopSizes = [12, 24, 20, 18, 17, 15, 14, 12];
+const iaCoops = iaCoopSizes.map((n) => addCoop("IA", n));
+addCore("IA", "Grain Elevator", 10);
+addCore("IA", "Grain Elevator", 2, { river: true });
+addCore("IA", "Grain Elevator", 8, { shuttle: true });
+addCore("IA", "Ethanol Plant", 12);
+addCore("IA", "Feed Mill", 39);
+addCore("IA", "Oilseed Crusher", 3);
+addCore("IA", "Seed Processor", 2);
+
+// Light layer elsewhere in the US and Canada
 for (const town of TOWNS) {
-  const n = weighted([[1, 80], [2, 18], [3, 2]]);
-  for (let i = 0; i < n; i++) accounts.push(makeAccount(town));
+  if (town.state === "IL" || town.state === "IA") continue;
+  const n = weighted([[0, 45], [1, 47], [2, 8]]);
+  for (let i = 0; i < n; i++) {
+    const regionId = REGION_BY_STATE[town.state] as RegionId;
+    accounts.push(makeAccount({ city: town.name, state: town.state, lat: town.lat, lon: town.lon }, weighted(TYPE_WEIGHTS[regionId])));
+  }
+}
+
+// Customers. Coverage is deliberately thin in Iowa co-ops: exactly one parent
+// co-op (12 locations) runs ThiboLiSoft → "12 of 132 Iowa co-op locations".
+const CUSTOMER_SHARE: Record<Segment, number> = {
+  "Country Elevator": 0.2,
+  "Multi-Location Co-op": 0.3,
+  "River Terminal": 0.12,
+  "Rail/Shuttle Loader": 0.22,
+  "Ethanol Plant": 0.3,
+  "Feed Mill": 0.22,
+  Processor: 0.25,
+  "Seed Cleaner / Specialty Crop": 0,
+};
+const coreCoopParents = new Set([...ilCoops, ...iaCoops].map((p) => p.Id));
+for (const a of accounts) {
+  if (a.ParentId) continue;
+  let customer: boolean;
+  if (a.Id === iaCoops[0].Id || a.Id === ilCoops[1].Id) customer = true;
+  else if (coreCoopParents.has(a.Id)) customer = false;
+  else customer = chance(CUSTOMER_SHARE[a.Segment__c]);
+  if (customer) {
+    a.Type = "Customer - Direct";
+    a.Current_Software__c = "ThiboLiSoft";
+  } else if (a.Current_Software__c === "ThiboLiSoft") {
+    a.Current_Software__c = pickSoftware(a.Facility_Type__c).name;
+  }
+  if (a.Type === "Prospect") {
+    const sw = pickSoftware(a.Facility_Type__c);
+    a.Current_Software__c = sw.name;
+    if (sw.end) a.Software_Contract_End__c = sw.end;
+  }
+}
+// Child locations inherit the parent's status and software
+const byId = new Map(accounts.map((a) => [a.Id, a]));
+for (const a of accounts) {
+  if (!a.ParentId) continue;
+  const p = byId.get(a.ParentId)!;
+  a.Type = p.Type;
+  a.Current_Software__c = p.Current_Software__c;
+  if (p.Software_Contract_End__c) a.Software_Contract_End__c = p.Software_Contract_End__c;
+  a.OwnerId = p.OwnerId;
 }
 
 // ---------------------------------------------------------------------------
 // Contacts
 // ---------------------------------------------------------------------------
 const ROLES: Record<FacilityType, [string, BuyingRole][]> = {
-  "Grain Elevator": [["General Manager", "Decision Maker"], ["Grain Merchandiser", "Champion"], ["Controller", "Economic Buyer"], ["Location Manager", "End User"], ["Office Manager", "End User"]],
-  Cooperative: [["CEO", "Decision Maker"], ["CFO", "Economic Buyer"], ["Grain Division Manager", "Champion"], ["IT Manager", "Influencer"], ["Merchandising Manager", "Influencer"], ["Agronomy Division Manager", "Influencer"]],
+  "Grain Elevator": [["General Manager", "Decision Maker"], ["Controller", "Economic Buyer"], ["Grain Merchandiser", "Champion"], ["Board Member", "Board Member"], ["Office Manager", "End User"]],
+  Cooperative: [["General Manager / CEO", "Decision Maker"], ["Controller / CFO", "Economic Buyer"], ["Grain Merchandiser", "Champion"], ["Board Chair", "Board Member"], ["Board Member", "Board Member"], ["IT Manager", "Influencer"]],
   "Ethanol Plant": [["General Manager", "Decision Maker"], ["Commodity Manager", "Champion"], ["Plant Manager", "Influencer"], ["Controller", "Economic Buyer"], ["IT Manager", "Influencer"]],
   "Feed Mill": [["General Manager", "Decision Maker"], ["Mill Manager", "Champion"], ["Controller", "Economic Buyer"], ["Nutritionist", "Influencer"], ["Delivery Manager", "End User"]],
   "Oilseed Crusher": [["General Manager", "Decision Maker"], ["Oilseed Procurement Manager", "Champion"], ["Plant Manager", "Influencer"], ["Controller", "Economic Buyer"], ["IT Manager", "Influencer"]],
@@ -435,8 +658,8 @@ const ROLES: Record<FacilityType, [string, BuyingRole][]> = {
 const contacts: Contact[] = [];
 const contactsByAccount = new Map<string, Contact[]>();
 for (const a of accounts) {
-  const roles = ROLES[a.Facility_Type__c];
-  const n = Math.min(roles.length, a.AnnualRevenue > 150e6 ? int(4, 5) : a.AnnualRevenue > 30e6 ? int(3, 4) : int(2, 3));
+  const roles: [string, BuyingRole][] = a.ParentId ? [["Location Manager", "End User"]] : ROLES[a.Facility_Type__c];
+  const n = a.ParentId ? 1 : Math.min(roles.length, a.Segment__c === "Multi-Location Co-op" ? 5 : a.AnnualRevenue > 150e6 ? int(4, 5) : a.AnnualRevenue > 30e6 ? int(3, 4) : 3);
   const domain = a.Website.replace(/^www\./, "");
   const list: Contact[] = [];
   const usedPeople = new Set<string>();
@@ -521,107 +744,171 @@ for (let i = 0; i < 120; i++) {
     ...(software.end ? { Software_Contract_End__c: software.end } : {}),
     ...(livestock ? { Livestock_Focus__c: livestock } : {}),
     Region__c: regionId,
+    Segment__c: segmentFor(type, { river: false, shuttle: chance(0.1) }),
   });
 }
 
 // ---------------------------------------------------------------------------
 // Opportunities + line items
+//
+// ~3 years of history (≈1,300 closed) + ~150 open. Seasonality is real:
+// elevator/co-op deals created Aug–Nov (harvest) close far less often and
+// take longer; deals created Dec–Feb close best. Ethanol, feed and processors
+// are steady all year. River Terminal is deliberately thin (<10 decided) and
+// Seed Cleaner / Specialty Crop has no closed history at all.
 // ---------------------------------------------------------------------------
+const OPP_HISTORY_START = new Date(Date.UTC(2023, 8, 1));
+
 const STAGE_PROB: Record<OpportunityStage, number> = {
-  Prospecting: 10, Qualification: 20, "Needs Analysis": 40, Proposal: 60, Negotiation: 80, "Closed Won": 100, "Closed Lost": 0,
+  Prospecting: 10, Qualification: 20, "Needs Analysis": 40, Proposal: 60, Negotiation: 75, "Board Approval": 90, "Closed Won": 100, "Closed Lost": 0,
 };
 const FORECAST: Record<OpportunityStage, Opportunity["ForecastCategoryName"]> = {
-  Prospecting: "Pipeline", Qualification: "Pipeline", "Needs Analysis": "Pipeline", Proposal: "Best Case", Negotiation: "Commit", "Closed Won": "Closed", "Closed Lost": "Omitted",
+  Prospecting: "Pipeline", Qualification: "Pipeline", "Needs Analysis": "Pipeline", Proposal: "Best Case", Negotiation: "Commit", "Board Approval": "Commit", "Closed Won": "Closed", "Closed Lost": "Omitted",
 };
 const NEXT_STEPS: Record<OpportunityStage, string[]> = {
-  Prospecting: ["Intro call with GM: confirm scale ticket and settlement workflow", "Send harvest-readiness checklist and book discovery", "Get intro to controller via merchandiser"],
-  Qualification: ["Discovery call: year-end close and settlement timing", "Confirm budget cycle and board approval date", "Map current ticket-to-settlement process with office manager"],
-  "Needs Analysis": ["On-site scale house walkthrough", "Demo merchandising & position report to merchandiser", "Collect ticket volumes and location list for sizing"],
-  Proposal: ["Review proposal with GM and controller", "Send revised pricing with implementation after harvest", "Reference call with a customer of similar size"],
-  Negotiation: ["Finalize 3-year terms; legal review of MSA", "Board approval meeting; send e-signature packet", "Lock go-live date before next harvest"],
+  Prospecting: ["Intro call with GM: confirm scale ticket and settlement workflow", "Identify the controller (economic buyer)", "Get intro to controller via merchandiser"],
+  Qualification: ["Discovery call: year-end close and settlement timing", "Confirm budget cycle and board meeting date", "Map current ticket-to-settlement process with office manager"],
+  "Needs Analysis": ["On-site scale house walkthrough (after harvest)", "Demo GrainSight position report to merchandiser", "Collect ticket volumes and location list for sizing"],
+  Proposal: ["Review proposal with GM and controller", "Send revised pricing with implementation before planting", "Reference call with a customer of similar size"],
+  Negotiation: ["Finalize 3-year terms; legal review of MSA", "Confirm go-live before spring planting", "Align price with fiscal-year budget"],
+  "Board Approval": ["Board meeting: present business case", "Send board packet to GM", "Board vote scheduled; e-signature packet ready"],
   "Closed Won": ["Kickoff scheduled with implementation team"],
   "Closed Lost": ["Revisit in 12 months"],
 };
-const LOSS_REASONS = ["Chose competitor (HarvestCore 360)", "No decision: revisit after harvest", "Budget frozen after margin squeeze", "Incumbent offered a discounted upgrade", "Timing: could not implement before harvest"];
+const LOSS_REASONS = ["Chose competitor (HarvestCore 360)", "No decision: board deferred", "Budget frozen after margin squeeze", "Incumbent offered a discounted upgrade", "Timing: harvest started before a decision", "Went dark during harvest"];
+
+interface SegmentHistory {
+  closed: number;
+  open: number;
+  baseWin: number;
+  medianDeal: number;
+  medianCycle: number;
+  seasonal: boolean;
+}
+const HISTORY: Record<Segment, SegmentHistory> = {
+  "Country Elevator": { closed: 380, open: 34, baseWin: 0.3, medianDeal: 48_000, medianCycle: 105, seasonal: true },
+  "Multi-Location Co-op": { closed: 250, open: 26, baseWin: 0.3, medianDeal: 165_000, medianCycle: 150, seasonal: true },
+  "River Terminal": { closed: 7, open: 4, baseWin: 0.35, medianDeal: 120_000, medianCycle: 120, seasonal: true },
+  "Rail/Shuttle Loader": { closed: 170, open: 18, baseWin: 0.31, medianDeal: 92_000, medianCycle: 118, seasonal: true },
+  "Ethanol Plant": { closed: 185, open: 22, baseWin: 0.33, medianDeal: 145_000, medianCycle: 95, seasonal: false },
+  "Feed Mill": { closed: 225, open: 26, baseWin: 0.33, medianDeal: 68_000, medianCycle: 78, seasonal: false },
+  Processor: { closed: 115, open: 14, baseWin: 0.3, medianDeal: 185_000, medianCycle: 128, seasonal: false },
+  "Seed Cleaner / Specialty Crop": { closed: 0, open: 4, baseWin: 0.3, medianDeal: 40_000, medianCycle: 90, seasonal: true },
+};
+/** Win multiplier by month the deal was created (0 = Jan) for harvest-driven buyers */
+const SEASONAL_WIN = [1.8, 1.6, 1.2, 0.8, 0.75, 1.2, 1.15, 0.6, 0.35, 0.3, 0.45, 1.75];
+const SEASONAL_CYCLE = [0.85, 0.9, 1, 1.1, 1.1, 1, 1, 1.3, 1.6, 1.7, 1.5, 0.9];
+
+const lognormal = (median: number, sigma: number) => {
+  // Box–Muller
+  const u = Math.max(1e-9, rand());
+  const v = rand();
+  const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  return median * Math.exp(sigma * z);
+};
 
 function productsFor(a: { Facility_Type__c: FacilityType }, addOn: boolean) {
   const fits = PRODUCTS.filter((p) => p.Best_Fit__c.includes(a.Facility_Type__c));
-  const n = addOn ? int(1, 2) : int(2, Math.min(4, fits.length));
+  const n = addOn ? int(1, 2) : int(2, Math.min(3, fits.length));
   const chosen = sample(fits, n);
   if (!addOn) chosen.push(PRODUCTS.find((p) => p.ProductCode === "SVC-IMPL")!);
-  if (chance(0.5)) chosen.push(PRODUCTS.find((p) => p.ProductCode === "SVC-TRAIN")!);
   return chosen;
 }
 
 const opportunities: Opportunity[] = [];
 const lineItems: OpportunityLineItem[] = [];
+const recentCutoff = addDays(ANCHOR, -365);
 
-function makeOpp(a: Account, stage: OpportunityStage, created: Date, close: Date, addOn: boolean) {
+function makeOpp(a: Account, stage: OpportunityStage, created: Date, close: Date, addOn: boolean, amount: number) {
   const id = sfId("006");
   const prods = productsFor(a, addOn);
-  let amount = 0;
-  const discount = stage === "Negotiation" || stage === "Closed Won" ? 1 - int(5, 15) / 100 : 1;
-  for (const p of prods) {
-    const qty = p.Pricing_Unit__c === "per location / year" ? a.Number_of_Locations__c : 1;
-    // Multi-year subscription deals are booked at 3 years of ARR
-    const years = p.Pricing_Unit__c === "one-time" ? 1 : 3;
-    const unit = Math.round(p.List_Price__c * years * discount);
-    lineItems.push({ Id: sfId("00k"), OpportunityId: id, Product2Id: p.Id, Quantity: qty, UnitPrice: unit, TotalPrice: unit * qty, ...(years > 1 ? { Description: "3-year subscription" } : {}) });
-    amount += unit * qty;
+  const isClosed = stage === "Closed Won" || stage === "Closed Lost";
+  // Line items only for open and recent deals (keeps the seed small)
+  if (!isClosed || close >= recentCutoff) {
+    const weights = prods.map((p) => p.List_Price__c * (p.Pricing_Unit__c === "per location / year" ? a.Number_of_Locations__c : 1));
+    const total = weights.reduce((s, w) => s + w, 0) || 1;
+    prods.forEach((p, i) => {
+      const qty = p.Pricing_Unit__c === "per location / year" ? a.Number_of_Locations__c : 1;
+      const lineTotal = Math.round((amount * weights[i]) / total / 10) * 10;
+      const unit = Math.round(lineTotal / qty);
+      lineItems.push({ Id: sfId("00k"), OpportunityId: id, Product2Id: p.Id, Quantity: qty, UnitPrice: unit, TotalPrice: unit * qty, ...(p.Pricing_Unit__c !== "one-time" ? { Description: "3-year subscription" } : {}) });
+    });
   }
-  const primary = contactsByAccount.get(a.Id)?.[0];
-  const mainProducts = prods.filter((p) => p.Family !== "Services").map((p) => p.Name.replace("ThiboLi ", ""));
+  const people = contactsByAccount.get(a.Id) ?? [];
+  const econ = people.find((c) => c.Buying_Role__c === "Economic Buyer");
+  const stageIdx = OPEN_STAGES.indexOf(stage);
+  const ebIdentified = isClosed || stageIdx >= 1 || chance(0.3);
+  const mainProducts = prods.filter((p) => p.Family !== "Services").map((p) => p.Name);
   const opp: Opportunity = {
     Id: id,
     AccountId: a.Id,
-    Name: `${a.Name} - ${mainProducts.slice(0, 2).join(" + ")}${addOn ? " Expansion" : ""}`,
+    Name: `${a.Name} - ${mainProducts.slice(0, 2).join(" + ")}${addOn ? " Add-On" : ""}`,
     Type: addOn ? "Add-On Business" : "New Business",
     StageName: stage,
-    Amount: amount,
+    Amount: Math.round(amount / 100) * 100,
     CloseDate: isoDate(close),
     Probability: STAGE_PROB[stage],
     ForecastCategoryName: FORECAST[stage],
     NextStep: pick(NEXT_STEPS[stage]),
     LeadSource: weighted<LeadSource>([["Trade Show", 25], ["Referral", 20], ["Web", 20], ["Direct Mail", 15], ["Webinar", 10], ["Purchased List", 10]]),
     OwnerId: a.OwnerId,
-    IsClosed: stage === "Closed Won" || stage === "Closed Lost",
+    IsClosed: isClosed,
     IsWon: stage === "Closed Won",
     CreatedDate: isoDateTime(workHours(created)),
-    LastModifiedDate: isoDateTime(workHours(randomDateBetween(created, stage.startsWith("Closed") ? close : addDays(ANCHOR, -1)))),
+    LastModifiedDate: isoDateTime(workHours(randomDateBetween(created, isClosed ? close : addDays(ANCHOR, -1)))),
     ...(stage === "Closed Lost" ? { Loss_Reason__c: pick(LOSS_REASONS) } : {}),
-    ...(primary ? { Primary_Contact__c: primary.Id } : {}),
+    ...(people[0] ? { Primary_Contact__c: people[0].Id } : {}),
+    Economic_Buyer_Identified__c: ebIdentified && !!econ,
+    ...(ebIdentified && econ ? { Economic_Buyer__c: econ.Id } : {}),
   };
   opportunities.push(opp);
   return opp;
 }
 
-const customers = accounts.filter((a) => a.Type === "Customer - Direct");
-const prospects = accounts.filter((a) => a.Type === "Prospect");
+// Deals live on top-level accounts; co-op location deals roll up to the parent.
+const topLevel = accounts.filter((a) => !a.ParentId);
+const bySegment = new Map<Segment, Account[]>();
+for (const a of topLevel) bySegment.set(a.Segment__c, [...(bySegment.get(a.Segment__c) ?? []), a]);
 
-// Closed won in the last 12 months (these are recent customer wins)
-for (const a of sample(customers, 24)) {
-  const close = randomDateBetween(HISTORY_START, addDays(ANCHOR, -5));
-  makeOpp(a, "Closed Won", addDays(close, -int(60, 160)), close, false);
+for (const segment of SEGMENTS) {
+  const h = HISTORY[segment];
+  const pool = bySegment.get(segment) ?? [];
+  const customersInSeg = pool.filter((a) => a.Type === "Customer - Direct");
+  const prospectsInSeg = pool.filter((a) => a.Type === "Prospect");
+  if (!pool.length) continue;
+  let made = 0;
+  let guard = 0;
+  while (made < h.closed && guard++ < h.closed * 20) {
+    const created = randomDateBetween(OPP_HISTORY_START, addDays(ANCHOR, -40));
+    const m = created.getUTCMonth();
+    const winP = Math.min(0.9, h.baseWin * (h.seasonal ? SEASONAL_WIN[m] : 0.93 + rand() * 0.14));
+    const cycle = Math.max(21, Math.round(lognormal(h.medianCycle * (h.seasonal ? SEASONAL_CYCLE[m] : 1), 0.35)));
+    const close = addDays(created, cycle);
+    if (close > addDays(ANCHOR, -2)) continue;
+    const won = chance(winP);
+    // Wins land on customers (new business or add-ons); losses mostly on prospects
+    const account = won ? (customersInSeg.length ? pick(customersInSeg) : pick(pool)) : chance(0.75) && prospectsInSeg.length ? pick(prospectsInSeg) : pick(pool);
+    const addOn = account.Type === "Customer - Direct" && chance(won ? 0.65 : 0.5);
+    const amount = lognormal(h.medianDeal * (addOn ? 0.45 : 1), 0.45);
+    makeOpp(account, won ? "Closed Won" : "Closed Lost", created, close, addOn, amount);
+    made++;
+  }
+  // Open pipeline
+  for (let i = 0; i < h.open; i++) {
+    const addOn = customersInSeg.length > 0 && chance(0.25);
+    const account = addOn ? pick(customersInSeg) : pick(prospectsInSeg.length ? prospectsInSeg : pool);
+    const hasBoard = segment === "Multi-Location Co-op" || segment === "Country Elevator" || segment === "Rail/Shuttle Loader";
+    const stage = weighted<OpportunityStage>([
+      ["Prospecting", 25], ["Qualification", 22], ["Needs Analysis", 18], ["Proposal", 15], ["Negotiation", 10], [hasBoard ? "Board Approval" : "Negotiation", 10],
+    ]);
+    const idx = OPEN_STAGES.indexOf(stage);
+    const created = addDays(ANCHOR, -int(15 + idx * 20, 60 + idx * 40));
+    const close = addDays(ANCHOR, int(20 + (5 - idx) * 10, 60 + (5 - idx) * 30));
+    const amount = lognormal(h.medianDeal * (addOn ? 0.45 : 1), 0.4);
+    makeOpp(account, stage, created, close, addOn, amount);
+  }
 }
-// Closed lost
-const lostAccounts = sample(prospects, 36);
-for (const a of lostAccounts) {
-  const close = randomDateBetween(HISTORY_START, addDays(ANCHOR, -5));
-  makeOpp(a, "Closed Lost", addDays(close, -int(45, 140)), close, false);
-}
-// Open pipeline
-const openStages: [OpportunityStage, number][] = [["Prospecting", 8], ["Qualification", 9], ["Needs Analysis", 8], ["Proposal", 8], ["Negotiation", 7]];
-const openProspects = sample(prospects.filter((a) => !lostAccounts.includes(a)), 30);
-const openCustomers = sample(customers, 10);
-const stageQueue: OpportunityStage[] = openStages.flatMap(([s, n]) => Array<OpportunityStage>(n).fill(s));
-const openTargets = [...openProspects.map((a) => [a, false] as const), ...openCustomers.map((a) => [a, true] as const)];
-openTargets.forEach(([a, addOn], i) => {
-  const stage = stageQueue[i % stageQueue.length];
-  const stageIdx = ["Prospecting", "Qualification", "Needs Analysis", "Proposal", "Negotiation"].indexOf(stage);
-  const created = addDays(ANCHOR, -int(20 + stageIdx * 25, 60 + stageIdx * 45));
-  const close = addDays(ANCHOR, int(18 + (4 - stageIdx) * 12, 70 + (4 - stageIdx) * 35));
-  makeOpp(a, stage, created, close, addOn);
-});
+opportunities.sort((a, b) => a.CreatedDate.localeCompare(b.CreatedDate));
 
 // ---------------------------------------------------------------------------
 // Campaigns + members (historical)
@@ -810,7 +1097,8 @@ for (const o of opportunities) oppByAccount.set(o.AccountId, [...(oppByAccount.g
 for (const a of accounts) {
   const opps = oppByAccount.get(a.Id) ?? [];
   const openOpp = opps.find((o) => !o.IsClosed);
-  const n = activityCount(a, opps.length > 0);
+  const recentOpps = opps.filter((o) => !o.IsClosed || new Date(o.CloseDate) >= HISTORY_START);
+  const n = a.ParentId ? (chance(0.2) ? 1 : 0) : activityCount(a, recentOpps.length > 0);
   const people = contactsByAccount.get(a.Id)!;
   for (let i = 0; i < n; i++) {
     const when = workHours(randomDateBetween(HISTORY_START, addDays(ANCHOR, -1)));
@@ -857,7 +1145,7 @@ for (const a of accounts) {
     }
   }
   // Meetings / demos for opportunity accounts
-  for (const o of opps) {
+  for (const o of recentOpps) {
     const nEvents = o.StageName === "Prospecting" ? 0 : int(1, 3);
     for (let i = 0; i < nEvents; i++) {
       const start = workHours(randomDateBetween(new Date(o.CreatedDate), o.IsClosed ? new Date(o.CloseDate) : addDays(ANCHOR, -1)));
@@ -995,7 +1283,8 @@ for (const [file, data] of Object.entries(files)) {
 const open = opportunities.filter((o) => !o.IsClosed);
 console.log(
   [
-    `accounts:      ${accounts.length} (${customers.length} customers)`,
+    `accounts:      ${accounts.length} (${accounts.filter((a) => a.Type === "Customer - Direct").length} customers; IL ${accounts.filter((a) => a.BillingState === "IL").length}, IA ${accounts.filter((a) => a.BillingState === "IA").length}, feed mills IL+IA ${accounts.filter((a) => (a.BillingState === "IL" || a.BillingState === "IA") && a.Segment__c === "Feed Mill").length})`,
+    `closed opps:   ${opportunities.filter((o) => o.IsClosed).length} · by segment ${JSON.stringify(Object.fromEntries(SEGMENTS.map((sg) => [sg, opportunities.filter((o) => o.IsClosed && accounts.find((a) => a.Id === o.AccountId)?.Segment__c === sg).length])))}`,
     `contacts:      ${contacts.length}`,
     `leads:         ${leads.length}`,
     `opportunities: ${opportunities.length} (${open.length} open, $${(open.reduce((s, o) => s + o.Amount, 0) / 1e6).toFixed(2)}M pipeline)`,

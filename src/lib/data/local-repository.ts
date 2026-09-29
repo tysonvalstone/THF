@@ -1,7 +1,6 @@
-import { SEED } from "@/data/seed";
 import { COLLECTION, type DataSnapshot, type Mutation, type SalesRepository } from "./types";
 
-const STORAGE_KEY = "harvest-signal:mutations:v1";
+const STORAGE_KEY = "harvest-signal:mutations:v2";
 
 function readLog(): Mutation[] {
   try {
@@ -41,10 +40,10 @@ export function applyMutations(base: DataSnapshot, mutations: Mutation[]): DataS
   return next as unknown as DataSnapshot;
 }
 
-/** Seed data + a mutation log in localStorage. */
-export function createLocalRepository(): SalesRepository {
+/** Server snapshot (mock seed or live Salesforce) + a mutation log in localStorage. */
+export function createLocalRepository(base: DataSnapshot): SalesRepository {
   let log = typeof window === "undefined" ? [] : readLog();
-  let snapshot = applyMutations(SEED, log);
+  let snapshot = applyMutations(base, log);
   return {
     load: () => snapshot,
     commit(mutations) {
@@ -56,7 +55,7 @@ export function createLocalRepository(): SalesRepository {
     reset() {
       log = [];
       writeLog(log);
-      snapshot = SEED;
+      snapshot = base;
       return snapshot;
     },
     pendingChanges: () => log.length,

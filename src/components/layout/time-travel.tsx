@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarClock, History, RotateCcw } from "lucide-react";
 import { useStore } from "@/lib/data/store";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -10,16 +9,16 @@ import { Label } from "@/components/ui/label";
 import { fmtDate } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 
+/** Demo moments: Oct → Dec → Mar → Jul re-rank everything and move the map */
 export const DEMO_PRESETS: { label: string; date: string; note: string }[] = [
-  { label: "Pre-planting", date: "2027-02-10", note: "Agronomy prepay & spring booking" },
-  { label: "Winter wheat pre-harvest", date: "2026-05-05", note: "Kansas, Oklahoma, Texas" },
-  { label: "Prairie canola pre-harvest", date: "2026-07-08", note: "SK, AB, MB, North Dakota" },
-  { label: "Corn Belt pre-harvest", date: "2026-08-10", note: "Iowa, Illinois, Nebraska, Ontario" },
-  { label: "Corn Belt harvest", date: "2026-10-12", note: "Combines rolling, dump pits full" },
-  { label: "Post-harvest settlements", date: "2026-11-30", note: "Settlements, 1099s, year-end" },
+  { label: "October: harvest", date: "2026-10-12", note: "Elevators and co-ops go dark; year-round segments rise" },
+  { label: "December: year-end", date: "2026-12-08", note: "Prime time for co-ops: audits, boards, budgets" },
+  { label: "March: live before planting", date: "2027-03-09", note: "Implementation window" },
+  { label: "July: budget window", date: "2027-07-13", note: "Fiscal years end Aug 31 / Sep 30" },
+  { label: "Early August: quick wins", date: "2027-08-04", note: "Mobile add-ons and pilots only" },
 ];
 
-export function TimeTravel({ compact = false }: { compact?: boolean }) {
+export function TimeTravel() {
   const { asOfISO, todayISO, isTimeTraveling, setAsOf: set } = useStore();
   const [open, setOpen] = useState(false);
   const setAsOf = (iso: string, close = true) => {
@@ -31,67 +30,47 @@ export function TimeTravel({ compact = false }: { compact?: boolean }) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          size={compact ? "sm" : "default"}
-          className={cn("gap-2", isTimeTraveling && "border-brand-gold bg-accent text-accent-foreground hover:bg-accent/80")}
+          size="sm"
+          className={cn("tabular", isTimeTraveling && "border-primary text-primary")}
           aria-label="Time travel: change the date the app reasons about"
         >
-          {isTimeTraveling ? <History className="size-4" /> : <CalendarClock className="size-4" />}
-          <span className="tabular">{fmtDate(asOfISO)}</span>
+          {isTimeTraveling ? "As of " : ""}
+          {fmtDate(asOfISO)}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
-        <div className="border-b p-4">
+        <div className="border-b p-3">
           <p className="text-sm font-semibold">Time travel</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Pretend it&apos;s a different day. Rankings, reasons, the season map and campaign copy all recalculate.
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">Pick a date. Segment rankings, close rates, blackouts and the map all recalculate.</p>
           <div className="mt-3 flex items-end gap-2">
             <div className="grid flex-1 gap-1.5">
               <Label htmlFor="as-of" className="text-xs">
                 As-of date
               </Label>
-              <Input
-                id="as-of"
-                type="date"
-                value={asOfISO}
-                min="2025-10-01"
-                max="2027-12-31"
-                onChange={(e) => e.target.value && setAsOf(e.target.value, false)}
-              />
+              <Input id="as-of" type="date" value={asOfISO} min="2024-01-01" max="2027-12-31" onChange={(e) => e.target.value && setAsOf(e.target.value, false)} />
             </div>
-            <Button variant="ghost" size="icon" disabled={!isTimeTraveling} onClick={() => setAsOf(todayISO)} aria-label="Back to today">
-              <RotateCcw className="size-4" />
+            <Button variant="outline" size="sm" disabled={!isTimeTraveling} onClick={() => setAsOf(todayISO)}>
+              Today
             </Button>
           </div>
         </div>
-        <div className="p-2">
-          <p className="px-2 pb-1 pt-1 text-xs font-medium text-muted-foreground">Demo moments</p>
+        <ul className="p-1.5">
           {DEMO_PRESETS.map((p) => (
-            <button
-              key={p.date}
-              type="button"
-              onClick={() => setAsOf(p.date)}
-              className={cn(
-                "flex w-full items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted",
-                asOfISO === p.date && "bg-muted font-medium",
-              )}
-            >
-              <span>
-                <span className="block">{p.label}</span>
-                <span className="block text-xs text-muted-foreground">{p.note}</span>
-              </span>
-              <span className="shrink-0 text-xs text-muted-foreground tabular">{fmtDate(p.date).replace(/, \d{4}$/, "")}</span>
-            </button>
+            <li key={p.date}>
+              <button
+                type="button"
+                onClick={() => setAsOf(p.date)}
+                className={cn("flex w-full items-start justify-between gap-3 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted", asOfISO === p.date && "bg-accent-soft")}
+              >
+                <span>
+                  <span className="block font-medium">{p.label}</span>
+                  <span className="block text-xs text-muted-foreground">{p.note}</span>
+                </span>
+                <span className="shrink-0 pt-0.5 text-xs text-muted-foreground tabular">{fmtDate(p.date)}</span>
+              </button>
+            </li>
           ))}
-          <button
-            type="button"
-            onClick={() => setAsOf(todayISO)}
-            className="mt-1 flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
-          >
-            <span>Today</span>
-            <span className="text-xs text-muted-foreground tabular">{fmtDate(todayISO)}</span>
-          </button>
-        </div>
+        </ul>
       </PopoverContent>
     </Popover>
   );
@@ -101,15 +80,12 @@ export function TimeTravelBanner() {
   const { isTimeTraveling, asOfISO, todayISO, setAsOf, ready } = useStore();
   if (!ready || !isTimeTraveling) return null;
   return (
-    <div className="border-b border-brand-gold/40 bg-accent text-accent-foreground">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-1.5 text-xs sm:text-sm">
-        <span className="flex items-center gap-2">
-          <History className="size-4 shrink-0" />
-          <span>
-            Time travel is on. The app is reasoning as if today is <strong className="tabular">{fmtDate(asOfISO)}</strong>.
-          </span>
+    <div className="border-b bg-card">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3 px-4 py-1.5 text-xs">
+        <span className="text-muted-foreground">
+          Viewing as of <strong className="font-semibold text-foreground tabular">{fmtDate(asOfISO)}</strong>. Rankings use history up to this date.
         </span>
-        <button type="button" onClick={() => setAsOf(todayISO)} className="shrink-0 font-medium underline underline-offset-2">
+        <button type="button" onClick={() => setAsOf(todayISO)} className="shrink-0 font-medium text-primary underline-offset-2 hover:underline">
           Back to today
         </button>
       </div>

@@ -1,13 +1,11 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight, CloudSun, Megaphone } from "lucide-react";
+import { ChevronLeft, ChevronRight, CloudSun } from "lucide-react";
 import { REGIONS } from "@/data/reference/regions";
 import { useStore } from "@/lib/data/store";
 import { climateFor, cropNoun, harvestWindows } from "@/lib/season";
 import { addDays, diffDays, fmtShortDate, MONTHS_SHORT } from "@/lib/dates";
-import { campaignBuilderHref } from "@/lib/links";
 import { COMMODITIES, type Commodity } from "@/types/salesforce";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,7 +45,6 @@ export function SeasonCalendar() {
         const bars: Bar[] = [];
         for (const w of harvestWindows(r.id, c, new Date(Date.UTC(y, 6, 1)))) {
           bars.push({ kind: "planting", start: w.plantStart, end: w.plantEnd, label: `${cropNoun(c.commodity)} planting` });
-          bars.push({ kind: "launch", start: addDays(w.start, -42), end: addDays(w.start, -28), label: "Campaign launch window" });
           bars.push({ kind: "harvest", start: w.start, end: w.end, label: `${cropNoun(c.commodity)} harvest` });
           bars.push({ kind: "settlement", start: addDays(w.end, 1), end: addDays(w.end, 60), label: "Settlement & year-end" });
         }
@@ -101,9 +98,6 @@ export function SeasonCalendar() {
           <span className="h-2.5 w-5 rounded-sm" style={{ background: PLANT_BG }} /> Planting
         </li>
         <li className="flex items-center gap-1.5">
-          <span className="h-2.5 w-5 rounded-sm" style={{ background: LAUNCH_BG }} /> Campaign launch window (6–4 weeks pre-harvest)
-        </li>
-        <li className="flex items-center gap-1.5">
           <span className="h-2.5 w-5 rounded-sm bg-phase-harvest" /> Harvest (climate-adjusted)
         </li>
         <li className="flex items-center gap-1.5">
@@ -149,11 +143,6 @@ export function SeasonCalendar() {
                     <div key={row.commodity} className="grid grid-cols-[220px_1fr] border-b last:border-b-0">
                       <div className="flex items-center justify-between gap-2 px-4 py-2 text-sm">
                         <span>{row.commodity}</span>
-                        <Button asChild size="icon-xs" variant="ghost" aria-label={`Build a ${row.regionName} ${row.commodity} campaign`}>
-                          <Link href={campaignBuilderHref({ regions: [row.regionId], commodity: row.commodity, season: "Pre-harvest" })}>
-                            <Megaphone />
-                          </Link>
-                        </Button>
                       </div>
                       <div className="relative">
                         <div className="absolute inset-0 grid grid-cols-12" aria-hidden>

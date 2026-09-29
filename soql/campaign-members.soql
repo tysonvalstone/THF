@@ -1,0 +1,4 @@
+SELECT Id, CampaignId, ContactId, LeadId, Contact.AccountId, Status, HasResponded, FirstRespondedDate, CreatedDate
+FROM CampaignMember
+WHERE CreatedDate = LAST_N_YEARS:3
+ORDER BY CreatedDate DESC

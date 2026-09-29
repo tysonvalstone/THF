@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Megaphone, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useStore } from "@/lib/data/store";
 import { REGION_BY_ID } from "@/data/reference/regions";
 import { fmtShortDate } from "@/lib/dates";
@@ -10,10 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLaunchWindows } from "@/components/dashboard/launch-windows";
-import { campaignBuilderHref } from "@/lib/links";
-import { cropNoun } from "@/lib/season";
-import type { Campaign, Commodity } from "@/types/salesforce";
+import { CurrentWindowCard } from "@/components/season/selling-windows";
+import type { Campaign } from "@/types/salesforce";
 import { cn } from "@/lib/utils";
 
 export function statusClass(s: Campaign["Status"]) {
@@ -22,7 +20,6 @@ export function statusClass(s: Campaign["Status"]) {
 
 export function CampaignList() {
   const { ready, data } = useStore();
-  const windows = useLaunchWindows().filter((w) => w.state !== "upcoming").slice(0, 3);
   if (!ready) return <Skeleton className="h-96" />;
 
   const rows = [...data.campaigns]
@@ -35,27 +32,11 @@ export function CampaignList() {
 
   return (
     <div className="space-y-5">
-      {windows.length > 0 && (
-        <Card className="border-primary/30 bg-brand-green-soft/40 py-4">
-          <CardContent className="flex flex-col gap-3 px-5 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="font-medium">Launch windows open now</p>
-              <p className="text-sm text-muted-foreground">
-                {windows.map((w) => `${w.regionName} ${cropNoun(w.commodity as Commodity).toLowerCase()}`).join(" · ")}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {windows.map((w) => (
-                <Button key={`${w.regionId}-${w.commodity}`} asChild size="sm" variant="outline">
-                  <Link href={campaignBuilderHref({ regions: [w.regionId], commodity: w.commodity, season: "Pre-harvest" })}>
-                    <Megaphone className="size-4" /> {REGION_BY_ID[w.regionId as keyof typeof REGION_BY_ID].shortName} {w.commodity}
-                  </Link>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <Card className="py-4">
+        <CardContent className="px-5">
+          <CurrentWindowCard compact />
+        </CardContent>
+      </Card>
 
       <div className="overflow-hidden rounded-lg border bg-card">
         <div className="hidden grid-cols-[minmax(0,2.2fr)_repeat(5,minmax(0,1fr))] gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs font-medium text-muted-foreground md:grid">

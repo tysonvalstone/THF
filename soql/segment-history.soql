@@ -1,0 +1,5 @@
+SELECT Account.Segment__c, IsWon, COUNT(Id) deals, SUM(Amount) amount
+FROM Opportunity
+WHERE IsClosed = true AND CreatedDate = LAST_N_YEARS:3
+GROUP BY Account.Segment__c, IsWon
+ORDER BY Account.Segment__c

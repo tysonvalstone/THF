@@ -12,6 +12,7 @@ import {
   pctChange,
 } from "@/lib/market";
 import { busyWindows, climateFor, cropNoun, windowPositions, type WindowPosition } from "@/lib/season";
+import { blackoutStatus, isSeasonalSegment, sellingWindowAt } from "@/lib/seasonality";
 import { buildEngagementIndex, engagementFor, type Engagement } from "./engagement";
 import { targetFromAccount, targetFromLead, type Target } from "./target";
 
@@ -21,7 +22,7 @@ export { sizeLabel } from "./target";
 export type FactorKey = "timing" | "market" | "fit" | "displacement" | "engagement" | "climate";
 
 export const FACTOR_META: Record<FactorKey, { label: string; max: number; description: string }> = {
-  timing: { label: "Season timing", max: 30, description: "Days until their next busy window (harvest, new-crop buying, application or feeding season). Peaks 3–8 weeks before it starts." },
+  timing: { label: "Season timing", max: 30, description: "Elevators and co-ops: selling window (Dec–Feb prime, late Feb–Mar implementation, Jun–Jul budget, early Aug quick wins) and harvest/planting no-contact periods. Ethanol, feed and processors: year-round, driven by margins and feeding season." },
   market: { label: "Market signal", max: 15, description: "Price moves, local basis, crop size, crush margins or ration costs that create workload or budget." },
   fit: { label: "Fit & size", max: 20, description: "Facility type fit with our product lines, plus size (revenue, volume) and number of locations." },
   displacement: { label: "Displacement", max: 15, description: "How replaceable their current system is: paper and legacy score highest, then competitor contracts nearing renewal." },
@@ -107,8 +108,42 @@ function positionReason(t: Target, p: WindowPosition): string {
   return `Off-season: ${label.toLowerCase()} is ${fmtSpan(p.days)} away, a good time for a longer evaluation`;
 }
 
+/** Elevators, co-ops, terminals, loaders, seed plants: selling windows and harvest blackouts */
+function grainTiming(t: Target, asOf: Date): Factor {
+  const max = FACTOR_META.timing.max;
+  const entity = { Segment__c: t.segment, BillingLatitude: t.lat, BillingCountry: t.country };
+  const b = blackoutStatus(entity, asOf);
+  if (b.status === "hard") return { key: "timing", points: 2, max, reason: b.message! };
+  if (b.status === "light") return { key: "timing", points: 8, max, reason: b.message! };
+  const w = sellingWindowAt(asOf);
+  switch (w.id) {
+    case "year-end":
+      return { key: "timing", points: 30, max, reason: "Dec–Feb is prime time: year-end close, audits, board meetings and next year's budgets" };
+    case "implementation":
+      return { key: "timing", points: 24, max, reason: "Late Feb–Mar: a decision now can still go live before spring planting" };
+    case "budget":
+      return { key: "timing", points: 22, max, reason: "Jun–Jul budget window: fiscal years often end Aug 31 or Sep 30, so next year's budget is being written now" };
+    case "quick-wins":
+      return { key: "timing", points: 13, max, reason: "Early August: quick wins only (mobile add-ons, pilots) before harvest goes dark" };
+    default:
+      return { key: "timing", points: 16, max, reason: "Harvest is winding down; book December meetings" };
+  }
+}
+
 function timingFactor(t: Target, asOf: Date): { factor: Factor; position?: WindowPosition } {
   const max = FACTOR_META.timing.max;
+  if (isSeasonalSegment(t.segment)) return { factor: grainTiming(t, asOf) };
+  if (t.segment === "Processor") {
+    const grainDark = sellingWindowAt(asOf).sellToGrain === "no-contact";
+    return {
+      factor: {
+        key: "timing",
+        points: grainDark ? 24 : 20,
+        max,
+        reason: grainDark ? "Processors run year-round and are reachable while elevators are in harvest blackout" : "Processors run year-round with no harvest blackout",
+      },
+    };
+  }
   const positions = windowPositions(busyWindows({ Region__c: t.regionId, Facility_Type__c: t.facilityType, Primary_Commodities__c: t.commodities }, asOf), asOf);
 
   if (t.facilityType === "Ethanol Plant") {
@@ -128,6 +163,10 @@ function timingFactor(t: Target, asOf: Date): { factor: Factor; position?: Windo
     } else if (corn?.state === "during") {
       points += 3;
       reason += "; they're buying new-crop corn off the combine now";
+    }
+    if (sellingWindowAt(asOf).sellToGrain === "no-contact") {
+      points += 4;
+      reason += "; while elevators are in harvest blackout, ethanol buyers are still at their desks";
     }
     return { factor: { key: "timing", points: round1(clamp(points, 0, max)), max, reason }, position: corn };
   }
@@ -149,6 +188,10 @@ function timingFactor(t: Target, asOf: Date): { factor: Factor; position?: Windo
     if (t.livestock === "Poultry" || t.livestock === "Swine") {
       points += 4;
       parts.push(`${t.livestock.toLowerCase()} integrator demand runs year-round`);
+    }
+    if (sellingWindowAt(asOf).sellToGrain === "no-contact") {
+      points += 4;
+      parts.push("feed mills run year-round, so they're reachable during harvest");
     }
     return { factor: { key: "timing", points: round1(clamp(points, 0, max)), max, reason: parts.join("; ") }, position: feeding };
   }
@@ -426,7 +469,7 @@ export function scoreTarget(t: Target, asOf: Date, engagement: Engagement): Scor
 export function rankProspects(data: DataSnapshot, asOf: Date): ScoredTarget[] {
   const engagement = buildEngagementIndex(data, asOf);
   const targets: Target[] = [
-    ...data.accounts.filter((a) => a.Type !== "Customer - Direct").map(targetFromAccount),
+    ...data.accounts.filter((a) => a.Type !== "Customer - Direct" && !a.ParentId).map(targetFromAccount),
     ...data.leads.filter((l) => l.Status !== "Closed - Not Converted").map(targetFromLead),
   ];
   return targets

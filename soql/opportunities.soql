@@ -1,0 +1,4 @@
+SELECT Id, AccountId, Account.Name, Account.Segment__c, Name, Type, StageName, Amount, CloseDate, Probability, ForecastCategoryName, NextStep, LeadSource, OwnerId, IsClosed, IsWon, CreatedDate, LastModifiedDate, Economic_Buyer_Identified__c, Economic_Buyer__c, Loss_Reason__c, Primary_Contact__c
+FROM Opportunity
+WHERE IsClosed = false OR CreatedDate = LAST_N_YEARS:3
+ORDER BY CloseDate DESC

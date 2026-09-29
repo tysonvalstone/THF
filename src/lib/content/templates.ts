@@ -1,9 +1,7 @@
 import { REGION_BY_ID } from "@/data/reference/regions";
 import type { CampaignContent, Commodity, Contact, FacilityType, RegionId } from "@/types/salesforce";
-import { cropNoun, cropStatus } from "@/lib/season";
-import { fmtShortDate, fmtSpan } from "@/lib/dates";
 import type { ScoredTarget } from "@/lib/scoring";
-import { MESSAGES, facilityGroup, playForTiming, type FacilityGroup, type SeasonPlay } from "./messaging";
+import { MESSAGES, facilityGroup, playForDate, type FacilityGroup, type SeasonPlay } from "./messaging";
 
 export interface Sender {
   name: string;
@@ -49,34 +47,20 @@ export interface TimingContext {
   harvestStart?: Date;
 }
 
-/** Plain-English seasonal timing for the lead region + commodity */
+/** Plain-English timing line for the play and regions */
 export function timingContext(brief: Pick<CampaignBrief, "play" | "regionIds" | "commodity" | "asOf">): TimingContext {
-  const region = REGION_BY_ID[brief.regionIds[0]];
-  if (!region) return { line: "the season is turning", short: "this season" };
-  const crop = region.crops.find((c) => c.commodity === brief.commodity) ?? [...region.crops].sort((a, b) => b.importance - a.importance)[0];
-  const s = cropStatus(region.id, crop, brief.asOf);
-  const noun = cropNoun(crop.commodity).toLowerCase();
-  const regionNames = listJoin(brief.regionIds.map((r) => REGION_BY_ID[r]?.name).filter(Boolean) as string[]);
-  const climate = s.window.climate;
-  const climateNote =
-    climate.condition !== "Normal" && climate.harvestShiftDays !== 0
-      ? ` (${climate.harvestShiftDays < 0 ? "about a week early" : "later than usual"} this year)`
-      : "";
+  const regionNames = listJoin(brief.regionIds.map((r) => REGION_BY_ID[r]?.name).filter(Boolean) as string[]) || "your area";
   switch (brief.play) {
-    case "Pre-harvest":
-      return s.phase === "Harvest"
-        ? { line: `${noun} harvest is already rolling across ${regionNames}`, short: `${noun} harvest`, harvestStart: s.window.start }
-        : {
-            line: `${noun} harvest starts around ${fmtShortDate(s.window.start)} across ${regionNames}, about ${fmtSpan(s.daysToHarvest).replace("about ", "")} from now${climateNote}`,
-            short: `${noun} harvest in ${fmtSpan(s.daysToHarvest).replace("about ", "")}`,
-            harvestStart: s.window.start,
-          };
-    case "Harvest":
-      return { line: `${noun} harvest is in full swing across ${regionNames}`, short: `${noun} harvest` };
-    case "Post-harvest":
-      return { line: `${noun} harvest is wrapping up across ${regionNames}, and ${region.localColor}`, short: "settlement season" };
-    case "Pre-planting":
-      return { line: `spring planting across ${regionNames} is only weeks away`, short: "spring" };
+    case "Year-end":
+      return { line: `harvest is in across ${regionNames}, and year-end close, audits and next year's budgets are next`, short: "year-end" };
+    case "Implementation":
+      return { line: `spring planting across ${regionNames} is only weeks away, and a decision now can still go live before it`, short: "live before planting" };
+    case "Budget window":
+      return { line: `fiscal years across ${regionNames} often close Aug 31 or Sep 30, so next year's budget is being written now`, short: "budget season" };
+    case "Quick wins":
+      return { line: `harvest across ${regionNames} is about two weeks away`, short: "before harvest" };
+    case "Harvest support":
+      return { line: `harvest is in full swing across ${regionNames}`, short: "harvest" };
     default:
       return { line: `markets across ${regionNames} keep moving`, short: "this season" };
   }
@@ -111,7 +95,7 @@ const DISCOVERY: Record<FacilityGroup, string[]> = {
 
 function objections(group: FacilityGroup, play: SeasonPlay): { objection: string; response: string }[] {
   const busy =
-    play === "Harvest"
+    play === "Harvest support"
       ? "Completely understand. That's why I'm not asking for time now. Can I put 20 minutes on your calendar for two weeks after your last truck?"
       : "That's exactly why we reach out now. Go-lives take 4–6 weeks, and we schedule them around your season, not ours.";
   return [
@@ -141,7 +125,7 @@ export function templateCampaignContent(brief: CampaignBrief): CampaignContent {
   const audience = listJoin([...new Set(brief.facilityTypes.map((t) => TYPE_PLURAL[t]))]);
   const regionNames = listJoin(brief.regionIds.map((r) => REGION_BY_ID[r]?.name).filter(Boolean) as string[]);
   const signature = `${brief.sender.name}\n${brief.sender.title}, ThiboLiSoft\n${brief.sender.email}${brief.sender.phone ? ` · ${brief.sender.phone}` : ""}`;
-  const productList = listJoin(m.products);
+  const productList = listJoin([...new Set(m.products)]);
 
   const letterBody = `Dear {{FirstName}},
 
@@ -161,12 +145,12 @@ Sincerely,
 
 ${signature}
 
-P.S. ${brief.play === "Pre-harvest" ? "Go-lives take 4–6 weeks. If you want relief before harvest, the time to talk is now." : brief.play === "Post-harvest" ? "Talk to us before year-end and we'll have you live before next harvest." : "We schedule every go-live around your busy season, not ours."}`;
+P.S. ${brief.play === "Budget window" ? "Budget it now and we'll schedule go-live for December, after harvest." : brief.play === "Year-end" ? "Decide by February and you're live before spring planting." : "We schedule every go-live around harvest and planting, never during them."}`;
 
   const emails: CampaignContent["emails"] = [
     {
       sendOffsetDays: 0,
-      subject: brief.play === "Pre-harvest" ? `${cap(timing.short)}: is {{Company}} ready?` : brief.play === "Harvest" ? "One idea for after harvest" : `${cap(timing.short)} at {{Company}}`,
+      subject: brief.play === "Harvest support" ? "One idea for after harvest" : `${cap(timing.short)} at {{Company}}`,
       body: `Hi {{FirstName}},
 
 ${m.hook} ${cap(timing.line)}.
@@ -195,10 +179,10 @@ ${brief.sender.name}`,
     },
     {
       sendOffsetDays: 10,
-      subject: brief.play === "Pre-harvest" ? "Last call before harvest" : "Should I close the loop?",
+      subject: brief.play === "Quick wins" ? "Last note before harvest" : "Should I close the loop?",
       body: `Hi {{FirstName}},
 
-${brief.play === "Pre-harvest" ? "Harvest is close, so this is my last note until the rush is over." : "I don't want to clutter your inbox, so this is my last note for now."}
+${brief.play === "Quick wins" ? "Harvest is close, so this is my last note until after Thanksgiving." : "I don't want to clutter your inbox, so this is my last note for now."}
 
 If ${m.pains[2]} is on your list to fix, we can help, and we'll schedule everything around your season.
 
@@ -218,7 +202,7 @@ ThiboLiSoft`,
       discovery: DISCOVERY[group],
       valuePoints: m.outcomes.map(cap),
       objections: objections(group, brief.play),
-      close: `Based on what you've said, I'd suggest ${m.offer}. Does ${brief.play === "Harvest" ? "a date right after your last truck" : "Tuesday or Thursday next week"} work?`,
+      close: `Based on what you've said, I'd suggest ${m.offer}. Does ${brief.play === "Harvest support" ? "a date right after your last truck" : "Tuesday or Thursday next week"} work?`,
     },
   };
 }
@@ -237,7 +221,7 @@ export type EmailIntent = "timing" | "after-season" | "follow-up";
 export function templateOneToOneEmail(opts: { s: ScoredTarget; contact?: Contact; sender: Sender; asOf: Date; intent?: EmailIntent }): { subject: string; body: string; play: SeasonPlay } {
   const { s, contact, sender } = opts;
   const t = s.target;
-  const play = opts.intent === "after-season" ? "Post-harvest" : playForTiming(s.timing?.state, s.timing?.window.kind);
+  const play = opts.intent === "after-season" ? "Year-end" : playForDate(opts.asOf, t.segment);
   const group = facilityGroup(t.facilityType);
   const m = MESSAGES[group][play];
   const first = contact?.FirstName ?? "there";
@@ -248,9 +232,11 @@ export function templateOneToOneEmail(opts: { s: ScoredTarget; contact?: Contact
   if (opts.intent === "follow-up") subject = `Following up: ${t.name}`;
   else if (t.facilityType === "Ethanol Plant") subject = `New-crop corn origination at ${t.name}`;
   else if (t.facilityType === "Feed Mill") subject = `Winter feeding season at ${t.name}`;
-  else if (play === "Pre-harvest" && s.timing) subject = `${s.timing.window.label} in ${fmtSpan(s.timing.days).replace("about ", "")}: a quick idea for ${t.name}`;
-  else if (play === "Harvest") subject = "After harvest, 20 minutes?";
-  else if (play === "Post-harvest") subject = `Settlement season at ${t.name}`;
+  else if (play === "Harvest support") subject = "After harvest, 20 minutes?";
+  else if (play === "Year-end") subject = `Year-end at ${t.name}`;
+  else if (play === "Budget window") subject = `Next year's budget at ${t.name}`;
+  else if (play === "Quick wins") subject = `A quick win for ${t.name} before harvest`;
+  else if (play === "Implementation") subject = `Live before planting at ${t.name}`;
   else subject = `A quick idea for ${t.name}`;
 
   const body =
@@ -261,7 +247,7 @@ Following up on my last note. ${cap(why)}.
 
 The teams we work with in ${region.name} usually start with ${m.outcomes[0]}. Happy to show you what that would look like at ${t.name}.
 
-Is ${play === "Harvest" ? "a date just after your last truck" : "next Tuesday or Thursday"} good for 20 minutes?
+Is ${play === "Harvest support" ? "a date just after your last truck" : "next Tuesday or Thursday"} good for 20 minutes?
 
 Best,
 ${sender.name}
@@ -274,7 +260,7 @@ Most ${TYPE_PLURAL[t.facilityType]} we talk to in ${region.name} are dealing wit
 
 ${m.proof}
 
-Would you be open to ${m.offer}? ${play === "Harvest" ? "No rush. Pick any week after your last truck." : "I have time Tuesday or Thursday afternoon."}
+Would you be open to ${m.offer}? ${play === "Harvest support" ? "No rush. Pick any week after your last truck." : "I have time Tuesday or Thursday afternoon."}
 
 Best,
 ${sender.name}

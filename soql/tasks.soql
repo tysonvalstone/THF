@@ -1,0 +1,4 @@
+SELECT Id, Subject, Type, TaskSubtype, Status, IsClosed, Priority, ActivityDate, WhoId, WhatId, AccountId, OwnerId, Description, CallDisposition, CallDurationInSeconds, CreatedDate, CompletedDateTime
+FROM Task
+WHERE ActivityDate = LAST_N_DAYS:365 OR ActivityDate > TODAY OR (ActivityDate = null AND CreatedDate = LAST_N_DAYS:365)
+ORDER BY ActivityDate DESC NULLS LAST

@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowDown, ArrowUp, ChevronDown, Download, FilterX, Megaphone, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react";
 import { REGIONS, REGION_BY_ID } from "@/data/reference/regions";
 import { STATE_NAMES } from "@/data/reference/geo";
 import { useStore } from "@/lib/data/store";
@@ -132,16 +132,16 @@ export function ProspectList() {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="py-4">
-        <CardContent className="space-y-3 px-4">
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_repeat(5,minmax(0,1fr))]">
+    <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <aside className="space-y-3 rounded-md border bg-panel p-4 lg:sticky lg:top-20 lg:self-start" aria-label="Filters">
+          <h2 className="text-sm font-semibold">Filters</h2>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
             <div className="relative sm:col-span-2 lg:col-span-1">
               <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name, town, software…" className="pl-8" aria-label="Search prospects" />
+              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name, town, software…" className="bg-card pl-8" aria-label="Search prospects" />
             </div>
             <Select value={f.region} onValueChange={(v) => f.set({ region: v, state: null })}>
-              <SelectTrigger className="w-full" aria-label="Region">
+              <SelectTrigger className="w-full bg-card" aria-label="Region">
                 <SelectValue placeholder="Region" />
               </SelectTrigger>
               <SelectContent>
@@ -154,7 +154,7 @@ export function ProspectList() {
               </SelectContent>
             </Select>
             <Select value={f.state} onValueChange={(v) => f.set({ state: v })}>
-              <SelectTrigger className="w-full" aria-label="State or province">
+              <SelectTrigger className="w-full bg-card" aria-label="State or province">
                 <SelectValue placeholder="State / province" />
               </SelectTrigger>
               <SelectContent>
@@ -167,7 +167,7 @@ export function ProspectList() {
               </SelectContent>
             </Select>
             <Select value={f.type} onValueChange={(v) => f.set({ type: v })}>
-              <SelectTrigger className="w-full" aria-label="Facility type">
+              <SelectTrigger className="w-full bg-card" aria-label="Facility type">
                 <SelectValue placeholder="Facility type" />
               </SelectTrigger>
               <SelectContent>
@@ -180,7 +180,7 @@ export function ProspectList() {
               </SelectContent>
             </Select>
             <Select value={f.commodity} onValueChange={(v) => f.set({ commodity: v })}>
-              <SelectTrigger className="w-full" aria-label="Commodity">
+              <SelectTrigger className="w-full bg-card" aria-label="Commodity">
                 <SelectValue placeholder="Commodity" />
               </SelectTrigger>
               <SelectContent>
@@ -193,7 +193,7 @@ export function ProspectList() {
               </SelectContent>
             </Select>
             <Select value={f.kind} onValueChange={(v) => f.set({ kind: v })}>
-              <SelectTrigger className="w-full" aria-label="Record type">
+              <SelectTrigger className="w-full bg-card" aria-label="Record type">
                 <SelectValue placeholder="Accounts & leads" />
               </SelectTrigger>
               <SelectContent>
@@ -203,23 +203,23 @@ export function ProspectList() {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-3 border-t border-slate-300/70 pt-3">
             <div className="flex items-center gap-3">
               <span className="text-xs whitespace-nowrap text-muted-foreground">Min score</span>
-              <Slider value={[f.min]} min={0} max={90} step={5} onValueChange={([v]) => f.set({ min: v ? String(v) : null })} className="w-40" aria-label="Minimum score" />
+              <Slider value={[f.min]} min={0} max={90} step={5} onValueChange={([v]) => f.set({ min: v ? String(v) : null })} className="flex-1" aria-label="Minimum score" />
               <span className="w-6 text-sm font-medium tabular">{f.min}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
               {hasFilters && (
                 <Button variant="ghost" size="sm" onClick={() => {
                     setQuery("");
                     router_reset(f.set);
                   }}>
-                  <FilterX className="size-4" /> Clear
+                  Clear filters
                 </Button>
               )}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={exportCsv} disabled={!filtered.length}>
-                <Download className="size-4" /> Export CSV
+              <Button variant="outline" size="sm" className="bg-card" onClick={exportCsv} disabled={!filtered.length}>
+                Export CSV
               </Button>
               <Button asChild size="sm">
                 <Link
@@ -229,13 +229,13 @@ export function ProspectList() {
                     types: f.type !== ALL ? [f.type] : undefined,
                   })}
                 >
-                  <Megaphone className="size-4" /> Campaign from these filters
+                  Campaign from these filters
                 </Link>
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+      </aside>
+      <div className="min-w-0 space-y-4">
 
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted-foreground">
@@ -383,6 +383,7 @@ export function ProspectList() {
           </Button>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { CalendarClock, Mail, Megaphone, Phone, Sparkles, Loader2, Send } from "lucide-react";
+import { Phone, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useStore } from "@/lib/data/store";
 import { contactsFor, findLead } from "@/lib/data/selectors";
@@ -11,7 +11,8 @@ import { REGION_BY_ID } from "@/data/reference/regions";
 import type { ScoredTarget } from "@/lib/scoring";
 import { preferredContact } from "@/lib/nba";
 import { templateCampaignContent, templateOneToOneEmail, mergeFields, type Sender } from "@/lib/content/templates";
-import { playForTiming } from "@/lib/content/messaging";
+import { playForDate } from "@/lib/content/messaging";
+import { blackoutStatus } from "@/lib/seasonality";
 import { aiEmail, useAiAvailable } from "@/lib/content/ai-client";
 import { addToCampaign, businessDaysOut, CALL_OUTCOMES, logCall, sendEmail, type ActionResult, type CallOutcome } from "@/lib/actions/outreach";
 import { campaignBuilderHref } from "@/lib/links";
@@ -70,7 +71,7 @@ export function OutreachDialog({ s, open, onOpenChange, tab }: { s: ScoredTarget
 }
 
 function OutreachBody({ s, tab, close }: { s: ScoredTarget; tab: OutreachTab; close: () => void }) {
-  const { data, asOf, commit } = useStore();
+  const { data, asOf, commit, readOnly } = useStore();
   const t = s.target;
   const recipients = useMemo<Recipient[]>(() => {
     if (t.kind === "lead") {
@@ -91,6 +92,7 @@ function OutreachBody({ s, tab, close }: { s: ScoredTarget; tab: OutreachTab; cl
         <DialogTitle>{t.name}</DialogTitle>
         <DialogDescription className="line-clamp-2">{s.whyNow}</DialogDescription>
       </DialogHeader>
+      <OutreachWarnings s={s} readOnly={readOnly} />
       <div className="grid gap-1.5">
         <Label className="text-xs">Contact</Label>
         <Select value={whoId} onValueChange={setWhoId}>
@@ -109,14 +111,11 @@ function OutreachBody({ s, tab, close }: { s: ScoredTarget; tab: OutreachTab; cl
       </div>
       <Tabs defaultValue={tab} className="mt-1">
         <TabsList className="w-full">
-          <TabsTrigger value="email">
-            <Mail className="size-4" /> Email
+          <TabsTrigger value="email"> Email
           </TabsTrigger>
-          <TabsTrigger value="call">
-            <Phone className="size-4" /> Log call
+          <TabsTrigger value="call"> Log call
           </TabsTrigger>
-          <TabsTrigger value="campaign">
-            <Megaphone className="size-4" /> Campaign
+          <TabsTrigger value="campaign"> Campaign
           </TabsTrigger>
         </TabsList>
         <TabsContent value="email">
@@ -165,8 +164,26 @@ function OutreachBody({ s, tab, close }: { s: ScoredTarget; tab: OutreachTab; cl
   );
 }
 
-function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient; contact?: Contact; onSend: (subject: string, body: string, scheduleFor?: string) => void }) {
+/** Blackout + read-only warnings shown above every outreach tab */
+function OutreachWarnings({ s, readOnly }: { s: ScoredTarget; readOnly: boolean }) {
   const { asOf } = useStore();
+  const t = s.target;
+  const b = blackoutStatus({ Segment__c: t.segment, BillingLatitude: t.lat, BillingCountry: t.country }, asOf);
+  return (
+    <>
+      {b.status !== "none" && (
+        <p className={cn("rounded-md border p-2.5 text-sm", b.status === "hard" ? "border-amber-300 bg-amber-50 text-amber-900" : "border-slate-300 bg-slate-50 text-slate-700")} role="status">
+          {b.message}
+        </p>
+      )}
+      {readOnly && <p className="rounded-md border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-700">Live Salesforce is read-only in this app, so outreach actions are disabled. Log activity in Salesforce.</p>}
+    </>
+  );
+}
+
+function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient; contact?: Contact; onSend: (subject: string, body: string, scheduleFor?: string) => void }) {
+  const { asOf, readOnly } = useStore();
+  const blackout = blackoutStatus({ Segment__c: s.target.segment, BillingLatitude: s.target.lat, BillingCountry: s.target.country }, asOf);
   const aiAvailable = useAiAvailable();
   const draft = useMemo(
     () => templateOneToOneEmail({ s, contact: contact ?? ({ FirstName: who.firstName } as Contact), sender: SENDER, asOf }),
@@ -176,7 +193,7 @@ function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient
   const [body, setBody] = useState(draft.body);
   const [source, setSource] = useState<"ai" | "template">("template");
   const [busy, setBusy] = useState(false);
-  const [scheduleFor, setScheduleFor] = useState(toISODate(businessDaysOut(asOf, 1)));
+  const [scheduleFor, setScheduleFor] = useState(toISODate(blackout.resumeDate ?? businessDaysOut(asOf, 1)));
 
   const rewrite = async () => {
     setBusy(true);
@@ -242,11 +259,11 @@ function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient
         </Tooltip>
         <div className="flex flex-wrap items-center gap-2">
           <Input type="date" value={scheduleFor} min={toISODate(asOf)} onChange={(e) => setScheduleFor(e.target.value)} className="h-8 w-38" aria-label="Schedule date" />
-          <Button variant="outline" size="sm" disabled={who.optedOut || !subject || !body} onClick={() => onSend(subject, body, scheduleFor)}>
-            <CalendarClock className="size-4" /> Schedule
+          <Button variant="outline" size="sm" disabled={readOnly || who.optedOut || !subject || !body} onClick={() => onSend(subject, body, scheduleFor)}>
+            {blackout.status === "hard" ? `Schedule for ${fmtShortDate(scheduleFor)}` : "Schedule"}
           </Button>
-          <Button size="sm" disabled={who.optedOut || !subject || !body} onClick={() => onSend(subject, body)}>
-            <Send className="size-4" /> Send now
+          <Button size="sm" disabled={readOnly || who.optedOut || !subject || !body} onClick={() => onSend(subject, body)}>
+            {blackout.status === "hard" ? "Send anyway" : "Send now"}
           </Button>
         </div>
       </div>
@@ -259,11 +276,11 @@ function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient
 }
 
 function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: (outcome: CallOutcome, notes: string, demoDate?: string) => void }) {
-  const { asOf } = useStore();
+  const { asOf, readOnly } = useStore();
   const t = s.target;
   const script = useMemo(() => {
     const content = templateCampaignContent({
-      play: playForTiming(s.timing?.state, s.timing?.window.kind),
+      play: playForDate(asOf, t.segment),
       regionIds: [t.regionId],
       facilityTypes: [t.facilityType],
       commodity: t.commodities[0],
@@ -271,7 +288,7 @@ function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: 
       sender: SENDER,
     });
     return content.callScript;
-  }, [s.timing, t.regionId, t.facilityType, t.commodities, asOf]);
+  }, [t.segment, t.regionId, t.facilityType, t.commodities, asOf]);
   const [outcome, setOutcome] = useState<CallOutcome>("Connected");
   const [notes, setNotes] = useState("");
   const [demoDate, setDemoDate] = useState(toISODate(businessDaysOut(asOf, 7)));
@@ -351,8 +368,8 @@ function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: 
                 ? "Creates a revisit task in 90 days."
                 : "Creates a call-back task in 2 business days."}
         </p>
-        <Button size="sm" onClick={() => onSave(outcome, notes, outcome === "Interested - Book Demo" ? demoDate : undefined)}>
-          <Phone className="size-4" /> Save call
+        <Button size="sm" disabled={readOnly} onClick={() => onSave(outcome, notes, outcome === "Interested - Book Demo" ? demoDate : undefined)}>
+          Save call
         </Button>
       </div>
     </div>
@@ -360,7 +377,7 @@ function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: 
 }
 
 function CampaignTab({ s, onAdd }: { s: ScoredTarget; onAdd: (campaignId: string) => void }) {
-  const { data, asOfISO } = useStore();
+  const { data, asOfISO, readOnly: readOnlyCampaign } = useStore();
   const t = s.target;
   const options = data.campaigns
     .filter((c) => (c.Status === "Planned" || c.Status === "In Progress") && c.EndDate >= asOfISO)
@@ -404,10 +421,10 @@ function CampaignTab({ s, onAdd }: { s: ScoredTarget; onAdd: (campaignId: string
       <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
         <Button asChild variant="outline" size="sm">
           <Link href={campaignBuilderHref({ regions: [t.regionId], commodity: t.commodities[0], types: [t.facilityType] })}>
-            <Megaphone className="size-4" /> Build a new campaign
+            Build a new campaign
           </Link>
         </Button>
-        <Button size="sm" disabled={!picked} onClick={() => onAdd(picked)}>
+        <Button size="sm" disabled={!picked || readOnlyCampaign} onClick={() => onAdd(picked)}>
           Add to campaign
         </Button>
       </div>

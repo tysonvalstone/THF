@@ -1,4 +1,3 @@
-import { Flame, Snowflake, Sun } from "lucide-react";
 import type { Phase } from "@/lib/season";
 import type { Tier } from "@/lib/scoring";
 import { cn } from "@/lib/utils";
@@ -21,20 +20,14 @@ export function PhaseChip({ phase, children, className }: { phase: Phase; childr
   );
 }
 
-const TIER: Record<Tier, { icon: typeof Flame; cls: string }> = {
-  Hot: { icon: Flame, cls: "text-[#a8431b]" },
-  Warm: { icon: Sun, cls: "text-[#8a6100]" },
-  Cool: { icon: Snowflake, cls: "text-muted-foreground" },
+const TIER: Record<Tier, string> = {
+  Hot: "text-primary",
+  Warm: "text-foreground",
+  Cool: "text-muted-foreground",
 };
 
 export function TierLabel({ tier, className }: { tier: Tier; className?: string }) {
-  const { icon: Icon, cls } = TIER[tier];
-  return (
-    <span className={cn("inline-flex items-center gap-1 text-xs font-medium", cls, className)}>
-      <Icon className="size-3.5" aria-hidden />
-      {tier}
-    </span>
-  );
+  return <span className={cn("text-xs font-medium", TIER[tier], className)}>{tier}</span>;
 }
 
 /** Score as a number over a thin sequential bar */

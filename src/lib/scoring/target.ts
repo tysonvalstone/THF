@@ -1,4 +1,4 @@
-import type { Account, Commodity, FacilityType, Lead, LivestockFocus, RegionId } from "@/types/salesforce";
+import type { Account, Commodity, FacilityType, Lead, LivestockFocus, RegionId, Segment } from "@/types/salesforce";
 
 /** A scoreable prospect: either an Account or an unconverted Lead, normalized. */
 export interface Target {
@@ -10,6 +10,8 @@ export interface Target {
   country: string;
   regionId: RegionId;
   facilityType: FacilityType;
+  segment: Segment;
+  parentId?: string;
   commodities: Commodity[];
   storageBu?: number;
   gallons?: number;
@@ -38,6 +40,8 @@ export function targetFromAccount(a: Account): Target {
     country: a.BillingCountry,
     regionId: a.Region__c,
     facilityType: a.Facility_Type__c,
+    segment: a.Segment__c,
+    parentId: a.ParentId,
     commodities: a.Primary_Commodities__c,
     storageBu: a.Storage_Capacity_Bu__c,
     gallons: a.Annual_Production_Gal__c,
@@ -65,6 +69,7 @@ export function targetFromLead(l: Lead): Target {
     country: l.Country,
     regionId: l.Region__c,
     facilityType: l.Facility_Type__c,
+    segment: l.Segment__c ?? segmentOf(l.Facility_Type__c),
     commodities: l.Primary_Commodities__c,
     storageBu: l.Storage_Capacity_Bu__c,
     gallons: l.Annual_Production_Gal__c,
@@ -92,4 +97,22 @@ export function sizeLabel(t: Pick<Target, "storageBu" | "gallons" | "tons" | "fa
   if (t.tons) return t.tons >= 1e6 ? `${(t.tons / 1e6).toFixed(1)}M tons/yr` : `${Math.round(t.tons / 1000)}K tons/yr`;
   if (t.storageBu) return `${(t.storageBu / 1e6).toFixed(1)}M bu`;
   return "—";
+}
+
+export function segmentOf(type: FacilityType): Segment {
+  switch (type) {
+    case "Cooperative":
+      return "Multi-Location Co-op";
+    case "Ethanol Plant":
+      return "Ethanol Plant";
+    case "Feed Mill":
+      return "Feed Mill";
+    case "Oilseed Crusher":
+    case "Flour Mill":
+      return "Processor";
+    case "Seed Processor":
+      return "Seed Cleaner / Specialty Crop";
+    default:
+      return "Country Elevator";
+  }
 }

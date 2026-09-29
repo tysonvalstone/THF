@@ -36,6 +36,34 @@ export const FACILITY_TYPES: FacilityType[] = [
   "Agronomy Retailer",
 ];
 
+/**
+ * Market segments used for prioritization (Account.Segment__c).
+ * "Seed Cleaner / Specialty Crop" is deliberately new: it has no deal history.
+ */
+export type Segment =
+  | "Country Elevator"
+  | "Multi-Location Co-op"
+  | "River Terminal"
+  | "Rail/Shuttle Loader"
+  | "Ethanol Plant"
+  | "Feed Mill"
+  | "Processor"
+  | "Seed Cleaner / Specialty Crop";
+
+export const SEGMENTS: Segment[] = [
+  "Country Elevator",
+  "Multi-Location Co-op",
+  "River Terminal",
+  "Rail/Shuttle Loader",
+  "Ethanol Plant",
+  "Feed Mill",
+  "Processor",
+  "Seed Cleaner / Specialty Crop",
+];
+
+/** Segments whose buyers go dark during harvest and spring planting */
+export const SEASONAL_SEGMENTS: Segment[] = ["Country Elevator", "Multi-Location Co-op", "River Terminal", "Rail/Shuttle Loader", "Seed Cleaner / Specialty Crop"];
+
 export type Commodity =
   | "Corn"
   | "Soybeans"
@@ -117,9 +145,22 @@ export interface Account {
   Livestock_Focus__c?: LivestockFocus;
   Region__c: RegionId;
   Rail_Served__c: boolean;
+  Segment__c: Segment;
+  /** Parent co-op for location accounts (Salesforce standard ParentId) */
+  ParentId?: Id;
+  County__c?: string;
+  /** 5-digit county FIPS code (US only) */
+  County_FIPS__c?: string;
+  Railroad__c?: string;
+  River_Access__c: boolean;
+  Shuttle_Loader__c: boolean;
+  /** Month-day the fiscal year ends, e.g. "08-31" */
+  Fiscal_Year_End__c: string;
+  /** Months (1–12) the board meets */
+  Board_Meeting_Months__c: number[];
 }
 
-export type BuyingRole = "Decision Maker" | "Economic Buyer" | "Champion" | "Influencer" | "End User";
+export type BuyingRole = "Decision Maker" | "Economic Buyer" | "Champion" | "Influencer" | "End User" | "Board Member";
 
 export interface Contact {
   Id: Id;
@@ -193,6 +234,7 @@ export interface Lead {
   Software_Contract_End__c?: DateString;
   Livestock_Focus__c?: LivestockFocus;
   Region__c: RegionId;
+  Segment__c?: Segment;
 }
 
 export type OpportunityStage =
@@ -201,6 +243,7 @@ export type OpportunityStage =
   | "Needs Analysis"
   | "Proposal"
   | "Negotiation"
+  | "Board Approval"
   | "Closed Won"
   | "Closed Lost";
 
@@ -210,6 +253,7 @@ export const OPEN_STAGES: OpportunityStage[] = [
   "Needs Analysis",
   "Proposal",
   "Negotiation",
+  "Board Approval",
 ];
 
 export const ALL_STAGES: OpportunityStage[] = [...OPEN_STAGES, "Closed Won", "Closed Lost"];
@@ -235,6 +279,9 @@ export interface Opportunity {
   LastModifiedDate: DateTimeString;
   Loss_Reason__c?: string;
   Primary_Contact__c?: Id;
+  /** Required before a deal can move past Prospecting */
+  Economic_Buyer_Identified__c: boolean;
+  Economic_Buyer__c?: Id;
 }
 
 export type ProductFamily =

@@ -17,7 +17,29 @@ import { downloadText } from "@/lib/csv";
 import { addDays, fmtShortDate, toISODate } from "@/lib/dates";
 import { fmtMoney } from "@/lib/format";
 import { sizeLabel } from "@/lib/scoring";
-import { cropStatus } from "@/lib/season";
+import { SELLING_WINDOWS, windowRange, type SellingWindowId } from "@/lib/seasonality";
+import { WEBINAR_NAME, WEBINAR_PRESET, templateWebinarCampaign, webinarDate } from "@/lib/content/webinar";
+import { contactsFor } from "@/lib/data/selectors";
+import type { DataSnapshot } from "@/lib/data/types";
+import type { ScoredTarget } from "@/lib/scoring";
+
+const PLAY_WINDOW: Record<SeasonPlay, SellingWindowId | undefined> = {
+  "Year-end": "year-end",
+  Implementation: "implementation",
+  "Budget window": "budget",
+  "Quick wins": "quick-wins",
+  "Harvest support": "harvest",
+  "Year-round": undefined,
+};
+
+/** Controller + GM at an account (falls back to the usual recipient) */
+function webinarRecipients(data: DataSnapshot, s: ScoredTarget) {
+  const base = recipientFor(data, s);
+  if (!base || s.target.kind === "lead") return [base];
+  const people = contactsFor(data, s.target.id).filter((c) => /controller|cfo|general manager|ceo/i.test(c.Title));
+  if (!people.length) return [base];
+  return people.slice(0, 2).map((c) => ({ ...base, whoId: c.Id, firstName: c.FirstName, lastName: c.LastName, title: c.Title, email: c.Email }));
+}
 import { COMMODITIES, FACILITY_TYPES, type CampaignContent, type Campaign, type Commodity, type FacilityType, type RegionId } from "@/types/salesforce";
 import { SENDER, announce } from "@/components/outreach/outreach-dialog";
 import { ContentEditor } from "./content-editor";
@@ -67,19 +89,21 @@ function Builder({ params }: { params: URLSearchParams }) {
   const { data, asOf, ranked, commit } = useStore();
   const aiAvailable = useAiAvailable();
 
+  const webinar = params.get("preset") === WEBINAR_PRESET;
   const initialRegions = (params.get("regions")?.split(",").filter((r) => r in REGION_BY_ID) ?? []) as RegionId[];
+  const initialTypes: FacilityType[] = params.get("types")
+    ? (params.get("types")!.split(",").filter((t) => FACILITY_TYPES.includes(t as FacilityType)) as FacilityType[])
+    : ["Grain Elevator", "Cooperative"];
   const [audience, setAudience] = useState<Audience>(() => ({
-    play: (SEASON_PLAYS.includes(params.get("season") as SeasonPlay) ? params.get("season") : suggestedPlay(initialRegions[0], asOf)) as SeasonPlay,
+    play: webinar ? "Year-end" : ((SEASON_PLAYS.includes(params.get("season") as SeasonPlay) ? params.get("season") : suggestedPlay(initialTypes, asOf)) as SeasonPlay),
     regions: initialRegions,
-    types: params.get("types")
-      ? (params.get("types")!.split(",").filter((t) => FACILITY_TYPES.includes(t as FacilityType)) as FacilityType[])
-      : ["Grain Elevator", "Cooperative"],
+    types: initialTypes,
     commodity: COMMODITIES.includes(params.get("commodity") as Commodity) ? (params.get("commodity") as Commodity) : undefined,
   }));
   const [step, setStep] = useState(0);
-  const [minScore, setMinScore] = useState(55);
+  const [minScore, setMinScore] = useState(webinar ? 0 : 55);
   const [excluded, setExcluded] = useState<Set<string>>(new Set());
-  const [type, setType] = useState<Campaign["Type"]>("Direct Mail");
+  const [type, setType] = useState<Campaign["Type"]>(webinar ? "Event" : "Direct Mail");
   const [content, setContent] = useState<CampaignContent | null>(null);
   const [generating, setGenerating] = useState(false);
   const [name, setName] = useState("");
@@ -88,26 +112,26 @@ function Builder({ params }: { params: URLSearchParams }) {
   const matched = useMemo(() => matchTargets(ranked, audience), [ranked, audience]);
   const eligible = matched.filter((s) => s.total >= minScore);
   const selected = eligible.filter((s) => !excluded.has(s.target.id));
-  const recipients = selected.map((s) => recipientFor(data, s)).filter(Boolean) as NonNullable<ReturnType<typeof recipientFor>>[];
+  // The webinar targets both the controller and the GM at each account
+  const recipients = (webinar ? selected.flatMap((s) => webinarRecipients(data, s)) : selected.map((s) => recipientFor(data, s))).filter(Boolean) as NonNullable<ReturnType<typeof recipientFor>>[];
   const avgScore = selected.length ? selected.reduce((sum, s) => sum + s.total, 0) / selected.length : 0;
   const econ = campaignEconomics(type, selected.length, avgScore);
 
-  // Launch timing: pre-harvest campaigns land 6 weeks before harvest when that's still ahead
-  const lead = audience.regions[0] ? REGION_BY_ID[audience.regions[0]] : undefined;
-  const leadCrop = lead ? lead.crops.find((c) => c.commodity === audience.commodity) ?? lead.crops[0] : undefined;
-  const status = lead && leadCrop ? cropStatus(lead.id, leadCrop, asOf) : undefined;
-  const suggestedStart = status && audience.play === "Pre-harvest" && status.launchStart > asOf ? status.launchStart : businessDaysOut(asOf, 3);
+  // Launch timing: start at the play's selling window if it's still ahead
+  const playWindow = SELLING_WINDOWS.find((w) => w.id === PLAY_WINDOW[audience.play]);
+  const windowRangeNext = playWindow ? windowRange(playWindow, asOf) : undefined;
+  const suggestedStart = windowRangeNext && windowRangeNext.start > asOf ? windowRangeNext.start : businessDaysOut(asOf, 3);
   const [dates, setDates] = useState<{ start: string; end: string } | null>(null);
   const startDate = dates?.start ?? toISODate(suggestedStart);
   const endDate = dates?.end ?? toISODate(addDays(suggestedStart, 45));
   const setStartDate = (v: string) => setDates({ start: v, end: endDate < v ? toISODate(addDays(new Date(v + "T00:00:00Z"), 45)) : endDate });
   const setEndDate = (v: string) => setDates({ start: startDate, end: v });
-  const effectiveName = nameTouched ? name : defaultCampaignName(audience, type, asOf);
+  const effectiveName = nameTouched ? name : webinar ? `${WEBINAR_NAME} · ${fmtShortDate(webinarDate(asOf))}` : defaultCampaignName(audience, type, asOf);
 
   const brief = { play: audience.play, regionIds: audience.regions.length ? audience.regions : [selected[0]?.target.regionId ?? "western-corn-belt"], facilityTypes: audience.types.length ? audience.types : FACILITY_TYPES, commodity: audience.commodity, asOf, sender: SENDER };
 
   const generate = async (withAi: boolean) => {
-    const template = templateCampaignContent(brief);
+    const template = webinar ? templateWebinarCampaign(asOf, SENDER) : templateCampaignContent(brief);
     if (!withAi) {
       setContent(template);
       return;
@@ -189,7 +213,7 @@ function Builder({ params }: { params: URLSearchParams }) {
       {step === 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Who is this campaign for?</CardTitle>
+            <CardTitle>{webinar ? `${WEBINAR_NAME}: who to invite` : "Who is this campaign for?"}</CardTitle>
             <CardDescription>Pick the season play, regions, facility types and commodity. The target list and copy follow from these.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -202,7 +226,7 @@ function Builder({ params }: { params: URLSearchParams }) {
                     type="button"
                     onClick={() => setAud({ play: p })}
                     aria-pressed={audience.play === p}
-                    className={cn("rounded-lg border p-3 text-left transition-colors hover:bg-muted/50", audience.play === p && "border-primary bg-brand-green-soft/50 ring-1 ring-primary")}
+                    className={cn("rounded-lg border p-3 text-left transition-colors hover:bg-muted/50", audience.play === p && "border-primary bg-accent-soft ring-1 ring-primary")}
                   >
                     <span className="block text-sm font-medium">{p}</span>
                     <span className="mt-1 block text-xs text-muted-foreground">{PLAY_DESCRIPTIONS[p]}</span>
@@ -398,13 +422,10 @@ function Builder({ params }: { params: URLSearchParams }) {
                   <Input id="end" type="date" value={endDate} min={startDate} onChange={(e) => setEndDate(e.target.value)} />
                 </div>
               </div>
-              {status && audience.play === "Pre-harvest" && (
-                <p className="rounded-md bg-muted/60 p-3 text-sm">
-                  {cropNounLabel(leadCrop!.commodity)} harvest in {lead!.name} starts around <strong>{fmtShortDate(status.window.start)}</strong>. Ideal launch window:{" "}
-                  <strong>
-                    {fmtShortDate(status.launchStart)} – {fmtShortDate(status.launchEnd)}
-                  </strong>
-                  {status.launchEnd < asOf ? ". That window has passed, so launch now and keep it short." : "."}
+              {playWindow && windowRangeNext && (
+                <p className="rounded-md bg-muted p-3 text-sm">
+                  {audience.play}: <strong>{playWindow.when}</strong>. {playWindow.summary}{" "}
+                  {windowRangeNext.start > asOf ? `Next window opens ${fmtShortDate(windowRangeNext.start)}.` : `Open now through ${fmtShortDate(windowRangeNext.end)}.`}
                 </p>
               )}
             </CardContent>
@@ -446,7 +467,7 @@ function Builder({ params }: { params: URLSearchParams }) {
         {step < 3 && (
           <Button
             onClick={() => {
-              if (step === 1 && !content) setContent(templateCampaignContent(brief));
+              if (step === 1 && !content) setContent(webinar ? templateWebinarCampaign(asOf, SENDER) : templateCampaignContent(brief));
               setStep(step + 1);
             }}
             disabled={!canNext}
@@ -470,4 +491,3 @@ function Row({ k, v }: { k: string; v: string }) {
 }
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const cropNounLabel = (c: Commodity) => (c === "Soybeans" ? "Soybean" : c === "Pulses" ? "Pulse" : c.replace(" Wheat", " wheat"));

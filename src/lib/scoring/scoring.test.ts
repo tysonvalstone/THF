@@ -16,6 +16,7 @@ const elevator: Target = {
   country: "United States",
   regionId: "western-corn-belt",
   facilityType: "Grain Elevator",
+  segment: "Country Elevator",
   commodities: ["Corn", "Soybeans"],
   storageBu: 4_000_000,
   locations: 2,
@@ -46,11 +47,17 @@ test("customers are excluded from prospect rankings", () => {
   assert.ok(ranked.every((s) => !customerIds.has(s.target.id)));
 });
 
-test("pre-harvest outranks mid-harvest for the same facility", () => {
-  const before = scoreTarget(elevator, parseDate("2026-08-10"), none);
-  const during = scoreTarget(elevator, parseDate("2026-10-10"), none);
-  assert.ok(before.factors.timing.points > during.factors.timing.points);
-  assert.match(before.whyNow, /harvest starts in/i);
+test("harvest is a no-contact period for elevators; December is prime", () => {
+  const harvest = scoreTarget(elevator, parseDate("2026-10-10"), none);
+  const december = scoreTarget(elevator, parseDate("2026-12-08"), none);
+  assert.ok(december.factors.timing.points > harvest.factors.timing.points);
+  assert.match(harvest.factors.timing.reason, /harvest blackout/i);
+});
+
+test("year-round segments are not blacked out during harvest", () => {
+  const feed = scoreTarget({ ...elevator, facilityType: "Feed Mill", segment: "Feed Mill" }, parseDate("2026-10-10"), none);
+  assert.ok(!/blackout until/i.test(feed.factors.timing.reason));
+  assert.ok(feed.factors.timing.points > 10);
 });
 
 test("paper and spreadsheets get full displacement points", () => {

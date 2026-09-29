@@ -1,5 +1,5 @@
-import { Dashboard } from "@/components/dashboard/dashboard";
+import { SegmentPrioritization } from "@/components/segments/segment-prioritization";
 
 export default function Home() {
-  return <Dashboard />;
+  return <SegmentPrioritization />;
 }

@@ -24,15 +24,22 @@ test("booking a demo on an account without a deal creates an opportunity and an 
   const after = applyMutations(SEED, r.mutations);
   const opp = after.opportunities.find((o) => o.AccountId === prospectWithoutOpp.Id);
   assert.ok(opp, "opportunity created");
-  assert.equal(opp!.StageName, "Qualification");
+  assert.equal(opp!.StageName, "Prospecting", "no economic buyer on the call, so it stays in Prospecting");
   assert.ok(after.lineItems.some((l) => l.OpportunityId === opp!.Id));
   assert.ok(after.events.some((e) => e.AccountId === prospectWithoutOpp.Id && e.Type === "Demo"));
 });
 
-test("a connected call advances a Prospecting deal to Qualification", () => {
-  const r = logCall(ctx, { targetId: openOpp.AccountId, outcome: "Connected", notes: "Good call" });
-  const after = applyMutations(SEED, r.mutations);
-  assert.equal(after.opportunities.find((o) => o.Id === openOpp.Id)!.StageName, "Qualification");
+test("a connected call only leaves Prospecting once the economic buyer is identified", () => {
+  const blocked = logCall(ctx, { targetId: openOpp.AccountId, outcome: "Connected", notes: "Good call" });
+  const unchanged = applyMutations(SEED, blocked.mutations).opportunities.find((o) => o.Id === openOpp.Id)!;
+  if (!openOpp.Economic_Buyer_Identified__c) assert.equal(unchanged.StageName, "Prospecting");
+  const eb = SEED.contacts.find((c) => c.AccountId === openOpp.AccountId && c.Buying_Role__c === "Economic Buyer");
+  if (eb) {
+    const r = logCall(ctx, { targetId: openOpp.AccountId, whoId: eb.Id, outcome: "Connected", notes: "Spoke with the controller" });
+    const after = applyMutations(SEED, r.mutations).opportunities.find((o) => o.Id === openOpp.Id)!;
+    assert.equal(after.StageName, "Qualification");
+    assert.equal(after.Economic_Buyer_Identified__c, true);
+  }
 });
 
 test("touching an open lead moves it to Working - Contacted", () => {
@@ -50,11 +57,11 @@ test("creating a campaign writes the campaign, members and scheduled tasks; re-a
     startDate: "2026-10-05",
     endDate: "2026-11-15",
     budget: 1000,
-    season: "Pre-harvest",
+    season: "Year-end",
     regions: ["western-corn-belt"],
     facilityTypes: ["Grain Elevator"],
     description: "",
-    content: templateCampaignContent({ play: "Pre-harvest", regionIds: ["western-corn-belt"], facilityTypes: ["Grain Elevator"], asOf, sender: { name: "A", title: "B", email: "c" } }),
+    content: templateCampaignContent({ play: "Year-end", regionIds: ["western-corn-belt"], facilityTypes: ["Grain Elevator"], asOf, sender: { name: "A", title: "B", email: "c" } }),
     expectedRevenue: 0,
     members,
   });

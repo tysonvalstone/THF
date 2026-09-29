@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Briefcase, Flame, Target, Trophy } from "lucide-react";
 import { useStore } from "@/lib/data/store";
 import { pipelineSummary } from "@/lib/data/selectors";
 import { fmtDate } from "@/lib/dates";
@@ -10,10 +9,9 @@ import { cropNoun, type RegionStatus } from "@/lib/season";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SeasonMap } from "./season-map";
 import { StageChart } from "./stage-chart";
 import { MarketStrip } from "./market-strip";
-import { LaunchWindows } from "./launch-windows";
+import { CurrentWindowCard } from "@/components/season/selling-windows";
 import { ProspectRowCard } from "@/components/prospects/prospect-row-card";
 import { OutreachButtons } from "@/components/outreach/outreach-buttons";
 
@@ -46,15 +44,12 @@ export function seasonSentence(regions: RegionStatus[]): string {
   return parts.join(" ");
 }
 
-function Kpi({ icon: Icon, label, value, sub }: { icon: typeof Target; label: string; value: string; sub: string }) {
+function Kpi({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <Card className="gap-0 py-4">
       <CardContent className="px-4">
-        <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-          <Icon className="size-3.5" aria-hidden />
-          {label}
-        </p>
-        <p className="mt-1.5 text-2xl font-semibold tracking-tight">{value}</p>
+        <p className="text-xs font-medium text-muted-foreground">{label}</p>
+        <p className="mt-1.5 text-2xl font-semibold tabular">{value}</p>
         <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>
       </CardContent>
     </Card>
@@ -87,33 +82,24 @@ export function Dashboard() {
     <div className="space-y-6">
       <section className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
-          <p className="text-sm font-medium text-primary">Right now · {fmtDate(asOf)}</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Who to call this week, and why</h1>
-          <p className="mt-2 text-muted-foreground">{seasonSentence(regions)}</p>
+          <p className="text-xs text-muted-foreground">Today · {fmtDate(asOf)}</p>
+          <h1 className="mt-1 text-xl font-semibold">Who to call this week, and why</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{seasonSentence(regions)}</p>
         </div>
         <Button asChild variant="outline" className="self-start md:self-auto">
           <Link href="/prospects">
-            All {ranked.length} prospects <ArrowRight className="size-4" />
+            All {ranked.length} prospects
           </Link>
         </Button>
       </section>
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Headline numbers">
-        <Kpi icon={Briefcase} label="Open pipeline" value={fmtMoney(pipe.total)} sub={`${pipe.open.length} open deals`} />
-        <Kpi icon={Target} label="Weighted forecast" value={fmtMoney(pipe.weighted)} sub={`${fmtMoney(pipe.commit)} commit · ${fmtMoney(pipe.bestCase)} best case`} />
-        <Kpi icon={Flame} label="Hot prospects right now" value={String(hot.length)} sub={`${warm.length} warm · scored for ${fmtDate(asOf).replace(/, \d{4}$/, "")}`} />
-        <Kpi icon={Trophy} label="Closed won, last 90 days" value={fmtMoney(pipe.wonLast90)} sub="New and add-on business" />
+        <Kpi label="Open pipeline" value={fmtMoney(pipe.total)} sub={`${pipe.open.length} open deals`} />
+        <Kpi label="Weighted forecast" value={fmtMoney(pipe.weighted)} sub={`${fmtMoney(pipe.commit)} commit · ${fmtMoney(pipe.bestCase)} best case`} />
+        <Kpi label="Hot prospects right now" value={String(hot.length)} sub={`${warm.length} warm · scored for ${fmtDate(asOf).replace(/, \d{4}$/, "")}`} />
+        <Kpi label="Closed won, last 90 days" value={fmtMoney(pipe.wonLast90)} sub="New and add-on business" />
       </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Season map</CardTitle>
-          <CardDescription>Where each region is in its crop year. Pick a state or province to see what&apos;s happening there.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SeasonMap />
-        </CardContent>
-      </Card>
 
       <div className="grid gap-6 lg:grid-cols-12">
         <Card className="min-w-0 lg:col-span-7">
@@ -124,7 +110,7 @@ export function Dashboard() {
             </div>
             <Button asChild variant="ghost" size="sm" className="shrink-0">
               <Link href="/prospects">
-                See all <ArrowRight className="size-4" />
+                See all
               </Link>
             </Button>
           </CardHeader>
@@ -138,11 +124,11 @@ export function Dashboard() {
         <div className="min-w-0 space-y-6 lg:col-span-5">
           <Card>
             <CardHeader>
-              <CardTitle>Campaign launch windows</CardTitle>
-              <CardDescription>Best practice: land 4–6 weeks before harvest starts.</CardDescription>
+              <CardTitle>Selling window</CardTitle>
+              <CardDescription>When elevators and co-ops will take a call.</CardDescription>
             </CardHeader>
             <CardContent>
-              <LaunchWindows />
+              <CurrentWindowCard />
             </CardContent>
           </Card>
           <Card>

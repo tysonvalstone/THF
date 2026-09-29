@@ -1,0 +1,4 @@
+SELECT Id, AccountId, FirstName, LastName, Name, Title, Email, Phone, MobilePhone, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OwnerId, HasOptedOutOfEmail, CreatedDate, Buying_Role__c
+FROM Contact
+WHERE AccountId != null
+ORDER BY LastName

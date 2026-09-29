@@ -1,0 +1,3 @@
+SELECT Id, Name, Type, Industry, Phone, Website, Description, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, AnnualRevenue, NumberOfEmployees, ParentId, OwnerId, CreatedDate, Segment__c, Facility_Type__c, Primary_Commodities__c, Storage_Capacity_Bu__c, Annual_Production_Gal__c, Annual_Production_Tons__c, Livestock_Focus__c, Number_of_Locations__c, Current_Software__c, Software_Contract_End__c, Region__c, County__c, County_FIPS__c, Railroad__c, River_Access__c, Shuttle_Loader__c, Fiscal_Year_End__c, Board_Meeting_Months__c, Rail_Served__c
+FROM Account
+ORDER BY Name

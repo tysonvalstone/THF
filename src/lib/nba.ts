@@ -1,6 +1,7 @@
 import type { Contact, Opportunity, Task } from "@/types/salesforce";
 import type { ScoredTarget } from "@/lib/scoring";
 import { addDays, diffDays, fmtShortDate, fmtSpan, parseDate } from "@/lib/dates";
+import { blackoutStatus, isSeasonalSegment, sellingWindowAt } from "@/lib/seasonality";
 
 export type NbaChannel = "call" | "email" | "campaign" | "wait";
 
@@ -92,6 +93,71 @@ export function nextBestAction(
 
   const pos = s.timing;
   const t = s.target;
+  if (isSeasonalSegment(t.segment)) {
+    const b = blackoutStatus({ Segment__c: t.segment, BillingLatitude: t.lat, BillingCountry: t.country }, asOf);
+    const controller = pickContact(contacts, ROLE_PREFS.postSeason);
+    if (b.status === "hard") {
+      return {
+        title: `Harvest blackout: schedule for ${fmtShortDate(b.resumeDate!)}`,
+        detail: `No contact until ${fmtShortDate(b.blackout!.end)}. Queue a short email to ${firstName(controller ?? contact)} for ${fmtShortDate(b.resumeDate!)} and spend today on year-round segments.`,
+        channel: "email",
+        contact: controller ?? contact,
+        due: b.resumeDate!,
+        urgency: "later",
+      };
+    }
+    if (b.status === "light") {
+      return {
+        title: "Spring planting: keep it short",
+        detail: `Light no-contact until ${fmtShortDate(b.blackout!.end)}. A two-line email is fine; save calls and demos for after planting.`,
+        channel: "email",
+        contact,
+        due: b.resumeDate!,
+        urgency: "soon",
+      };
+    }
+    const w = sellingWindowAt(asOf);
+    if (w.id === "year-end") {
+      return {
+        title: `Call ${firstName(controller ?? contact)}: year-end is prime time`,
+        detail: "Audits, board meetings and next year's budgets are all happening now. Offer a price-later compliance review or a year-end walkthrough.",
+        channel: "call",
+        contact: controller ?? contact,
+        due: addDays(asOf, 2),
+        urgency: "now",
+      };
+    }
+    if (w.id === "implementation") {
+      return {
+        title: `Call ${firstName(contact)}: decide now, live before planting`,
+        detail: "Late Feb–Mar is the last window to implement before spring planting.",
+        channel: "call",
+        contact,
+        due: addDays(asOf, 3),
+        urgency: "this-week",
+      };
+    }
+    if (w.id === "budget") {
+      return {
+        title: `Get into next year's budget with ${firstName(controller ?? contact)}`,
+        detail: "Fiscal years often end Aug 31 or Sep 30. Send a budget-ready proposal with a December go-live.",
+        channel: "email",
+        contact: controller ?? contact,
+        due: addDays(asOf, 3),
+        urgency: "this-week",
+      };
+    }
+    if (w.id === "quick-wins") {
+      return {
+        title: "Quick win only: offer a mobile pilot",
+        detail: "Harvest starts in about two weeks. Only small, fast decisions now: ScaleTrac Mobile or GrainSight Mobile at one location.",
+        channel: "email",
+        contact,
+        due: addDays(asOf, 2),
+        urgency: "soon",
+      };
+    }
+  }
   if (t.facilityType === "Ethanol Plant") {
     return {
       title: `Call ${firstName(contact)} about new-crop corn origination`,

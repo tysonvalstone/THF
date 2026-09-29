@@ -1,4 +1,4 @@
-import { PRICES } from "@/data/seed";
+import { PRICES } from "@/data/seed/prices";
 import { REGION_BY_ID } from "@/data/reference/regions";
 import type { PriceSeries, PriceSeriesKey } from "@/types/reference";
 import type { Commodity, RegionId } from "@/types/salesforce";

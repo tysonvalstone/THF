@@ -3,9 +3,10 @@ import type { DataSnapshot } from "@/lib/data/types";
 import { contactsFor, findAccount, findLead } from "@/lib/data/selectors";
 import type { ScoredTarget } from "@/lib/scoring";
 import { preferredContact } from "@/lib/nba";
-import { regionStatus } from "@/lib/season";
 import type { Campaign, Commodity, FacilityType, RegionId } from "@/types/salesforce";
-import type { SeasonPlay } from "@/lib/content/messaging";
+import { playForDate, type SeasonPlay } from "@/lib/content/messaging";
+import { isSeasonalSegment } from "@/lib/seasonality";
+import { segmentOf } from "@/lib/scoring/target";
 import { toCSV } from "@/lib/csv";
 
 export interface MailRecipient {
@@ -98,16 +99,10 @@ export function matchTargets(ranked: ScoredTarget[], a: Audience): ScoredTarget[
   );
 }
 
-/** Suggest the natural play for a region on a date */
-export function suggestedPlay(regionId: RegionId | undefined, asOf: Date): SeasonPlay {
-  const m = asOf.getUTCMonth();
-  if (!regionId) return m <= 2 ? "Pre-planting" : "Pre-harvest";
-  const phase = regionStatus(regionId, asOf).headline.phase;
-  if (phase === "Pre-harvest") return "Pre-harvest";
-  if (phase === "Harvest") return "Harvest";
-  if (phase === "Post-harvest") return "Post-harvest";
-  if (m <= 3) return "Pre-planting";
-  return "Pre-harvest";
+/** Suggest the natural play for an audience on a date */
+export function suggestedPlay(types: FacilityType[], asOf: Date): SeasonPlay {
+  const grain = !types.length || types.some((t) => isSeasonalSegment(segmentOf(t)));
+  return playForDate(asOf, grain ? "Country Elevator" : "Ethanol Plant");
 }
 
 export function defaultCampaignName(a: Audience, type: Campaign["Type"], asOf: Date): string {

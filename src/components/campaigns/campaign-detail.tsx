@@ -12,7 +12,7 @@ import { templateCampaignContent } from "@/lib/content/templates";
 import { mailListCsv, recipientFor } from "@/lib/campaigns";
 import { downloadText } from "@/lib/csv";
 import type { Commodity } from "@/types/salesforce";
-import type { SeasonPlay } from "@/lib/content/messaging";
+import { LEGACY_PLAYS, SEASON_PLAYS, type SeasonPlay } from "@/lib/content/messaging";
 import { SENDER } from "@/components/outreach/outreach-dialog";
 import { ContentEditor } from "./content-editor";
 import { statusClass } from "./campaign-list";
@@ -52,7 +52,7 @@ export function CampaignDetail({ id }: { id: string }) {
   const content =
     c.Content__c ??
     templateCampaignContent({
-      play: (["Pre-harvest", "Harvest", "Post-harvest", "Pre-planting"].includes(c.Season__c) ? c.Season__c : "Year-round") as SeasonPlay,
+      play: (SEASON_PLAYS as string[]).includes(c.Season__c) ? (c.Season__c as SeasonPlay) : (LEGACY_PLAYS[c.Season__c] ?? "Year-round"),
       regionIds: c.Target_Regions__c,
       facilityTypes: c.Target_Facility_Types__c,
       commodity: c.Target_Commodity__c as Commodity | undefined,
@@ -86,7 +86,7 @@ export function CampaignDetail({ id }: { id: string }) {
         <CardContent className="space-y-5 px-5">
           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <div className="flex gap-3">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-brand-green-soft text-primary">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-primary">
                 <Megaphone className="size-5" />
               </span>
               <div>

@@ -9,9 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --color-brand-gold: var(--brand-gold);
-  --color-brand-green-dark: var(--brand-green-dark);
-  --color-brand-green-soft: var(--brand-green-soft);
+  --color-panel: var(--panel);
+  --color-accent-soft: var(--accent-soft);
   --color-phase-pre: var(--phase-pre);
   --color-phase-harvest: var(--phase-harvest);
   --color-phase-post: var(--phase-post);
@@ -51,51 +50,64 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
 }
 
 :root {
-  /* HarvestSignal brand: field green + harvest gold on a warm neutral plane */
-  --background: #f4f5f1;
-  --foreground: #121a15;
-  --card: #ffffff;
-  --card-foreground: #121a15;
+  /*
+   * Design tokens (single source of truth).
+   * UI: neutral slate scale + ONE accent (deep green #1F5F4A) for primary
+   * buttons, links and active states only. Status colors carry status only.
+   * Data-viz colors are separate (--viz-*, --chart-*).
+   */
+  --background: #f8fafc;            /* slate-50: page */
+  --foreground: #0f172a;            /* slate-900 */
+  --card: #ffffff;                  /* content cards */
+  --card-foreground: #0f172a;
   --popover: #ffffff;
-  --popover-foreground: #121a15;
-  --primary: #1e5a3c;
+  --popover-foreground: #0f172a;
+  --primary: #1f5f4a;               /* the one accent */
   --primary-foreground: #ffffff;
-  --secondary: #eef1ec;
-  --secondary-foreground: #1b2a21;
-  --muted: #eef0ec;
-  --muted-foreground: #5a625c;
-  --accent: #fbf3de;
-  --accent-foreground: #5a4204;
-  --destructive: #d03b3b;
-  --border: #e0e3dc;
-  --input: #d6dad2;
-  --ring: #1e5a3c;
-  --radius: 0.5rem;
+  --secondary: #f1f5f9;             /* slate-100 */
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;                 /* slate-100 */
+  --muted-foreground: #64748b;      /* slate-500 */
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #b91c1c;
+  --border: #e2e8f0;                /* slate-200 */
+  --input: #cbd5e1;                 /* slate-300 */
+  --ring: #1f5f4a;
+  --radius: 6px;
 
-  --brand-gold: #d99a1e;
-  --brand-green-dark: #133d28;
-  --brand-green-soft: #e6f0e9;
+  --panel: #f1f5f9;                 /* left filter panel (slate-100) */
+  --accent-soft: #e8f1ed;           /* tint of the accent for selected rows */
 
-  /* Charts (validated default categorical order) */
+  /* Status (meaning only) */
+  --status-good: #15803d;
+  --status-warning: #b45309;
+  --status-critical: #b91c1c;
+
+  /* Data viz (separate from UI colors) */
   --chart-1: #2a78d6;
   --chart-2: #eb6834;
   --chart-3: #1baf7a;
   --chart-4: #eda100;
   --chart-5: #e87ba4;
-  --viz-grid: #e1e0d9;
-  --viz-axis: #898781;
+  --viz-grid: #e2e8f0;
+  --viz-axis: #94a3b8;
+  --viz-seq-1: #cde2fb;
+  --viz-seq-2: #86b6ef;
+  --viz-seq-3: #3987e5;
+  --viz-seq-4: #1c5cab;
 
-  /* Crop phases */
+  /* Crop phases (legacy season views) */
   --phase-pre: #2a78d6;
   --phase-harvest: #eb6834;
   --phase-post: #1baf7a;
@@ -103,19 +115,14 @@
   --phase-growing: #d3dcd2;
   --phase-dormant: #e6e8e3;
 
-  /* Status */
-  --status-good: #0ca30c;
-  --status-warning: #fab219;
-  --status-critical: #d03b3b;
-
   --sidebar: #ffffff;
-  --sidebar-foreground: #121a15;
-  --sidebar-primary: #1e5a3c;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #1f5f4a;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eef1ec;
-  --sidebar-accent-foreground: #121a15;
-  --sidebar-border: #e0e3dc;
-  --sidebar-ring: #1e5a3c;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #1f5f4a;
 }
 
 @layer base {
@@ -124,6 +131,11 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.01em;
   }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
