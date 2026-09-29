@@ -9,8 +9,8 @@ import { fmtDate, fmtShortDate } from "@/lib/dates";
 import { fmtMoney, fmtPct } from "@/lib/format";
 import { recordHref } from "@/lib/links";
 import { templateCampaignContent } from "@/lib/content/templates";
-import { mailListCsv, recipientFor } from "@/lib/campaigns";
-import { downloadText } from "@/lib/csv";
+import { MAIL_LIST_COLUMNS, mailListFilename, recipientFor } from "@/lib/campaigns";
+import { ExportCsvButton } from "@/components/shared/column-picker";
 import type { Commodity } from "@/types/salesforce";
 import { LEGACY_PLAYS, SEASON_PLAYS, type SeasonPlay } from "@/lib/content/messaging";
 import { useSender } from "@/lib/auth";
@@ -68,14 +68,11 @@ export function CampaignDetail({ id }: { id: string }) {
     return { m, targetId, name: account?.Name ?? lead?.Company ?? "Unknown", place: account ? `${account.BillingCity}, ${account.BillingState}` : lead ? `${lead.City}, ${lead.State}` : "", person: contactName(data, m.ContactId ?? m.LeadId) };
   });
 
-  const exportCsv = () => {
-    const recips = rows
-      .map((r) => scoredById.get(r.targetId))
-      .filter(Boolean)
-      .map((s) => recipientFor(data, s!))
-      .filter(Boolean) as NonNullable<ReturnType<typeof recipientFor>>[];
-    downloadText(`${c.Name.replace(/[^\w]+/g, "-").toLowerCase()}-mail-list.csv`, mailListCsv(recips));
-  };
+  const recips = rows
+    .map((r) => scoredById.get(r.targetId))
+    .filter(Boolean)
+    .map((s) => recipientFor(data, s!))
+    .filter(Boolean) as NonNullable<ReturnType<typeof recipientFor>>[];
 
   return (
     <div className="space-y-5">
@@ -99,9 +96,20 @@ export function CampaignDetail({ id }: { id: string }) {
                 <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{c.Description}</p>
               </div>
             </div>
-            <Button variant="outline" onClick={exportCsv} disabled={!rows.length} className="shrink-0">
-              <Download className="size-4" /> Mail list CSV
-            </Button>
+            <ExportCsvButton
+              disabled={!rows.length}
+              className="shrink-0"
+              label={
+                <>
+                  <Download className="size-4" /> Mail list CSV
+                </>
+              }
+              exportId="campaign-mail-list"
+              title="Export mail list"
+              columns={MAIL_LIST_COLUMNS}
+              rows={recips}
+              filename={mailListFilename(c.Name)}
+            />
           </div>
           <div className="grid grid-cols-2 gap-4 border-t pt-4 sm:grid-cols-3 lg:grid-cols-6">
             <Stat label="Dates" value={`${fmtShortDate(c.StartDate)} – ${fmtShortDate(c.EndDate)}`} />

@@ -4,11 +4,11 @@ import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useStore } from "@/lib/data/store";
-import { accountsToCsv, corePenetration, countyCoverage, importAccountsCsv, isCovered } from "@/lib/facilities";
-import { downloadText } from "@/lib/csv";
+import { ACCOUNT_CSV_COLUMNS, corePenetration, countyCoverage, importAccountsCsv, isCovered } from "@/lib/facilities";
 import { recordHref } from "@/lib/links";
 import { SEGMENTS } from "@/types/salesforce";
 import { Button } from "@/components/ui/button";
+import { ExportCsvButton } from "@/components/shared/column-picker";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -42,7 +42,6 @@ export function FacilitiesView() {
 
   if (!ready) return <Skeleton className="h-[640px]" />;
 
-  const exportCsv = () => downloadText(`accounts-${state}-${new Date().toISOString().slice(0, 10)}.csv`, accountsToCsv(rows));
   const onImport = async (file: File) => {
     const text = await file.text();
     const r = importAccountsCsv(text, data.accounts);
@@ -78,9 +77,17 @@ export function FacilitiesView() {
         {select(coverage, setCoverage, [[ALL, "Customers & prospects"], ["covered", "Customers (covered)"], ["open", "Prospects (not covered)"]], "Coverage")}
         <div className="space-y-2 border-t border-slate-300/70 pt-4">
           <p className="text-xs text-muted-foreground">CSV</p>
-          <Button variant="outline" size="sm" className="w-full bg-card" onClick={exportCsv}>
-            Export ({rows.length})
-          </Button>
+          <ExportCsvButton
+            size="sm"
+            className="w-full bg-card"
+            label={`Export (${rows.length})`}
+            exportId="facilities-accounts"
+            title="Export accounts"
+            columns={ACCOUNT_CSV_COLUMNS}
+            rows={data.accounts}
+            filteredRows={rows}
+            filename={`accounts-${state}-${new Date().toISOString().slice(0, 10)}.csv`}
+          />
           <Button variant="outline" size="sm" className="w-full bg-card" disabled={readOnly} onClick={() => fileRef.current?.click()}>
             Import CSV
           </Button>

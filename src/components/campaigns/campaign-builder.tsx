@@ -11,9 +11,9 @@ import { useStore } from "@/lib/data/store";
 import { SEASON_PLAYS, PLAY_DESCRIPTIONS, type SeasonPlay } from "@/lib/content/messaging";
 import { templateCampaignContent, timingContext } from "@/lib/content/templates";
 import { aiCampaign, useAiAvailable } from "@/lib/content/ai-client";
-import { campaignEconomics, defaultCampaignName, mailListCsv, matchTargets, recipientFor, suggestedPlay, type Audience } from "@/lib/campaigns";
+import { MAIL_LIST_COLUMNS, campaignEconomics, defaultCampaignName, mailListFilename, matchTargets, recipientFor, suggestedPlay, type Audience } from "@/lib/campaigns";
 import { createCampaign, businessDaysOut } from "@/lib/actions/outreach";
-import { downloadText } from "@/lib/csv";
+import { ExportCsvButton } from "@/components/shared/column-picker";
 import { addDays, fmtShortDate, toISODate } from "@/lib/dates";
 import { fmtMoney } from "@/lib/format";
 import { sizeLabel } from "@/lib/scoring";
@@ -188,7 +188,6 @@ function Builder({ params }: { params: URLSearchParams }) {
     router.push(`/campaigns/${campaignId}`);
   };
 
-  const exportCsv = () => downloadText(`${effectiveName.replace(/[^\w]+/g, "-").toLowerCase()}-mail-list.csv`, mailListCsv(recipients));
   const canNext = step === 0 ? true : step === 1 ? selected.length > 0 : step === 2 ? Boolean(content) : true;
 
   return (
@@ -436,9 +435,20 @@ function Builder({ params }: { params: URLSearchParams }) {
               <Row k="Expected pipeline" v={fmtMoney(econ.expectedRevenue)} />
               <Row k="Return on budget" v={`${Math.round(econ.roi)}×`} />
               <div className="space-y-2 border-t pt-3">
-                <Button variant="outline" className="w-full" onClick={exportCsv} disabled={!recipients.length}>
-                  <Download className="size-4" /> Export mail list (CSV)
-                </Button>
+                <ExportCsvButton
+                  className="w-full"
+                  disabled={!recipients.length}
+                  label={
+                    <>
+                      <Download className="size-4" /> Export mail list (CSV)
+                    </>
+                  }
+                  exportId="campaign-mail-list"
+                  title="Export mail list"
+                  columns={MAIL_LIST_COLUMNS}
+                  rows={recipients}
+                  filename={mailListFilename(effectiveName)}
+                />
                 <Button className="w-full" onClick={launch} disabled={!content || !selected.length}>
                   <Rocket className="size-4" /> Create campaign
                 </Button>

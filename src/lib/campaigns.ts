@@ -7,7 +7,7 @@ import type { Campaign, Commodity, FacilityType, RegionId } from "@/types/salesf
 import { playForDate, type SeasonPlay } from "@/lib/content/messaging";
 import { isSeasonalSegment } from "@/lib/seasonality";
 import { segmentOf } from "@/lib/scoring/target";
-import { toCSV } from "@/lib/csv";
+import { buildCsv, defaultSetup, type ColumnDef } from "@/lib/columns";
 
 export interface MailRecipient {
   targetId: string;
@@ -65,22 +65,29 @@ export function recipientFor(data: DataSnapshot, s: ScoredTarget): MailRecipient
   };
 }
 
+export const MAIL_LIST_COLUMNS: ColumnDef<MailRecipient>[] = [
+  { key: "first_name", label: "First Name", value: (r) => r.firstName },
+  { key: "last_name", label: "Last Name", value: (r) => r.lastName },
+  { key: "title", label: "Title", value: (r) => r.title },
+  { key: "company", label: "Company", value: (r) => r.company },
+  { key: "street", label: "Address Line 1", value: (r) => r.street },
+  { key: "city", label: "City", value: (r) => r.city },
+  { key: "state", label: "State/Province", value: (r) => r.state },
+  { key: "postal_code", label: "ZIP/Postal Code", value: (r) => r.postalCode },
+  { key: "country", label: "Country", value: (r) => r.country },
+  { key: "email", label: "Email", value: (r) => r.email },
+  { key: "score", label: "Score", type: "number", value: (r) => r.score },
+  { key: "record_id", label: "Salesforce Record Id", value: (r) => r.targetId },
+  { key: "who_id", label: "Salesforce Contact/Lead Id", value: (r) => r.whoId },
+];
+
 export function mailListCsv(rows: MailRecipient[]): string {
-  return toCSV(rows, [
-    { header: "First Name", value: (r) => r.firstName },
-    { header: "Last Name", value: (r) => r.lastName },
-    { header: "Title", value: (r) => r.title },
-    { header: "Company", value: (r) => r.company },
-    { header: "Address Line 1", value: (r) => r.street },
-    { header: "City", value: (r) => r.city },
-    { header: "State/Province", value: (r) => r.state },
-    { header: "ZIP/Postal Code", value: (r) => r.postalCode },
-    { header: "Country", value: (r) => r.country },
-    { header: "Email", value: (r) => r.email },
-    { header: "Score", value: (r) => r.score },
-    { header: "Salesforce Record Id", value: (r) => r.targetId },
-    { header: "Salesforce Contact/Lead Id", value: (r) => r.whoId },
-  ]);
+  return buildCsv(rows, MAIL_LIST_COLUMNS, defaultSetup(MAIL_LIST_COLUMNS));
+}
+
+/** Mail list file name for a campaign */
+export function mailListFilename(campaignName: string): string {
+  return `${campaignName.replace(/[^\w]+/g, "-").toLowerCase()}-mail-list.csv`;
 }
 
 export interface Audience {

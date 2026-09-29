@@ -10,7 +10,8 @@ import { useStore } from "@/lib/data/store";
 import { FACTOR_KEYS, FACTOR_META, sizeLabel, type FactorKey, type ScoredTarget } from "@/lib/scoring";
 import { userName } from "@/lib/data/selectors";
 import { recordHref, campaignBuilderHref } from "@/lib/links";
-import { toCSV, downloadText } from "@/lib/csv";
+import type { ColumnDef } from "@/lib/columns";
+import { ExportCsvButton } from "@/components/shared/column-picker";
 import { fmtMoney } from "@/lib/format";
 import { COMMODITIES, FACILITY_TYPES, type Commodity, type RegionId } from "@/types/salesforce";
 import { ScorePill, TierLabel } from "@/components/shared/badges";
@@ -28,6 +29,28 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 type SortKey = "total" | "name" | FactorKey;
+
+/** CSV columns for the prospect list; rank is the position in the full ranking */
+export function prospectCsvColumns(rankOf: Map<string, number>): ColumnDef<ScoredTarget>[] {
+  return [
+    { key: "rank", label: "Rank", type: "number", value: (s) => rankOf.get(s.target.id) },
+    { key: "score", label: "Score", type: "number", value: (s) => s.total },
+    { key: "tier", label: "Tier", value: (s) => s.tier },
+    { key: "record_type", label: "Record Type", value: (s) => (s.target.kind === "lead" ? "Lead" : "Account") },
+    { key: "id", label: "Id", value: (s) => s.target.id },
+    { key: "name", label: "Name", value: (s) => s.target.name },
+    { key: "facility_type", label: "Facility Type", value: (s) => s.target.facilityType },
+    { key: "city", label: "City", value: (s) => s.target.city },
+    { key: "state", label: "State/Province", value: (s) => s.target.state },
+    { key: "region", label: "Region", value: (s) => REGION_BY_ID[s.target.regionId].name },
+    { key: "commodities", label: "Commodities", value: (s) => s.target.commodities.join("; ") },
+    { key: "size", label: "Size", value: (s) => sizeLabel(s.target) },
+    { key: "software", label: "Current Software", value: (s) => s.target.software },
+    ...FACTOR_KEYS.map((k): ColumnDef<ScoredTarget> => ({ key: `factor_${k}`, label: FACTOR_META[k].label, type: "number", value: (s) => Math.round(s.factors[k].points) })),
+    { key: "why_now", label: "Why Now", value: (s) => s.whyNow },
+    { key: "owner", label: "Owner", value: (s) => userName(s.target.ownerId) },
+  ];
+}
 const ALL = "all";
 
 function useFilterState() {
@@ -70,6 +93,8 @@ export function ProspectList() {
     return () => clearTimeout(id);
   }, [query, urlQ, setParams]);
 
+  const csvColumns = useMemo(() => prospectCsvColumns(new Map(ranked.map((s, i) => [s.target.id, i + 1]))), [ranked]);
+
   const statesInScope = useMemo(() => {
     const src = f.region !== ALL ? REGION_BY_ID[f.region as RegionId]?.states ?? [] : REGIONS.flatMap((r) => r.states);
     return [...src].sort((a, b) => STATE_NAMES[a].localeCompare(STATE_NAMES[b]));
@@ -111,28 +136,6 @@ export function ProspectList() {
   const pipeline = filtered.reduce((sum, s) => sum + s.engagement.openPipeline, 0);
 
   const sortBy = (k: SortKey) => f.set({ sort: k, dir: f.sort === k && f.dir === "desc" ? "asc" : "desc" });
-
-  const exportCsv = () => {
-    const csv = toCSV(filtered, [
-      { header: "Rank", value: (s) => ranked.indexOf(s) + 1 },
-      { header: "Score", value: (s) => s.total },
-      { header: "Tier", value: (s) => s.tier },
-      { header: "Record Type", value: (s) => (s.target.kind === "lead" ? "Lead" : "Account") },
-      { header: "Id", value: (s) => s.target.id },
-      { header: "Name", value: (s) => s.target.name },
-      { header: "Facility Type", value: (s) => s.target.facilityType },
-      { header: "City", value: (s) => s.target.city },
-      { header: "State/Province", value: (s) => s.target.state },
-      { header: "Region", value: (s) => REGION_BY_ID[s.target.regionId].name },
-      { header: "Commodities", value: (s) => s.target.commodities.join("; ") },
-      { header: "Size", value: (s) => sizeLabel(s.target) },
-      { header: "Current Software", value: (s) => s.target.software },
-      ...FACTOR_KEYS.map((k) => ({ header: FACTOR_META[k].label, value: (s: ScoredTarget) => Math.round(s.factors[k].points) })),
-      { header: "Why Now", value: (s) => s.whyNow },
-      { header: "Owner", value: (s) => userName(s.target.ownerId) },
-    ]);
-    downloadText(`harvestsignal-prospects-${asOf.toISOString().slice(0, 10)}.csv`, csv);
-  };
 
   return (
     <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
@@ -221,9 +224,17 @@ export function ProspectList() {
                   Clear filters
                 </Button>
               )}
-              <Button variant="outline" size="sm" className="bg-card" onClick={exportCsv} disabled={!filtered.length}>
-                Export CSV
-              </Button>
+              <ExportCsvButton
+                size="sm"
+                className="bg-card"
+                disabled={!filtered.length}
+                exportId="prospects"
+                title="Export prospects"
+                columns={csvColumns}
+                rows={ranked}
+                filteredRows={filtered}
+                filename={`harvestsignal-prospects-${asOf.toISOString().slice(0, 10)}.csv`}
+              />
               <Button asChild size="sm">
                 <Link
                   href={campaignBuilderHref({

@@ -1,4 +1,5 @@
 import "server-only";
+import { searchHelp } from "@/lib/help/content";
 
 /**
  * No-key answers for the AI assistant. Matches a handful of common questions
@@ -36,7 +37,8 @@ const HELP = `I can answer a few questions without the AI service. Try one of th
 - Which Iowa co-ops come out of blackout next?
 - Summarize the Eastern Corn Belt
 - Which segment should we prioritize?
-- Corn harvest status in Illinois`;
+- Corn harvest status in Illinois
+- How do I plan a trip?`;
 
 /* ---------------------------------------------------------------- parsing */
 
@@ -292,12 +294,26 @@ async function season(ctx: ToolContext, where: { area: Area; label: string } | u
 
 /* -------------------------------------------------------------- dispatcher */
 
+/** "How do I…" questions: point to Help Center articles */
+async function howTo(question: string): Promise<OfflineAnswer | null> {
+  const hits = await searchHelp(question, 3);
+  if (!hits.length) return null;
+  const [first, ...rest] = hits;
+  const lines = [`See [${first.title}](${first.href}) in the Help Center.`, "", `> ${first.snippet}…`];
+  if (rest.length) lines.push("", "Related:", ...rest.map((h) => `- [${h.title}](${h.href})`));
+  return { markdown: lines.join("\n"), accountIds: [], exportable: false };
+}
+
 export async function answerOffline(question: string, ctx: ToolContext): Promise<OfflineAnswer> {
   const q = question.toLowerCase().replace(/[’']/g, "'");
   const where = findArea(question);
   const commodity = findCommodity(q);
   const n = findCount(q, 10);
 
+  if (/\bhow (do|can|should|would) (i|we|you)\b|\bhow to\b|\bwhere (do|can) (i|we)\b|\bwhat does\b|\bwhat do .* mean\b|\bexplain\b|\bhelp (with|on|article)/.test(q)) {
+    const answer = await howTo(question);
+    if (answer) return answer;
+  }
   if (/blackout|no[- ]contact|go(?:ne)? dark|come out of harvest/.test(q)) return blackout(ctx, q, where);
   if (/\bsegments?\b|win rates?|close rates?|prioriti[sz]e/.test(q)) return segments(ctx);
   if ((commodity || /\bcrop\b/.test(q)) && /harvest|planting|season|phase|progress|status|crop/.test(q)) return season(ctx, where, commodity);

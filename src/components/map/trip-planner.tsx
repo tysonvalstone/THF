@@ -21,7 +21,9 @@ import {
   tripToIcs,
   type TripPlan,
 } from "@/lib/trips";
-import { toCSV, downloadText } from "@/lib/csv";
+import { downloadText } from "@/lib/csv";
+import type { ColumnDef } from "@/lib/columns";
+import { ExportCsvButton } from "@/components/shared/column-picker";
 import { fmtShortDate, parseDate } from "@/lib/dates";
 import { fmtMoney } from "@/lib/format";
 import { recordHref } from "@/lib/links";
@@ -30,6 +32,24 @@ import { STATE_NAMES } from "@/data/reference/geo";
 import { SEGMENTS } from "@/types/salesforce";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+type ItineraryRow = ReturnType<typeof itineraryRows>[number];
+
+export const ITINERARY_CSV_COLUMNS: ColumnDef<ItineraryRow>[] = [
+  { key: "stop", label: "Stop", type: "number", value: (r) => r.stop },
+  { key: "day", label: "Day", type: "number", value: (r) => r.day },
+  { key: "date", label: "Date", type: "date", value: (r) => r.date },
+  { key: "arrive", label: "Arrive", value: (r) => r.arrive },
+  { key: "account", label: "Account", value: (r) => r.account },
+  { key: "segment", label: "Segment", value: (r) => r.segment },
+  { key: "address", label: "Address", value: (r) => r.address },
+  { key: "phone", label: "Phone", value: (r) => r.phone },
+  { key: "why", label: "Why", value: (r) => r.why },
+  { key: "open", label: "Open pipeline", type: "currency", value: (r) => r.open },
+  { key: "last_contact", label: "Last contact", type: "date", value: (r) => r.lastContact },
+  { key: "blackout", label: "Blackout", value: (r) => r.blackout },
+  { key: "drive", label: "Drive from previous", value: (r) => r.drive },
+];
 
 interface SavedTrip {
   id: string;
@@ -113,28 +133,6 @@ export function TripPlanner({
       setRequest(next);
       setExclude([]);
     }
-  };
-
-  const exportCsv = (p: TripPlan) => {
-    const rows = itineraryRows(p);
-    downloadText(
-      `trip-${slug(p.destinationName)}-${p.request.startDate}.csv`,
-      toCSV(rows, [
-        { header: "Stop", value: (r) => r.stop },
-        { header: "Day", value: (r) => r.day },
-        { header: "Date", value: (r) => r.date },
-        { header: "Arrive", value: (r) => r.arrive },
-        { header: "Account", value: (r) => r.account },
-        { header: "Segment", value: (r) => r.segment },
-        { header: "Address", value: (r) => r.address },
-        { header: "Phone", value: (r) => r.phone },
-        { header: "Why", value: (r) => r.why },
-        { header: "Open pipeline", value: (r) => r.open },
-        { header: "Last contact", value: (r) => r.lastContact },
-        { header: "Blackout", value: (r) => r.blackout },
-        { header: "Drive from previous", value: (r) => r.drive },
-      ]),
-    );
   };
 
   const exportPdf = async (p: TripPlan) => {
@@ -384,9 +382,14 @@ export function TripPlanner({
               <Button size="sm" variant="outline" onClick={() => exportPdf(plan)}>
                 Export PDF
               </Button>
-              <Button size="sm" variant="outline" onClick={() => exportCsv(plan)}>
-                Export CSV
-              </Button>
+              <ExportCsvButton
+                size="sm"
+                exportId="trip-itinerary"
+                title="Export itinerary"
+                columns={ITINERARY_CSV_COLUMNS}
+                rows={itineraryRows(plan)}
+                filename={`trip-${slug(plan.destinationName)}-${plan.request.startDate}.csv`}
+              />
               <Button
                 size="sm"
                 variant="outline"

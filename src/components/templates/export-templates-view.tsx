@@ -11,6 +11,8 @@ import { useStore } from "@/lib/data/store";
 import { prioritize } from "@/lib/prioritization";
 import { applySpec, blankSpec, buildRows, localSpecFromPrompt, sanitizeSpec, withAccountIds } from "@/lib/exports/engine";
 import { SOURCE_LABELS } from "@/lib/exports/fields";
+import { exportFilename, templateCsvColumns, templateCsvSetup } from "@/lib/exports/export-file";
+import { ColumnPickerDialog } from "@/components/shared/column-picker";
 import { PREBUILT_EXPORTS } from "@/data/seed/export-templates";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +49,7 @@ export function ExportTemplatesView() {
   const [generating, setGenerating] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [csvOpen, setCsvOpen] = useState(false);
 
   const saved = items.find((t) => t.id === selectedId);
   const isNew = !!draft && !saved;
@@ -114,6 +117,9 @@ export function ExportTemplatesView() {
   );
   const result = useMemo(() => (draft ? applySpec(draft, rows) : null), [draft, rows]);
 
+  const csvColumns = useMemo(() => (draft ? templateCsvColumns(draft) : []), [draft]);
+  const csvSetup = useMemo(() => (draft ? templateCsvSetup(draft) : undefined), [draft]);
+
   const update = (patch: Partial<ExportSpec>) => setDraft((d) => (d ? { ...d, ...patch } : d));
 
   const onSave = () => {
@@ -147,10 +153,15 @@ export function ExportTemplatesView() {
 
   const onExport = async () => {
     if (!draft || !result) return;
+    if (draft.format === "csv") {
+      setCsvOpen(true);
+      return;
+    }
+    const format = draft.format;
     setExporting(true);
     try {
       const { exportSpec } = await import("@/lib/exports/export-file");
-      const file = await exportSpec(draft, result, { asOf: asOfISO });
+      const file = await exportSpec(draft, result, { asOf: asOfISO, format });
       toast.success(`Exported ${file}`);
     } catch (e) {
       console.error(e);
@@ -248,6 +259,19 @@ export function ExportTemplatesView() {
           )}
         </div>
       </div>
+
+      {draft && result && (
+        <ColumnPickerDialog
+          open={csvOpen}
+          onOpenChange={setCsvOpen}
+          exportId={`template:${draft.source}`}
+          title={`Export ${draft.name || "Untitled export"}`}
+          columns={csvColumns}
+          rows={result.rows}
+          filename={exportFilename(draft, asOfISO, "csv")}
+          initialSetup={csvSetup}
+        />
+      )}
 
       <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <DialogContent>

@@ -1,0 +1,68 @@
+---
+title: Campaigns & Email Sequences
+summary: Build seasonal campaigns with a target list and copy, and set up multi-step email sequences with merge fields, variants and blackout-aware scheduling.
+order: 7
+related: [seasonality-rules, exports-templates, trip-planner, ai-assistant]
+---
+
+The Campaigns section has three tabs. **Campaigns** builds a one-off campaign for a selling-window play. **Sequences** runs multi-step outreach (email, call and LinkedIn tasks) for chosen contacts. **Calendar** shows the selling windows through the year and the campaign planned for each. Nothing is actually sent: in mock mode the app logs Salesforce-style records in your browser, and in live mode it writes nothing.
+
+## Build a campaign
+
+1. Go to **Campaigns** and click **New Campaign**.
+2. **Audience**: choose a season play (Year-end, Implementation, Budget window, Quick wins, Harvest support or Year-round), regions, facility types and an optional commodity. The play suggested for the as-of date is selected first.
+3. **Targets**: set **Min score** (default 55) and untick any accounts you want to leave out. Targets are ranked by prospect score.
+4. **Content**: use the built-in template, or click **Write with AI** when an AI key is configured. You can edit the copy.
+5. **Launch**: set the campaign name, type (Direct Mail, Multi-Channel, Email or Call Blitz) and start date. The summary shows members, average score, estimated budget, expected responses, expected pipeline and return on budget.
+6. Click **Export mail list (CSV)** to download the recipients, or launch the campaign.
+
+Launching creates a Campaign, a CampaignMember for each recipient and a follow-up task for each member (mock mode). The campaign page shows dates, members, responses, budget, expected pipeline, owner and content, and you can export its mail list again.
+
+Mail-list CSV exports open the column picker. See [Exports & Templates](/help/exports-templates).
+
+## Use the Calendar
+
+The **Calendar** tab lists the selling windows and a planned campaign for each. The Year-end window starts with the **Price-Later Contract Compliance Webinar** (invite copy, a controller and GM target list and a follow-up sequence). Click **Plan the webinar**, or the plan button for another window, to open the campaign builder pre-filled. The tab also shows the crop calendar by region.
+
+## Sequences
+
+A sequence is a list of steps, each with a type (**Email**, **Call** task or **LinkedIn** task) and a day offset. Four sequences are prebuilt: Post-Harvest Co-op Outreach, Year-Round Ethanol & Feed, Price-Later Compliance Webinar and Visiting Next Week.
+
+### Create or edit a sequence
+
+1. Open **Campaigns**, then the **Sequences** tab.
+2. Select a sequence, or click **New sequence**. To have the AI write one, click **Draft sequence** and describe it (segment, month or season phase).
+3. Add, remove or reorder steps, and set each step's day.
+4. Write the subject and body. Use **Insert field** to add merge fields.
+5. Click **Rewrite** on a step and choose Shorter, Friendlier, More formal or Clearer call to action (AI key required).
+6. Click **Save**. You must save changes before you can enroll anyone.
+
+Prebuilt sequences can be hidden but not deleted. Sequences you create are stored in your browser.
+
+### Merge fields
+
+Available fields: `{{contact.first_name}}`, `{{contact.title}}`, `{{account.name}}`, `{{account.locations}}`, `{{region}}`, `{{state}}`, `{{commodity}}`, `{{season_phase}}`, `{{blackout_end_date}}`, `{{fiscal_year_end}}`, `{{next_board_meeting}}` and `{{sender.name}}`.
+
+The season phase is worked out for each step's send date. Open **Preview** and pick any recipient to see the rendered text. Missing values are highlighted in amber, and a recipient with any missing field can't be enrolled until you change the text or the recipient.
+
+### Variants
+
+A step can have variants, each with rules on **Season phase**, **Commodity**, **Region**, **State** or **Segment**. For each recipient the first variant whose rules all match is used; otherwise the default text is used.
+
+### Scheduling around blackouts
+
+- In a harvest (hard) blackout, every step moves to the first allowed day.
+- In a planting (light) blackout, only call steps move.
+- Weekend dates move to Monday.
+- Later steps keep their spacing after a move.
+
+<Screenshot caption="Sequence preview with a step moved out of the harvest blackout" />
+
+### Enroll recipients
+
+1. Select a saved sequence and click **Enroll**.
+2. Filter contacts by region, state, segment, facility type, commodity, and customers or prospects, or search.
+3. Tick recipients. Each shows a status (for example Ready, No contact or Already enrolled) and the variant it will get.
+4. Confirm. Steps are logged as scheduled Salesforce tasks in mock mode. In live mode no tasks are created.
+
+You can also start enrollment from the Map (**Enroll top 25 in sequence**), the Trip Planner (**Enroll in sequence**) or the assistant (**Start sequence**).

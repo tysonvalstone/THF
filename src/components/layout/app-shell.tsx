@@ -20,6 +20,9 @@ import { Avatar } from "@/components/auth/avatar";
 import { LoginScreen } from "@/components/auth/login-screen";
 import { ChatPanel, useChatOpen } from "@/components/ai/chat-panel";
 import { cn } from "@/lib/utils";
+import { CircleHelp } from "lucide-react";
+import { HelpDrawer, openHelp } from "@/components/help/help-drawer";
+import { helpSlugFor } from "@/lib/help/types";
 
 /** Top-level sections; each section's pages show as tabs under the header */
 const NAV: { href: string; label: string; tabs: [string, string][]; also: string[] }[] = [
@@ -32,30 +35,48 @@ const NAV: { href: string; label: string; tabs: [string, string][]; also: string
 const within = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
 
 function sectionFor(pathname: string) {
+  if (within(pathname, "/help")) return null;
   return NAV.find((n) => n.tabs.some(([href]) => within(pathname, href)) || n.also.some((href) => within(pathname, href))) ?? NAV[0];
 }
 
+/** Section tabs (when the section has several pages) and the page's help link */
 function SectionTabs({ pathname }: { pathname: string }) {
   const section = sectionFor(pathname);
-  // Only on the section's own pages (not record pages), and only when there is a choice
+  if (!section) return null;
+  // Tabs only on the section's own pages (not record pages), and only when there is a choice
   const current = section.tabs.find(([href]) => pathname === href);
-  if (section.tabs.length < 2 || !current) return null;
+  const showTabs = section.tabs.length > 1 && !!current;
   return (
-    <nav className="mx-auto flex w-full max-w-[1400px] gap-5 border-b px-4" aria-label={`${section.label} pages`}>
-      {section.tabs.map(([href, label]) => (
-        <Link
-          key={href}
-          href={href}
-          aria-current={href === current[0] ? "page" : undefined}
-          className={cn(
-            "-mb-px border-b-2 border-transparent py-2.5 text-sm text-muted-foreground hover:text-foreground",
-            href === current[0] && "border-primary font-medium text-foreground",
-          )}
+    <div className="border-b">
+      <div className="mx-auto flex w-full max-w-[1400px] items-center gap-5 px-4">
+        {showTabs && (
+          <nav className="flex gap-5" aria-label={`${section.label} pages`}>
+            {section.tabs.map(([href, label]) => (
+              <Link
+                key={href}
+                href={href}
+                aria-current={href === current![0] ? "page" : undefined}
+                className={cn(
+                  "-mb-px border-b-2 border-transparent py-2.5 text-sm text-muted-foreground hover:text-foreground",
+                  href === current![0] && "border-primary font-medium text-foreground",
+                )}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        )}
+        <button
+          type="button"
+          onClick={() => openHelp(helpSlugFor(pathname))}
+          className="ml-auto flex h-10 items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          aria-label="Help for this page"
         >
-          {label}
-        </Link>
-      ))}
-    </nav>
+          <CircleHelp className="size-3.5" aria-hidden />
+          Help
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -150,7 +171,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const chatOpen = useChatOpen();
   if (pathname === "/login") return <>{children}</>;
   if (!auth.user) return <LoginScreen />;
-  const active = sectionFor(pathname).href;
+  const active = sectionFor(pathname)?.href;
   const isActive = (href: string) => href === active;
   return (
     <div className={cn("flex min-h-full flex-col", chatOpen && "lg:pr-[400px]")}>
@@ -174,6 +195,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <DataBadge />
+            <Link
+              href="/help"
+              aria-label="Help Center"
+              className={cn(
+                "flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground",
+                pathname.startsWith("/help") && "bg-accent-soft text-primary",
+              )}
+            >
+              <CircleHelp className="size-[18px]" aria-hidden />
+            </Link>
             <UserMenu />
           </div>
         </div>
@@ -182,10 +213,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               key={n.href}
               href={n.href}
-              className={cn(
-                "shrink-0 rounded-md px-2.5 py-1 text-sm text-muted-foreground",
-                isActive(n.href) && "bg-accent-soft font-medium text-primary",
-              )}
+              className={cn("shrink-0 rounded-md px-2.5 py-1 text-sm text-muted-foreground", isActive(n.href) && "bg-accent-soft font-medium text-primary")}
             >
               {n.label}
             </Link>
@@ -201,6 +229,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <SectionTabs pathname={pathname} />
       <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 pt-6 pb-20">{children}</main>
       <ChatPanel />
+      <HelpDrawer />
     </div>
   );
 }

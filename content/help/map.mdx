@@ -1,0 +1,65 @@
+---
+title: Map
+summary: Use the seasonality map to see where crops are in planting or harvest, drill into regions and states, show recent sales and filter prospects.
+order: 3
+related: [trip-planner, seasonality-rules, home-dashboard]
+---
+
+The Map (Map section, Map tab) shows US states and Canadian provinces coloured by where a crop is in its season on the as-of date, with your prospects and customers as dots. Use it to see which areas are in harvest, drill down to a state, check recent wins and build a list of accounts to contact or visit.
+
+## Choose what the map shows
+
+1. Pick a view in the toolbar:
+   - **Season** colours each area by crop phase for the crop you choose (Wheat, Corn, Soybeans, Rice or Lentils). Blue means planting and red means harvest peak. The colour varies within a state by latitude, so southern areas turn red earlier than northern ones.
+   - **Commodities** tints each state by its dominant crop and colours each dot by the account's primary commodity.
+2. In the Commodities view, click **Colors** to choose your own colour for each commodity. Your choice is saved in your browser. Click **Reset colors** to go back to the defaults.
+3. Change the as-of date in the header to see the season move.
+
+The season colours are a model based on USDA NASS usual planting and harvesting dates, shifted by latitude. They are not observed crop-progress data. See [Seasonality Rules](/help/seasonality-rules).
+
+## Drill down
+
+The map has three levels: North America, a sales region (there are 12), and a state or province.
+
+1. Click a state to zoom to its region.
+2. Click the state again to zoom to the state.
+3. Use the breadcrumb above the map (for example North America, Western Corn Belt, Iowa) to jump back to a level, or click **Back** to go up one level.
+
+You can also scroll to zoom, drag to pan, and use the **+**, **−** and **Fit** buttons. States show an outline when you hover them. At state level, click a facility dot to open the account.
+
+You can link straight to a region or state with `/map?region=` followed by the region id, or `/map?state=IA`.
+
+## Show recent sales
+
+1. Click **Recent sales** in the toolbar.
+2. Choose a range: Last 30 days, Last 60 days, Last 90 days or Last 12 months. The range is measured back from the as-of date.
+3. Closed-won deals appear as yellow dots sized by amount. A strip above the map shows the number of deals and the total for the range and the current drill-down.
+4. Click a yellow dot to see the account, amount, products (line items), close date and owner.
+
+In live mode the app does not read opportunity line items from Salesforce, so the products list is empty.
+
+<Screenshot caption="Map with Recent sales on, drilled into Iowa" />
+
+## Use the sidebar
+
+The sidebar has three tabs.
+
+### Prospects
+
+Filter the accounts shown on the map by **Status** (Prospects, Customers or All), **Commodity**, **Size** (by annual revenue: Large over $100M, Mid $25–100M, Small under $25M) and **Segment**, and sort by **Score**, **Est. deal size** or **Name**. The list and the dots stay in sync: hover a row to highlight its dot, hover a dot to highlight its row, and click a dot to select its row. Up to 600 dots are drawn at once.
+
+Click **Enroll top 25 in sequence** to open Sequences with the top accounts in the list ready to enroll. See [Campaigns & Email Sequences](/help/campaigns-sequences).
+
+### Area
+
+A summary of the current drill-down level: a one-line summary, key stats (facilities, customers, penetration, open pipeline, season phase), top potential customers with estimated deal size and blackout status, **Recent Wins** for the selected range, and three **Key Insights**.
+
+Estimated deal size uses the account's open deal if it has one, otherwise the segment's median won deal.
+
+### Plan a Trip
+
+Builds a multi-day visit itinerary for a state or region. See [Trip Planner](/help/trip-planner).
+
+## Facilities tab
+
+The **Facilities** tab lists target facilities with county, railroad, river and shuttle-loader access and capacity. Choose an area (Illinois + Iowa, Illinois, Iowa, or All US and Canada), see coverage figures such as "12 of 132 Iowa co-op locations", and review **Whitespace Counties**: counties with target facilities but no ThiboLiSoft customer. You can export a Salesforce-ready CSV and, in mock mode, import a CSV. See [Exports & Templates](/help/exports-templates).

@@ -1,5 +1,6 @@
 import type { Account, Segment } from "@/types/salesforce";
-import { parseCSV, toCSV } from "@/lib/csv";
+import { parseCSV } from "@/lib/csv";
+import { buildCsv, defaultSetup, type ColumnDef, type ColumnType } from "@/lib/columns";
 import type { Mutation } from "@/lib/data/types";
 import { newId } from "@/lib/data/local-repository";
 import { REGION_BY_STATE } from "@/data/reference/regions";
@@ -98,19 +99,31 @@ export const ACCOUNT_CSV_FIELDS = [
   "Region__c",
 ] as const;
 
+const ACCOUNT_FIELD_TYPES: Partial<Record<(typeof ACCOUNT_CSV_FIELDS)[number], ColumnType>> = {
+  BillingLatitude: "number",
+  BillingLongitude: "number",
+  Storage_Capacity_Bu__c: "number",
+  Number_of_Locations__c: "number",
+  River_Access__c: "boolean",
+  Shuttle_Loader__c: "boolean",
+  Rail_Served__c: "boolean",
+};
+
+/** Salesforce-ready Account columns; Id and Name are required for import */
+export const ACCOUNT_CSV_COLUMNS: ColumnDef<Account>[] = ACCOUNT_CSV_FIELDS.map((field) => ({
+  key: field,
+  label: field,
+  type: ACCOUNT_FIELD_TYPES[field],
+  required: field === "Id" || field === "Name",
+  value: (a: Account) => {
+    const v = (a as unknown as Record<string, unknown>)[field];
+    // Coordinates keep full precision
+    return (field === "BillingLatitude" || field === "BillingLongitude") && typeof v === "number" ? String(v) : v;
+  },
+}));
+
 export function accountsToCsv(accounts: Account[]): string {
-  return toCSV(
-    accounts,
-    ACCOUNT_CSV_FIELDS.map((field) => ({
-      header: field,
-      value: (a: Account) => {
-        const v = (a as unknown as Record<string, unknown>)[field];
-        if (Array.isArray(v)) return v.join(";");
-        if (typeof v === "boolean") return v ? "true" : "false";
-        return v === undefined || v === null ? "" : (v as string | number);
-      },
-    })),
-  );
+  return buildCsv(accounts, ACCOUNT_CSV_COLUMNS, defaultSetup(ACCOUNT_CSV_COLUMNS));
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,71 @@
+---
+title: AI Assistant
+summary: Ask the assistant about pipeline, accounts, segments and seasons, get how-to answers from the Help Center, and turn answers into exports or sequences.
+order: 12
+related: [getting-started, exports-templates, campaigns-sequences, faq]
+---
+
+The assistant answers questions about your pipeline, accounts and the season using the same data as the rest of the app. It can also find Help Center articles for "how do I" questions. Open it from the **Assistant** button at the bottom right of any page.
+
+## Ask a question
+
+1. Click **Assistant**. A side panel opens.
+2. Type a question and press Enter, or click one of the suggestions. For example:
+   - "Top 10 open deals by expected value"
+   - "Which Iowa co-ops come out of blackout next?"
+   - "Summarize the Eastern Corn Belt"
+   - "Which segment should we prioritize?"
+   - "Corn harvest status in Illinois"
+   - "How do I plan a trip?"
+3. While it works, the panel shows what it is doing (for example "Searching opportunities"). Click **Stop** to stop an answer.
+4. Click **New conversation** to start over. The conversation is kept for your browser session.
+
+The assistant knows the as-of date, the page you are on and the crop selected on the Map, so "now" and "this month" follow the time-travel date.
+
+## What it can look up
+
+The assistant uses read-only tools:
+
+| Tool | What it does |
+|---|---|
+| Pipeline summary | Open pipeline totals |
+| Search opportunities | Filter by state, region, segment, stage, amount, close date or name; sort by expected value, amount or close date |
+| Search accounts | Filter by area, segment, facility type, commodity, customer or prospect, and blackout status |
+| Segment stats | Segment close rates and ranking |
+| Region insights | A summary of a state or region |
+| Season status | Crop phase for an area and date |
+| Help search | Finds up to three Help Center articles and links them |
+| Run SOQL | Live mode only: one read-only SELECT query against Salesforce, capped at 200 rows |
+
+It can also search the web for outside information such as market news or weather, never for pipeline or account data.
+
+Answers include links to records, tables for lists, and a **Sources** line showing where the information came from.
+
+## Get help on using the app
+
+Ask "how do I" or "what does this mean" questions, such as "How do I export only some columns?" or "What does Blended mean?". The assistant searches these Help Center articles and links the best matches. You can also browse the Help Center directly from the **?** icon in the header, or open the article for the current page from its **?** link.
+
+## Act on an answer
+
+- **Export this**: opens the Export Template Builder with a template based on your question. See [Exports & Templates](/help/exports-templates).
+- **Start sequence**: opens Sequences with the accounts from the answer ready to enroll. See [Campaigns & Email Sequences](/help/campaigns-sequences).
+
+<Screenshot caption="Assistant panel with a table of top deals and the Export this button" />
+
+## When AI is offline
+
+The assistant uses Claude when the server has an Anthropic API key. Without one, the panel still works and shows "AI offline — limited answers". It matches your question to common requests and answers from the same data:
+
+- Open pipeline, overall or for a state or region.
+- Top deals by expected value, or top prospects in a state or region.
+- Who is in blackout and who comes out next.
+- Region summaries, segment ranking and season status.
+- How-to questions, answered with links to Help Center articles.
+
+Other AI features fall back in the same way: templates are built by keyword, sequences are edited by hand, trips are parsed by keyword and campaigns use built-in copy.
+
+## Limits
+
+- The assistant reads the server copy of the data. Changes you make in mock mode (emails, campaigns, imports) are stored in your browser, so the assistant does not see them.
+- It never writes to Salesforce.
+- SOQL queries are available only with a live Salesforce connection, must be a single SELECT and return at most 200 rows.

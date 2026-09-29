@@ -1,4 +1,5 @@
 import "server-only";
+import { searchHelp } from "@/lib/help/content";
 
 /**
  * Read-only tools for the AI assistant. Each tool works on the loaded
@@ -135,6 +136,17 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "search_help",
+    description:
+      "Search the HarvestSignal Help Center articles (how to use the app: navigation, time travel, map, trip planner, segment prioritization, seasonality rules, campaigns and sequences, exports and column presets, the assistant, Salesforce connection). Returns up to 3 articles with title, href and a snippet. Use for any how-do-I or what-does-this-mean question about the app, and link the articles in the answer.",
+    input_schema: {
+      type: "object",
+      properties: { query: { type: "string", description: "What the user wants to know, in a few words." } },
+      required: ["query"],
+      additionalProperties: false,
+    },
+  },
+  {
     name: "run_soql",
     description:
       "Run one read-only SOQL SELECT against the connected Salesforce org (live mode only). Use only when the other tools cannot answer. Results are capped at 200 rows. Standard objects: Account, Opportunity, Contact, Task, Event, Campaign, CampaignMember.",
@@ -159,6 +171,7 @@ export const TOOL_STATUS: Record<ToolName, string> = {
   get_region_insights: "Reviewing the area",
   get_season_status: "Checking the crop calendar",
   run_soql: "Querying Salesforce",
+  search_help: "Searching help",
 };
 
 /* ---------------------------------------------------------------- helpers */
@@ -637,7 +650,7 @@ async function runSoql(input: Record<string, unknown>, ctx: ToolContext) {
 
 /* ---------------------------------------------------------------- dispatch */
 
-const PLATFORM_ONLY = new Set<string>(["get_segment_stats", "get_season_status"]);
+const PLATFORM_ONLY = new Set<string>(["get_segment_stats", "get_season_status", "search_help"]);
 
 export function isToolName(name: string): name is ToolName {
   return (TOOL_NAMES as string[]).includes(name);
@@ -671,6 +684,11 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
       case "run_soql":
         out = await runSoql(args, ctx);
         break;
+      case "search_help": {
+        const query = str(args.query, 300);
+        out = { result: query ? { articles: await searchHelp(query, 3) } : { error: "query is required" }, accountIds: [] };
+        break;
+      }
       default:
         return { result: { error: `Unknown tool "${name}"` }, accountIds: [], source };
     }

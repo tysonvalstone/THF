@@ -110,6 +110,7 @@ How to answer:
 - Link every account and opportunity name with the href the tool returned, as a markdown link: [Name](href).
 - Format money like $1.2M or $85K and dates like Oct 14.
 - No emoji. Do not add a sources line; the app shows sources.
+- For how-to questions about using HarvestSignal, call search_help and link the matching article(s) as markdown links, e.g. [Trip Planner](/help/trip-planner).
 - Use web search only for outside information (market news, weather, company background), never for pipeline or account data.${mode === "live" ? "\n- run_soql is a last resort for questions the other tools can't answer; keep queries small." : ""}`;
 }
 

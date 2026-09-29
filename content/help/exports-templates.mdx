@@ -1,0 +1,74 @@
+---
+title: Exports & Templates
+summary: Export lists to CSV with the column picker, and build reusable export templates in CSV, XLSX or PDF, including a Salesforce Opportunity Import file.
+order: 11
+related: [campaigns-sequences, trip-planner, salesforce-connection, ai-assistant]
+---
+
+You can export data from HarvestSignal in two ways. Most lists have an **Export CSV** button that opens a column picker. For reports you run again and again, the **Export Template Builder** (Templates, Exports tab) lets you save a template with its own columns, filters, grouping and format.
+
+## Choose columns for a CSV export
+
+Every CSV export opens the same dialog. It applies to:
+
+- The Prospects list (Home, Prospects).
+- Salesforce-ready accounts on the Facilities tab (the **Export** button).
+- Campaign mail lists, in the campaign builder and on a campaign page.
+- Trip itineraries from the Trip Planner.
+- CSV exports from the Export Template Builder, including the Salesforce Opportunity Import template.
+
+To set up the file:
+
+1. Click **Export CSV** (or **Export** on Facilities).
+2. Tick or untick columns to show or hide them. Use **Select all** or **Clear all** to change them all at once.
+3. Drag a column by its handle to reorder it, or use the move up and move down buttons.
+4. Type in a column's header box to rename it in the file.
+5. Check the live preview of the first 5 rows.
+6. Under **Rows**, choose **Current view** (only the rows that match the page's filters) or **All rows**, where the page has filters.
+7. Under **Date format**, choose YYYY-MM-DD, MM/DD/YYYY or DD/MM/YYYY.
+8. Click the export button in the dialog to download the file.
+
+### Salesforce-ready exports
+
+In exports meant for Salesforce import, the required import fields are locked on and show a lock icon. You can't hide or rename them. Optional fields can be hidden, renamed and reordered as usual.
+
+### Presets
+
+- To reuse a setup, type a name in the preset box and save it. Choose it from **Preset** next time, or delete it with the delete button.
+- The last setup you used for each export is remembered, so the dialog opens the way you left it.
+
+Presets and last-used setups are stored in your browser. They are not shared with other users or devices.
+
+<Screenshot caption="Column picker with a locked Salesforce field and a saved preset" />
+
+## Build an export template
+
+1. Go to **Templates**, then **Exports**.
+2. Select a template in the list, or click **New template**.
+3. To start from a description, type what you want (for example "Board summary of Illinois pipeline by segment with win rates") and click **Generate**. With an AI key, the AI turns it into a template, which is checked against the list of available fields before it is shown. Without a key, the button reads **Build** and picks the closest prebuilt template, adding any state, region or segment filters it recognises.
+4. Edit the template:
+   - **Data source**: Opportunities, Accounts, Contacts or Segments.
+   - **Columns**: add, remove and reorder.
+   - **Filters**: for example state in IL, IA.
+   - **Group by**, **Sort** and **Totals**.
+   - **Format**: CSV, XLSX or PDF.
+5. Check the preview, which shows the first 20 rows with any subtotals and totals.
+6. Click **Save template**. Use **Duplicate** to copy a template and **Delete** to remove one (prebuilt templates are hidden rather than deleted).
+7. Click **Export CSV**, **Export XLSX** or **Export PDF** (the label follows the format). CSV exports open the column picker described above.
+
+Percent values export as 0 to 100 in CSV and as formatted percentages in XLSX and PDF. Templates you create are stored in your browser.
+
+## Prebuilt templates
+
+| Template | Source | What it contains |
+|---|---|---|
+| Pipeline by Segment | Opportunities | Open opportunities grouped by segment with seasonal win rates and expected value |
+| Territory Coverage | Accounts | Every facility by state and county, with customer coverage and open pipeline |
+| Accounts in Blackout | Accounts | Accounts in a harvest or planting no-contact window, soonest to clear first |
+| Salesforce Opportunity Import | Opportunities | Open opportunities with Salesforce API field names as headers, ready for Data Loader |
+
+The Salesforce Opportunity Import template includes Name, AccountId, StageName, Amount, CloseDate, Probability, Type, LeadSource, OwnerId, NextStep and Economic_Buyer_Identified__c, sorted by close date.
+
+## Export from the assistant
+
+When the assistant answers with a table, click **Export this** to open the answer as a template in the builder. See [AI Assistant](/help/ai-assistant).

@@ -1,0 +1,80 @@
+---
+title: Home Dashboard
+summary: What each KPI, focus card, chart and list on the Home page shows, and how the as-of date drives them.
+order: 2
+related: [getting-started, segment-prioritization, seasonality-rules, map]
+---
+
+The Home page (Home, Overview tab) is a one-screen summary of the pipeline for the as-of date. It has no period selector of its own: every figure is calculated for the date shown in the header, so moving the date with the season bar or the date picker changes the whole page.
+
+## KPI row
+
+Each KPI shows a value for the as-of date and a change against an earlier period.
+
+| KPI | What it measures | Compared with |
+|---|---|---|
+| Open Pipeline | Total amount of deals open on the as-of date | 30 days earlier |
+| Weighted Pipeline | Open amount weighted by probability | 30 days earlier |
+| Closed Won (current quarter) | Won amount from the start of the quarter to the as-of date | The same number of days into the previous quarter |
+| Win Rate (12 mo) | Won deals divided by decided deals over the trailing 12 months | The 12 months before that |
+| Average Deal Size | Average won amount over the trailing 12 months | The 12 months before that |
+
+## Focus this month
+
+### Top Commodity
+
+Shows the crop to focus on now, its phase (for example post-harvest) and the regions where most of its accounts share that phase, with a one-line reason and a count of accounts out of blackout.
+
+Each crop is scored by the estimated deal value of its accounts (prospect score times estimated deal, discounted for blackouts), weighted by crop phase:
+
+| Phase | Weight |
+|---|---|
+| Post-harvest | 1.25 |
+| Off-season | 1.1 |
+| Growing | 1.0 |
+| Planting | 0.6 |
+| Harvest | 0.4 |
+
+Phases come from the crop calendar. See [Seasonality Rules](/help/seasonality-rules).
+
+### Top Region
+
+Shows the region with the most estimated deal value (the same value without the phase weight), the number of accounts out of blackout and the open pipeline. Click **View on map** to open the Map drilled into that region.
+
+## Charts
+
+- **Pipeline by Stage**: open amount and deal count for each stage. Hover a bar to see the figures.
+- **Closed Won by Month**: won amount for each of the last 12 months, ending with the month of the as-of date. Hover a bar to see the month, amount and deal count.
+
+The charts are for reading only. Clicking a bar does not filter the page.
+
+## Top 10 Open Opportunities
+
+The ten open deals with the highest expected value (close rate for the deal's creation month times amount). Columns: Account, Segment, Region, Amount, Stage, Close and Blackout.
+
+The Blackout column shows:
+
+- "To" and a date when the account is in a harvest no-contact period.
+- "Planting" when it is in the light planting period.
+- "Close date" when the close date falls inside a blackout.
+- "Open" otherwise.
+
+Click an account name to open the opportunity. In mock mode this opens the in-app record; in live mode it opens the record in Salesforce Lightning. Click **View all** to go to Segments, which lists the top 25 open deals.
+
+## Upcoming
+
+Up to five dated items in the next 120 days, with at most two of each kind:
+
+- **Harvest blackout ends** for a region, with the number of accounts. Click to open the Map on that region.
+- **Selling window opens** (for example Year-end and audit season). Click to open the Calendar.
+- **Board meeting** at an account with an open deal. Click to open the account.
+- **Close date** of an open opportunity. Click to open the opportunity.
+
+If nothing falls in the next 120 days, the card says so.
+
+<Screenshot caption="Home dashboard set to October: harvest" />
+
+## Tips
+
+- Set the date to **October: harvest** and then **December: year-end** to see Focus this month and the blackout flags change.
+- The segment ranking is not on Home. Open the **Segments** tab for it. See [Segment Prioritization](/help/segment-prioritization).

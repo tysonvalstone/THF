@@ -16,18 +16,46 @@
 | **Segments** (`/segments`) | Segment prioritization. Left panel: sliders for the four weights (deal size, cycle speed, product fit, expansion potential) and prior strength *k*, plus Reset. Right: ranked segment cards showing close rate for deals created this month with a Wilson 95% interval bar and a `Measured` / `Blended` / `Prior` tag, decided deals, median cycle, median won deal, a 12-month close-rate strip and the priority score. Below: the top 25 open deals by expected value, linking to the record. |
 | **Prospects** (`/prospects`, `/accounts/[id]`, `/leads/[id]`) | Every prospect scored 0–100 with reasons. The account page shows the segment, harvest window, calculated blackout status, fiscal year end, board meeting months, parent co-op and locations, and the buying committee. |
 | **Opportunity** (`/opportunities/[id]`) | In-app record for mock mode: stage path incl. **Board Approval**, buying committee, and close-date checks (before the next board meeting, inside a no-contact period, no economic buyer). |
-| **Opportunity Map** (Map tab) | Seasonality heat map with real US state + Canadian province shapes, a commodity dropdown (Wheat, Corn, Soybeans, Rice, Lentils) and colour that varies within states by latitude (blue = planting, red = harvest peak), with a legend. **Drill-down:** click a state to zoom to its region, and click again to zoom to the state (500 ms eased zoom), with a breadcrumb (North America › Western Corn Belt › Iowa) and Back/Reset. The side panel shows a one-line summary, key stats (facilities, customers, penetration, open pipeline, season phase), top potential customers (ranked, with estimated deal size and blackout status) and three insights. At state level, facility dots open the account. |
+| **Opportunity Map** (Map tab) | Seasonality heat map with real US state + Canadian province shapes, a commodity dropdown (Wheat, Corn, Soybeans, Rice, Lentils) and colour that varies within states by latitude (blue = planting, red = harvest peak), with a legend. **Drill-down:** click a state to zoom to its region, and click again to zoom to the state (500 ms eased zoom), with a clickable breadcrumb (North America › Western Corn Belt › Iowa) and Back. The side panel shows a one-line summary, key stats (facilities, customers, penetration, open pipeline, season phase), top potential customers (ranked, with estimated deal size and blackout status) and three insights. At state level, facility dots open the account. |
 | **Facilities** (`/facilities`) | ~457 IL/IA target facilities plus a lighter layer elsewhere. Coverage figures ("12 of 132 Iowa co-op locations"), whitespace counties, and Salesforce-ready CSV export/import. |
-| **Campaigns** (`/campaigns`, `/campaigns/new`) | Campaign builder with the four selling-window plays, template or AI copy, mail-list CSV, and Campaign / CampaignMember / Task creation (mock mode). |
+| **Campaigns** (`/campaigns`, `/campaigns/new`) | Campaign builder with six season plays (Year-end, Implementation, Budget window, Quick wins, Harvest support, Year-round), template or AI copy, mail-list CSV, and Campaign / CampaignMember / Task creation (mock mode). |
 | **Sequences** (`/campaigns/sequences`) | Outreach-style email sequences: Email / Call task / LinkedIn task steps with day offsets, merge fields with an insert menu, variants chosen by rules (season phase, commodity, region, state, segment), preview for any recipient with missing fields in amber (sending blocked), blackout-aware scheduling, AI *Draft sequence* and *Rewrite step*, and enrollment from a filtered contact list, the map, the trip planner or the AI chat. Sending is simulated: steps are logged as scheduled Tasks. Four prebuilt sequences. |
 | **Templates → Exports** (`/templates/exports`) | Export Template Builder: describe an export in plain words (AI turns it into a template spec), then edit source, columns, filters, grouping, sort, totals and format with a live 20-row preview. Save, Duplicate, Delete, Export now as CSV, XLSX or PDF. Four prebuilt templates, including a Salesforce Opportunity Import CSV with API-name headers. |
+| **Help Center** (`/help`, the ? icon in the header) | 14 articles with a table of contents and search. Every page has a **Help** link under the header that opens its article in a drawer without leaving the page. |
 | **Assistant** (button, bottom right, every page) | A 400px side panel that answers pipeline questions using read-only tools over the same data as the app (plus web search), with record links, tables, a Sources line, *Export this* and *Start sequence*. |
 | **Calendar** (`/calendar`) | The four selling windows and the campaign for each, starting with the **Price-Later Contract Compliance Webinar** (invite copy, controller + GM target list, follow-up sequence). Crop calendar by region for reference. |
 | **Time travel** (header) | Pick any date: close rates, rankings, blackouts, the map and the campaign plays all recalculate. Presets: October, December, March, July, early August. |
 
 ## Interface decisions (UI polish pass)
 
-**Navigation, dashboard, map and assistant (latest round)**
+**Help Center and CSV column picker (latest round)**
+
+- **Help lives in one place:** pages keep no explainer text; the ? icon in the header opens `/help` and the **Help** link on each page (right end of the section tab row) opens the matching article in a right-side drawer. Page → article mapping is in `src/lib/help/types.ts` (`helpSlugFor`); record pages and Prospects open *Segment Prioritization*, Facilities opens *Map*, Calendar opens *Seasonality Rules*, Settings opens *Getting Started*.
+- **Search** is client-side (Fuse.js) over titles, summaries and article text; arrow keys and Enter pick a result.
+- **Assistant + help:** the assistant has a `search_help` tool and links articles for how-do-I questions; without a key, questions that start like "how do I…", "where can I…" or "what does … mean" are answered with the best matching articles.
+- **Features that aren't built yet:** *Quotes*, *Product Setup* and the *New Builds Finder* articles say plainly that the feature isn't available in this version, point to what exists today, and list the planned behaviour. The Home dashboard has no separate period selector or click-to-filter (the time-travel date sets the period) and the map has no new-builds layer; the articles describe the app as it is.
+- **Column picker on every CSV export** (Prospects, Facilities, campaign mail lists, trip itineraries and CSV exports from the Template Builder): show/hide, drag or move to reorder, rename headers, live 5-row preview, all rows or the filtered view (where the page has filters), date format (YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY), named presets and a remembered last-used setup per export. Salesforce-ready files lock their required fields (Facilities: `Id`, `Name`; Opportunity import: `Name`, `StageName`, `CloseDate`, `AccountId`). One engine (`src/lib/columns.ts`) and one dialog (`src/components/shared/column-picker.tsx`) serve all of them. In the Template Builder the template's own columns are the starting setup, and presets are shared per data source. Presets are stored with the same storage module as templates and sequences.
+- There are no Quotes or New Builds exports because those features don't exist yet.
+
+### Editing help articles
+
+Articles are MDX files in `content/help/`, one per article; the file name is the URL (`content/help/map.mdx` → `/help/map`). Each starts with front matter:
+
+```
+---
+title: Map
+summary: One sentence shown in search results.
+order: 3
+related: [trip-planner, seasonality-rules]
+---
+```
+
+- Write plain Markdown (GFM tables work) with `##` and `###` headings. Link other articles as `/help/<slug>` and pages as `/map`.
+- `related` becomes the *Related articles* list at the bottom; don't write it in the body.
+- `<Screenshot caption="…" />` draws a placeholder box. No other components, imports or `{ }` expressions (put merge fields like `{{account.name}}` in backticks).
+- Files are read at request time, so a new or edited article appears on the next page load (and after a deploy on Vercel). `order` sets the position in the table of contents.
+
+**Navigation, dashboard, map and assistant**
 
 - **Navigation:** four sections, **Home · Map · Campaigns · Templates**. Pages that used to be top-level are tabs inside a section, so nothing appears twice: Home has Overview / Segments / Prospects, Map has Map / Facilities, Campaigns has Campaigns / Sequences / Calendar, and Templates has Exports. Record pages (accounts, leads, opportunities) and Settings sit under Home. The time-travel bar, the Mock/Live badge and the assistant button are global. The segment priority list moved off Home (it lives on Segments).
 - **Home "Focus this month":** *Top Commodity* scores each crop by the estimated deal value of its accounts (prospect score × estimated deal, discounted for blackouts) weighted by crop phase (post-harvest ×1.25, off-season ×1.1, growing ×1, planting ×0.6, harvest ×0.4), and names the two regions where most of its accounts share that phase. *Top Region* uses the same value without the phase weight. Phases come from the crop calendar: planting and harvest when the phase value is ≥ 0.5 either way, post-harvest for 120 days after the harvest window, growing between planting and harvest, off-season otherwise.
@@ -60,7 +88,7 @@
 
 ## Seasonality rules
 
-- **Elevators, co-ops, river terminals, shuttle loaders, seed cleaners:** hard no-contact from mid-August to Thanksgiving (harvest), light no-contact mid-April to early June (planting). Both shift about a week later per ~4° north (0 days at 38°N, up to 14 days), and a further week in Canada.
+- **Elevators, co-ops, river terminals, shuttle loaders, seed cleaners:** hard no-contact from mid-August to Thanksgiving (harvest), light no-contact mid-April to early June (planting). Both shift 2 days later per degree north of 38°N (about 8 days at 42°N, capped at 14 days), and a further week in Canada.
 - **Ethanol plants, feed mills, processors:** no blackout; they are worked year-round and rise to the top during harvest.
 - **Selling windows:** Dec–Feb prime (year-end, audits, boards, budgets) · late Feb–Mar implementation ("live before planting") · Jun–Jul budget window (fiscal years often end Aug 31 / Sep 30) · early Aug quick wins only (mobile add-ons, pilots) · harvest = support customers, collect NPS, sell to year-round segments.
 - Outreach during a blackout shows a warning, e.g. *"In harvest blackout until Nov 26. Schedule for Nov 30?"* in southern Illinois, *"…until Dec 5. Schedule for Dec 7?"* in northern Iowa, and pre-fills the scheduled date.
@@ -83,7 +111,7 @@ Per segment, from closed opportunity history up to the as-of date:
 - Because the rate is seasonal, in **October** ethanol plants and feed mills rise to the top on their own, and in **December** co-ops take over.
 - Open-deal expected value = applicable close rate (for the deal's creation month) × Amount ÷ segment median days → expected dollars per day of cycle.
 
-Run the tests: `npm test` (stats, crop calendar, scoring and outreach: 28 tests).
+Run the tests: `npm test` (stats, crop calendar, scoring, outreach, sequences and CSV columns).
 
 ---
 
@@ -131,7 +159,7 @@ Step-by-step guide: **[docs/salesforce-setup.md](docs/salesforce-setup.md)**. It
 ```bash
 npm install
 npm run dev          # http://localhost:3000
-npm test             # 37 unit tests
+npm test             # unit tests (stats, crop calendar, scoring, outreach, sequences, CSV columns)
 npm run build
 npm run seed         # regenerate mock data
 npx tsx scripts/build-geo.ts   # regenerate /public/geo map files

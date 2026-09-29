@@ -1,0 +1,73 @@
+---
+title: Segment Prioritization
+summary: How the Segments page ranks market segments by seasonal close rate and your weights, and how prospect scores on the Prospects page are built.
+order: 5
+related: [seasonality-rules, home-dashboard, map]
+---
+
+The Segments page (Home, Segments tab) ranks the eight market segments by how well deals started this month close, adjusted by weights you control. The Prospects page (Home, Prospects tab) scores every individual prospect from 0 to 100. Both recalculate when you change the as-of date.
+
+## Read the segment cards
+
+Each ranked card shows:
+
+- **Close rate** for deals created in the as-of month, with a bar for the Wilson 95% interval.
+- A tag: **Measured**, **Blended** or **Prior** (see below).
+- **Decided Deals**, **Median Cycle** (days from created to closed) and **Median Won Deal**.
+- **Close rate by month created**: a 12-month strip. Thin months are hatched.
+- The **Priority** score.
+
+Below the cards, **Top Open Deals by Expected Value** lists the top 25 open deals. Flags show **Before board** (closes before the next board meeting), **In blackout** (closes inside a no-contact period) and **No econ. buyer** (past Prospecting without an economic buyer). Click a deal to open it.
+
+## How close rates are calculated
+
+- Close rate = won divided by (won + lost), from closed history up to the as-of date, with a Wilson 95% interval.
+- With 10 or more decided deals the rate is **Measured**.
+- With fewer than 10 decided deals the card says "Not enough data" instead of a bare percentage, and the rate used for ranking is **Blended**: (won + k times the company rate) divided by (decided + k).
+- With no history at all (for example Seed Cleaner / Specialty Crop) the company-wide rate is used and tagged **Prior**.
+- Month buckets that are thin blend toward the segment's own rate.
+
+## Adjust the weights
+
+The left panel has five sliders:
+
+1. **Deal size**, **Cycle speed**, **Product fit** and **Expansion potential** (0 to 100, defaults 30, 25, 25 and 20).
+2. **Prior strength k** (0 to 50, default 10). Higher k pulls thin segments harder toward the company rate.
+3. Click **Reset** to restore the defaults.
+
+The ranking updates immediately; nothing is re-queried.
+
+## How the priority score works
+
+Priority = (this month's close rate divided by the best segment's) times (0.25 + 0.75 times the weighted blend), shown out of 100.
+
+- The blend is a weighted average of deal size (log-scaled median won amount), cycle speed (shorter is better), product fit (from the product-fit table) and expansion potential (average locations per parent account), each scaled 0 to 1 across segments.
+- Rates that are less certain count for a little less: Prior times 0.85, Blended times 0.92.
+- The 0.25 floor stops a strong segment from disappearing in its weak month.
+
+Because the close rate is seasonal, ethanol plants and feed mills rise to the top in October, and multi-location co-ops take over in December.
+
+Expected value for an open deal is the close rate for the deal's creation month times its amount, divided by the segment's median cycle days (expected dollars per day).
+
+<Screenshot caption="Segments page in December with the weight sliders" />
+
+## Prospect scores
+
+On the Prospects page every account and lead gets a score from 0 to 100, made of six factors:
+
+| Factor | Max | What it reflects |
+|---|---|---|
+| Season timing | 30 | Selling window and blackouts for elevators and co-ops; margins and feeding season for year-round segments |
+| Fit & size | 20 | Facility type fit with the product lines, size and number of locations |
+| Market signal | 15 | Price moves, local basis, crop size, crush margins or ration costs |
+| Displacement | 15 | How replaceable the current system is: paper and legacy score highest, then competitor contracts near renewal |
+| Engagement | 15 | Recent touches, campaign responses and open deals; reduced if contacted in the last 7 days |
+| Climate | 5 | This season's regional conditions |
+
+Tiers: **Hot** is 72 or more, **Warm** is 60 to 71, **Cool** is below 60. The **Why Now** column gives the main reason. Open a prospect to see the full score breakdown.
+
+To use the Prospects page:
+
+1. Filter by record type, region, state or province, facility type, commodity or minimum score, or search by name, town or software.
+2. Click **Email** on a row to write to the prospect. If the account is in a blackout, you see a warning with a suggested date. Sending logs a completed email task and adds a follow-up task (mock mode only).
+3. Click **Export CSV** to download the list. See [Exports & Templates](/help/exports-templates).

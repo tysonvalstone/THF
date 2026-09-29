@@ -1,0 +1,78 @@
+---
+title: Seasonality Rules
+summary: When elevators and co-ops are in harvest or planting no-contact periods, how the dates shift going north, and the selling windows through the year.
+order: 6
+related: [segment-prioritization, map, campaigns-sequences, trip-planner]
+---
+
+Harvest is a no-contact period for grain buyers, not an opportunity. HarvestSignal applies the same blackout and selling-window rules everywhere: on account pages, outreach, the Map, the Trip Planner, sequences, campaigns and the Home dashboard. This article lists the rules.
+
+## Which segments have blackouts
+
+| Segment | Blackouts |
+|---|---|
+| Country Elevator, Multi-Location Co-op, River Terminal, Rail/Shuttle Loader, Seed Cleaner / Specialty Crop | Yes: harvest (hard) and planting (light) |
+| Ethanol Plant, Feed Mill, Processor | None. Worked year-round, and they rise to the top during harvest |
+
+## Blackout dates
+
+| Blackout | Base dates | What it means |
+|---|---|---|
+| Spring planting (light) | April 15 to June 5 | Short check-ins only. Sequences move call steps out of it. |
+| Harvest (hard) | August 15 to US Thanksgiving | No contact. Outreach shows a warning and suggests a date after it ends. |
+
+### Shift going north
+
+Both blackouts start and end later the further north the account is:
+
+- 0 days at or below 38°N.
+- About 2 days per degree of latitude above that, so about a week at 42°N.
+- Capped at 14 days (reached at about 45°N).
+- A further 7 days for accounts in Canada.
+
+Thanksgiving is US Thanksgiving for every account, including Canadian ones.
+
+### When contact can resume
+
+The suggested resume date is the next weekday after the blackout ends. If that falls on the Friday after Thanksgiving, it moves to the following Monday. For example, in the 2026 harvest:
+
+- Southern Illinois: "In harvest blackout until Nov 26. Schedule for Nov 30?"
+- Northern Iowa: "In harvest blackout until Dec 5. Schedule for Dec 7?"
+
+When you email or call an account in a blackout, you see this warning and the scheduled date is filled in for you.
+
+## Selling windows
+
+The calendar year is split into windows for selling to elevators and co-ops. They drive the season timing part of prospect scores, the campaign plays and the colours on the season bar.
+
+| Window | Dates | Selling to grain |
+|---|---|---|
+| Year-end and audit season | Dec 1 to Feb 20 | Prime: year-end close, audits, boards, budgets |
+| Live before planting | Feb 21 to Apr 14 | Good: decisions now can go live before planting |
+| Spring planting | Apr 15 to Jun 5 | Limited: light no-contact |
+| Budget window | Jun 6 to Jul 31 | Good: fiscal years often end Aug 31 or Sep 30 |
+| Quick wins only | Aug 1 to Aug 14 | Limited: mobile add-ons (GrainSight Mobile, ScaleTrac Mobile) and pilots |
+| Harvest | Aug 15 to Nov 28 | No contact: support customers, collect NPS, sell to year-round segments |
+| Post-harvest wrap-up | Nov 29 to Nov 30 | Good: book December meetings |
+
+These window dates are fixed calendar dates. The account-level blackout dates above are what decide whether a specific account can be contacted.
+
+## Crop phases on the Map and Home
+
+The Map colours and the Home "Top Commodity" card use a crop calendar for Wheat, Corn, Soybeans, Rice and Lentils. It is modelled on USDA NASS *Field Crops Usual Planting and Harvesting Dates*: each crop has a planting peak and a harvest peak that shift with latitude. Canadian provinces are extrapolated northward from the same model. It approximates the published state ranges and is not live crop-progress data.
+
+Phases:
+
+- **Planting** or **Harvest** when the model is at least halfway into that peak.
+- **Post-harvest** for 120 days after the harvest window.
+- **Growing** between planting and harvest.
+- **Off-season** otherwise.
+
+## Buying committee and board timing
+
+- A typical committee is the GM (decision maker), controller (economic buyer), merchandiser (champion) and the board.
+- A deal can't leave Prospecting until the economic buyer is identified.
+- Co-op deals go through a **Board Approval** stage. Boards are assumed to meet on the second Tuesday of their meeting months.
+- Co-op locations are child accounts of the co-op; their deals and pipeline roll up to the parent.
+
+<Screenshot caption="Account page showing a harvest blackout and resume date" />

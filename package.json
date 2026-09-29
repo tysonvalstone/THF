@@ -8,13 +8,15 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/generate-seed.ts",
-    "test": "tsx --test src/lib/stats.test.ts src/lib/cropCalendar.test.ts src/lib/scoring/scoring.test.ts src/lib/actions/outreach.test.ts src/lib/sequences/engine.test.ts"
+    "test": "tsx --test src/lib/stats.test.ts src/lib/cropCalendar.test.ts src/lib/scoring/scoring.test.ts src/lib/actions/outreach.test.ts src/lib/sequences/engine.test.ts src/lib/columns.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
+    "@mdx-js/mdx": "^3.1.1",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "d3-geo": "^3.1.1",
+    "fuse.js": "^7.5.0",
     "jsforce": "^3.10.27",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",

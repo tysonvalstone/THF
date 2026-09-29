@@ -1,19 +1,20 @@
 /**
- * Writes an applied export spec to CSV, XLSX or PDF and triggers a download.
- * The XLSX and PDF libraries are loaded on demand.
+ * Writes an applied export spec to XLSX or PDF and triggers a download (the
+ * libraries are loaded on demand). CSV goes through the shared column picker:
+ * `templateCsvColumns` / `templateCsvSetup` describe a template for it.
  */
 import type { ExportFormat, ExportSpec, FieldType } from "@/lib/ai/types";
-import { fieldDef } from "@/lib/exports/fields";
+import { EXPORT_FIELDS, fieldDef } from "@/lib/exports/fields";
 import { columnLabel, formatCell, type ExportResult, type ExportRow } from "@/lib/exports/engine";
-import { downloadText } from "@/lib/csv";
+import type { ColumnDef, ColumnSetup } from "@/lib/columns";
 import { fmtDate, parseDate } from "@/lib/dates";
 import { plural } from "@/lib/format";
 
 export interface ExportOptions {
   /** As-of date, YYYY-MM-DD */
   asOf: string;
-  /** Override the spec's format */
-  format?: ExportFormat;
+  /** Override the spec's format (CSV uses the column picker) */
+  format?: Exclude<ExportFormat, "csv">;
 }
 
 interface Col {
@@ -59,30 +60,49 @@ export async function exportSpec(spec: ExportSpec, result: ExportResult, opts: E
   const format = opts.format ?? spec.format;
   const filename = exportFilename(spec, opts.asOf, format);
   const cols = columnsOf(spec);
-  if (format === "csv") exportCsv(spec, result, cols, filename);
-  else if (format === "xlsx") await exportXlsx(spec, result, cols, filename);
+  if (format === "csv") throw new Error("CSV exports go through the column picker");
+  if (format === "xlsx") await exportXlsx(spec, result, cols, filename);
   else await exportPdf(spec, result, cols, filename, opts.asOf);
   return filename;
 }
 
 /* ------------------------------------------------------------------- CSV */
 
-function csvValue(v: unknown, type: FieldType): string {
-  if (v === null || v === undefined) return "";
-  if (type === "percent" && typeof v === "number") return String(Math.round(v * 1000) / 10);
-  if (type === "date" && typeof v === "string") return v.slice(0, 10);
-  if (type === "boolean") return v ? "true" : "false";
-  if (typeof v === "number") return String(Math.round(v * 100) / 100);
-  return String(v);
+/** Required Salesforce import fields per source (locked on in the column picker) */
+const SF_REQUIRED: Partial<Record<ExportSpec["source"], string[]>> = {
+  opportunities: ["name", "stage", "close_date", "account_id"],
+};
+
+/** Every field of the template's source as picker columns; headers are API names for Salesforce imports */
+export function templateCsvColumns(spec: ExportSpec): ColumnDef<ExportRow>[] {
+  const sf = isSalesforceImport(spec);
+  const required = new Set(sf ? (SF_REQUIRED[spec.source] ?? []) : []);
+  return EXPORT_FIELDS[spec.source].map((d) => ({
+    key: d.key,
+    label: sf ? (d.sfName ?? d.label) : d.type === "percent" ? `${d.label} (%)` : d.label,
+    type: d.type,
+    required: required.has(d.key) || undefined,
+    value: (r: ExportRow) => r[d.key],
+  }));
 }
 
-function exportCsv(spec: ExportSpec, result: ExportResult, cols: Col[], filename: string) {
+/** The template's own columns (in order, with custom headers) on; every other field off */
+export function templateCsvSetup(spec: ExportSpec): ColumnSetup {
   const sf = isSalesforceImport(spec);
-  const esc = (s: string) => (/[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s);
-  const header = cols.map((c) => (sf && c.sfName ? c.sfName : c.type === "percent" && !sf ? `${c.label} (%)` : c.label));
-  const lines = [header.map(esc).join(",")];
-  for (const r of result.rows) lines.push(cols.map((c) => esc(csvValue(r[c.field], c.type))).join(","));
-  downloadText(filename, lines.join("\r\n"));
+  const own = spec.columns.filter((c) => fieldDef(spec.source, c.field));
+  const ownKeys = new Set(own.map((c) => c.field));
+  return {
+    columns: [
+      ...own.map((c) => {
+        const d = fieldDef(spec.source, c.field)!;
+        const custom = c.label?.trim() && !(sf && d.sfName) ? (d.type === "percent" && !sf ? `${c.label.trim()} (%)` : c.label.trim()) : undefined;
+        return { key: c.field, on: true, ...(custom ? { label: custom } : {}) };
+      }),
+      ...EXPORT_FIELDS[spec.source].filter((d) => !ownKeys.has(d.key)).map((d) => ({ key: d.key, on: false })),
+    ],
+    dateFormat: "iso",
+    scope: "all",
+  };
 }
 
 /* ------------------------------------------------------------------ XLSX */

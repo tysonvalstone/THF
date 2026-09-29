@@ -1,0 +1,65 @@
+---
+title: Trip Planner
+summary: Describe a sales trip in plain words and get a ranked, routed, day-by-day list of facilities to visit, with blackout warnings and exports.
+order: 4
+related: [map, seasonality-rules, campaigns-sequences, exports-templates]
+---
+
+The Trip Planner (Map, **Plan a Trip** tab in the sidebar) turns a request such as "I'm going to Illinois in a month, give me the top 10 elevators to visit" into an itinerary. It picks prospects in the destination, avoids accounts in a no-contact period where it can, orders the stops to keep driving short and splits them into days.
+
+## Plan a trip
+
+1. Open **Map** and click the **Plan a Trip** tab.
+2. Type your request in the box and press Enter or click **Plan trip**.
+3. Check the form that fills in below, and change anything you need:
+   - **Destination**: a region or a state or province.
+   - **Start date**: the first travel day.
+   - **Stops**: 1 to 30.
+   - **Segment**: Any, Year-round segments, or a single segment.
+   - **Start city**: optional, for example "Peoria, IL".
+4. The itinerary appears below the form.
+
+With an AI key configured, Claude reads your request. Without one, a keyword parser fills the same form and the panel shows "AI offline — keyword matching". Either way you can edit the form. Relative dates ("tomorrow", "next week", "in a month") are measured from the as-of date. If you give no date, the trip starts a week after the as-of date, and weekend dates move to the next weekday. If you give no number, you get 10 stops.
+
+## How stops are chosen
+
+Candidates are prospects (not current customers) in the destination, including co-op locations. Each gets a trip score:
+
+| Part | Points |
+|---|---|
+| Prospect score | 0.6 times the prospect score |
+| Deal size | Up to 20, based on estimated deal size |
+| Open opportunity | +15 |
+| Win in the last 12 months within 40 miles (reference visit) | +10 |
+| Whitespace county (no customer yet) | +6 |
+
+The total is then multiplied by 0.3 if the account is in a harvest blackout on the travel date, or by 0.8 if it is in a planting blackout.
+
+Stops are picked one at a time from the start city (or the top pick), trading score against distance at one point per 4 miles. They are then ordered nearest-neighbour and split into days.
+
+## How days are scheduled
+
+- At most five stops per day, on consecutive weekdays.
+- The day starts at 8:30 AM, each visit takes 60 minutes, and the last arrival must be by 5 PM.
+- Drive time is estimated as straight-line miles times 1.3, at 55 mph. It is not a road route.
+
+Each stop shows its arrival time, the main reason it was picked, open pipeline, last contact and blackout status.
+
+## Blackout warning
+
+If half or more of the stops are in a harvest blackout on the travel date, a warning appears. It can offer:
+
+- **Year-round segments instead**, switching the segment to ethanol plants, feed mills and processors in the same area.
+- **Go** on a later date, when most of the blocked stops come out of blackout.
+
+<Screenshot caption="Trip planner with a harvest blackout warning" />
+
+## Adjust and share the trip
+
+- Click the swap icon on a stop to replace it with the next best candidate, or the remove icon to drop it.
+- **Export PDF** or **Export CSV** to download the itinerary. The CSV export opens the column picker; see [Exports & Templates](/help/exports-templates).
+- **Calendar (.ics)** downloads one calendar event per stop.
+- **Enroll in sequence** opens Sequences with the **Visiting Next Week** sequence selected and the stops ready to enroll.
+- **Clear trip** starts again.
+
+Your last eight trips are saved in this browser under **Recent trips**. Click one to reopen it, or click the X to delete it.

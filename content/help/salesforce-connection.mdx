@@ -1,0 +1,71 @@
+---
+title: Salesforce Connection (Admin)
+summary: How to connect HarvestSignal to a Salesforce org in read-only live mode, which fields it uses, and how the Settings connection screen and sign-in work.
+order: 13
+related: [getting-started, exports-templates, faq, product-setup]
+---
+
+HarvestSignal runs on mock data until an administrator connects it to Salesforce. In live mode it reads Accounts, Contacts, Opportunities, Campaigns, Campaign Members, Tasks and Events, and never writes anything. This article is for the person who sets up the connection. The full step-by-step guide is `docs/salesforce-setup.md` in the project.
+
+## Mock and live mode
+
+| | Mock (default) | Live Salesforce |
+|---|---|---|
+| Turned on when | No settings needed | All five `SF_` environment variables are set |
+| Data | Generated seed data | Your org, read with SOQL SELECT queries |
+| Changes | Emails, calls, campaigns and CSV imports are stored in the browser | Read-only. Outreach actions are disabled |
+| Refresh | Static | Cached for 1 hour; **Refresh data** reloads it |
+
+The header badge shows **Mock data** or **Live Salesforce**. Hover the badge to see when the data was loaded and how many warnings (for example a missing field) there are.
+
+## Connect a live org
+
+1. **Create a Connected App** (or External Client App) named HarvestSignal with OAuth scopes *api* and *refresh_token, offline_access*. Copy the Consumer Key and Consumer Secret.
+2. **Allow the username-password flow**: in Setup, OAuth and OpenID Connect Settings, turn on Allow OAuth Username-Password Flows. Without it, logins fail with `invalid_grant`.
+3. **Create a read-only integration user** with a permission set that has API Enabled and Read (only) on Account, Contact, Opportunity, Campaign, Campaign Member, Task and Event, plus read access to the custom fields below. View All is optional but gives complete win rates.
+4. **Handle the security token**: if IP restrictions apply, append the security token to the password, or relax IP restrictions on the Connected App.
+5. **Set the environment variables** in the Vercel project, then redeploy:
+
+| Variable | Value |
+|---|---|
+| `SF_LOGIN_URL` | `https://login.salesforce.com`, `https://test.salesforce.com` for a sandbox, or your My Domain URL |
+| `SF_CLIENT_ID` | Consumer Key |
+| `SF_CLIENT_SECRET` | Consumer Secret |
+| `SF_USERNAME` | Integration user's username |
+| `SF_PASSWORD` | Password, with the security token appended if needed |
+
+6. Open the app and check that the badge says **Live Salesforce**.
+
+Before adding real credentials, turn on Vercel Deployment Protection so customer data is not visible to anyone with the link.
+
+## Fields HarvestSignal uses
+
+Every custom field is optional. The app checks which fields exist, reads only those, fills in defaults for the rest and shows a warning.
+
+- **Account.Segment__c** is the most important. It should use the eight segment values (Country Elevator, Multi-Location Co-op, River Terminal, Rail/Shuttle Loader, Ethanol Plant, Feed Mill, Processor, Seed Cleaner / Specialty Crop). If it is missing, the segment is guessed from the account name, Industry and Type.
+- Other Account fields: Facility_Type__c, Region__c, Primary_Commodities__c, County__c, County_FIPS__c, Railroad__c, Rail_Served__c, River_Access__c, Shuttle_Loader__c, Fiscal_Year_End__c, Board_Meeting_Months__c, Number_of_Locations__c, Storage_Capacity_Bu__c, Current_Software__c, Software_Contract_End__c, and the standard ParentId to link co-op locations to their headquarters.
+- Contact.Buying_Role__c (guessed from Title if missing).
+- Opportunity.Economic_Buyer_Identified__c, and a **Board Approval** value in the Stage picklist. Stages that don't match are mapped by keyword or probability.
+- Campaign targeting fields: Season__c, Target_Regions__c, Target_Facility_Types__c, Target_Commodity__c.
+
+The app loads up to 20,000 rows per object and warns when it reaches that limit. Opportunities cover open deals plus deals created in the last 3 years. The exact queries are in the project's `soql` folder.
+
+## The Settings connection screen
+
+**Settings**, **Salesforce** (avatar menu) has a **Connect to Salesforce** flow: choose the environment (Production or Sandbox) and My Domain, then watch the authorization steps. Afterwards it shows the org, instance, last sync, object counts, **Sync now** and **Disconnect**.
+
+This screen is a demonstration. It does not change where the data comes from. Live mode is controlled only by the `SF_` environment variables.
+
+## Sign-in and sessions
+
+- Users pick their name on **Select user**. A user can set a password in **Settings**, **Security** (at least 6 characters); passwords are stored in the browser as salted SHA-256 hashes.
+- Signing in sets a signed, HTTP-only session cookie valid for 30 days. Every page request checks it. Set `SESSION_SECRET` in production to sign it; otherwise a built-in demo value is used.
+- For production, use Salesforce SSO or the company identity provider.
+
+## Other environment variables
+
+| Variable | Effect |
+|---|---|
+| `ANTHROPIC_API_KEY` | Turns on Claude for the assistant, templates, sequences, trip parsing and campaign copy |
+| `ANTHROPIC_MODEL` | Model for the AI features. Default `claude-opus-5-5` |
+| `SESSION_SECRET` | Signs the session cookie |

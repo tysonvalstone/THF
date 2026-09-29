@@ -1,0 +1,52 @@
+---
+title: Product Setup
+summary: Managing products and price books in the app is not available yet; this article covers the product reference data that exists today and what is planned.
+order: 9
+related: [quotes, segment-prioritization, salesforce-connection]
+---
+
+Product setup is not available in this version of HarvestSignal yet. You cannot add, edit or remove products, product types or price books from the app. The product catalog and product fit exist as reference data in the code, and this article explains what they contain and how they are used.
+
+## What you can do today
+
+### Review the product catalog
+
+The catalog is in `src/data/reference/products.ts`. It has five modules and two services:
+
+| Product | Code | Family | Best fit |
+|---|---|---|---|
+| Ceres | CERES | Financials | Grain Elevator, Cooperative, Seed Processor, Feed Mill |
+| GrainSight | GRAINSIGHT | Commodity Management | Grain Elevator, Cooperative, Ethanol Plant, Oilseed Crusher, Flour Mill |
+| ScaleTrac | SCALETRAC | Grain Operations | All facility types except Agronomy Retailer |
+| GrainSight Mobile | GRAINSIGHT-M | Customer Engagement | Grain Elevator, Cooperative, Ethanol Plant |
+| ScaleTrac Mobile | SCALETRAC-M | Grain Operations | Grain Elevator, Cooperative, Feed Mill |
+| Implementation & Data Migration | SVC-IMPL | Services | Any |
+| Go-Live Training | SVC-TRAIN | Services | Any |
+
+List prices and pricing units are in [Quotes](/help/quotes). Prices are illustrative. To change the catalog, a developer edits this file.
+
+### Review product fit by segment
+
+`src/data/reference/product-fit.ts` scores how well each module fits each of the eight segments, from 0 (no fit) to 1 (core fit). For example, a Multi-Location Co-op is a core fit for all five modules, while a Feed Mill is a weak fit for GrainSight and no fit for GrainSight Mobile.
+
+The average fit for a segment is the **Product fit** input on the Segments page. Changing the table changes the segment ranking. See [Segment Prioritization](/help/segment-prioritization).
+
+Prospect scores on the Prospects page have their own facility-type fit, part of the **Fit & size** factor; it does not read this table.
+
+### Where products appear
+
+- Opportunity pages (mock mode) list line items with quantity and total price.
+- Recent sales dots on the Map list the products on a won deal.
+- The mock data generator builds line items from this catalog.
+
+### What live mode reads
+
+When HarvestSignal is connected to Salesforce it reads Account, Contact, Opportunity, Campaign, CampaignMember, Task and Event. It does not read Product2, Pricebook2, PricebookEntry or OpportunityLineItem, so product line items are empty in live mode. See [Salesforce Connection (Admin)](/help/salesforce-connection).
+
+## Planned
+
+The following is planned and not built yet:
+
+- Manage product types (families) and products in the app.
+- Maintain price books, with pricing per location, user or bushel for each module.
+- Map products to Salesforce: Product2 for products, Pricebook2 for price books and PricebookEntry for prices, so the catalog and quotes match your org.

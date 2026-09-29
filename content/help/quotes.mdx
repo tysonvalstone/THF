@@ -1,0 +1,57 @@
+---
+title: Quotes
+summary: Quotes are not available in this version of HarvestSignal yet; this article covers what you can see about products and pricing today and what is planned.
+order: 8
+related: [product-setup, segment-prioritization, exports-templates]
+---
+
+Building quotes is not available in this version of HarvestSignal yet. There is no quote builder, no discount approval and no quote PDF. This article explains where you can see products and prices today, and what the quote feature is planned to do.
+
+## What you can do today
+
+### See products on an opportunity
+
+1. Open an opportunity, for example from the **Top 10 Open Opportunities** table on Home or the top open deals on **Segments**.
+2. In mock mode the opportunity page shows a **Products** section with each line item, its quantity and its total price, alongside the deal amount, stage path and buying committee.
+3. On the **Map**, turn on **Recent sales** and click a yellow dot to see the products on a won deal.
+
+In live mode, opportunity links open the record in Salesforce, and HarvestSignal does not read line items from your org, so products are not shown in the app.
+
+### Check list prices
+
+The price book is reference data in the app (`src/data/reference/products.ts`). Prices are illustrative.
+
+| Product | Family | List price | Pricing unit |
+|---|---|---|---|
+| Ceres | Financials | $36,000 | per year |
+| GrainSight | Commodity Management | $30,000 | per year |
+| ScaleTrac | Grain Operations | $9,600 | per location / year |
+| GrainSight Mobile | Customer Engagement | $12,000 | per year |
+| ScaleTrac Mobile | Grain Operations | $4,800 | per location / year |
+| Implementation & Data Migration | Services | $25,000 | one-time |
+| Go-Live Training | Services | $8,000 | one-time |
+
+What each product does:
+
+- **Ceres**: ag ERP for grain accounting, producer settlements, deferred payments, patronage and equity, 1099s and Canadian tax slips.
+- **GrainSight**: grain management, including contracts (price-later and DP), real-time position, hedges, bids, bin inventory and shrink.
+- **ScaleTrac**: scale house ticketing, grade and moisture capture, discounts and driver kiosks.
+- **GrainSight Mobile**: the producer app for contracts, e-signature, settlements and push bids.
+- **ScaleTrac Mobile**: mobile scale tickets and driver check-in; a quick add-on that can go live in weeks.
+- **Implementation & Data Migration**: fixed-scope implementation, historical ticket and contract migration, and go-live support.
+- **Go-Live Training**: on-site scale house and office training, scheduled outside harvest and planting.
+
+For a per-location product, multiply the list price by the number of locations. The account page shows the number of locations and, for a co-op, its location accounts.
+
+### Export deal data
+
+To prepare pricing outside the app, export open opportunities with the Export Template Builder. See [Exports & Templates](/help/exports-templates).
+
+## Planned
+
+The following is planned and not built yet:
+
+- Build a quote from the product catalog on an opportunity, with quantities per location, user or bushel as the product requires.
+- Apply discounts, with approval thresholds that route larger discounts for approval.
+- Export the quote as a PDF to send to the customer.
+- A simulated e-signature step.

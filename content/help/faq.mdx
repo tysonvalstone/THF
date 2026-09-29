@@ -1,0 +1,122 @@
+---
+title: FAQ & Troubleshooting
+summary: Answers to common questions about dates, data, blackouts, rankings, exports, the assistant and the Salesforce connection.
+order: 14
+related: [getting-started, seasonality-rules, salesforce-connection, ai-assistant]
+---
+
+Short answers to common questions. Each links to the article with the full detail.
+
+## Dates and data
+
+### Why do the numbers change when I change the date?
+
+Almost everything is calculated for the as-of date in the header: close rates for the current month, rankings, blackouts, Home KPIs, map colours and campaign plays. Click **Today** in the date picker to return to the real date. See [Getting Started](/help/getting-started).
+
+### Is this real customer data?
+
+When the header badge says **Mock data**, no. The data is generated, and company and people names are fictional. When it says **Live Salesforce**, the app is reading your org. See [Salesforce Connection (Admin)](/help/salesforce-connection).
+
+### Where did my emails, campaigns or imports go?
+
+In mock mode, changes are stored in your browser only. They do not appear in another browser or device, or in a private window, and clearing site data removes them. **Reset local changes** in the avatar menu also removes them.
+
+### Why can't I send emails or log calls?
+
+In live mode the app is read-only, so outreach actions are disabled. Nothing is ever actually sent in either mode: emails and sequence steps are logged as tasks in mock mode.
+
+### How current is live data?
+
+Live data is cached for 1 hour. Click **Refresh data** in the header to query Salesforce again.
+
+## Blackouts and seasons
+
+### Why does the app tell me not to contact an account?
+
+Elevators, co-ops, river terminals, shuttle loaders and seed cleaners are in a harvest no-contact period from mid-August to Thanksgiving, and a light no-contact period during spring planting. Dates move later the further north the account is. See [Seasonality Rules](/help/seasonality-rules).
+
+### Why is an ethanol plant never in blackout?
+
+Ethanol plants, feed mills and processors run year-round, so they have no blackout. They tend to rank highest during harvest.
+
+### Are the map colours actual crop progress?
+
+No. They come from a model based on USDA NASS usual planting and harvesting dates, shifted by latitude. See [Map](/help/map).
+
+## Rankings and scores
+
+### What does "Not enough data" mean on a segment?
+
+The segment has fewer than 10 decided deals for that period, so the app does not show a bare percentage. The rate used for ranking is blended toward the company rate. See [Segment Prioritization](/help/segment-prioritization).
+
+### What do Measured, Blended and Prior mean?
+
+**Measured** is based on 10 or more decided deals. **Blended** mixes a thin segment's own results with the company rate. **Prior** uses the company rate because the segment has no history.
+
+### Why did a segment jump when I moved a slider?
+
+The weights change the priority score immediately. Click **Reset** to go back to the defaults.
+
+### How is a prospect's score calculated?
+
+It adds six factors: season timing (30), fit and size (20), market signal (15), displacement (15), engagement (15) and climate (5). 72 or more is Hot and 60 to 71 is Warm.
+
+## Map and trips
+
+### Why doesn't the Trip Planner pick the highest-scored accounts?
+
+It balances score against distance (one point per 4 miles) to keep the trip compact, and reduces the score of accounts in a blackout on the travel date. See [Trip Planner](/help/trip-planner).
+
+### Are drive times accurate?
+
+They are estimates: straight-line miles times 1.3, at 55 mph. Check a routing app before you travel.
+
+### Why is the products list empty on a recent sale?
+
+In live mode the app does not read opportunity line items from Salesforce.
+
+## Exports
+
+### How do I export only some columns?
+
+Click **Export CSV**, untick the columns you don't need and reorder or rename the rest. Save the setup as a preset to reuse it. See [Exports & Templates](/help/exports-templates).
+
+### Why can't I hide a column?
+
+In Salesforce-ready exports, required import fields are locked on (shown with a lock icon) so the file can be imported.
+
+### My presets are missing.
+
+Presets and templates you create are stored in your browser. They are not available in another browser or on another device.
+
+## Assistant
+
+### The assistant says "AI offline — limited answers".
+
+The server has no Anthropic API key. The assistant still answers common questions from the data and links Help Center articles. See [AI Assistant](/help/ai-assistant).
+
+### Why doesn't the assistant see a campaign I just created?
+
+The assistant reads the server copy of the data. Changes made in mock mode are stored only in your browser.
+
+## Sign-in
+
+### How long does sign-in last?
+
+30 days. Only **Sign out** in the avatar menu ends the session earlier.
+
+### I forgot my password.
+
+Profiles and passwords are stored in the browser you set them in. Clearing that browser's site data for HarvestSignal removes your profile and password, along with any mock-mode changes. Production deployments should use Salesforce SSO or the company identity provider instead.
+
+## Salesforce connection
+
+### Salesforce login fails with invalid_grant or INVALID_LOGIN.
+
+For `invalid_grant`, turn on Allow OAuth Username-Password Flows and check that the user may use the Connected App. For `INVALID_LOGIN`, check the username and password, append the security token and make sure `SF_LOGIN_URL` points at the right environment. If the badge still says Mock data, one of the five `SF_` variables is missing or the app was not redeployed. See [Salesforce Connection (Admin)](/help/salesforce-connection).
+
+## Features not available yet
+
+### Can I build a quote, manage products or find new facility construction?
+
+Not yet. See [Quotes](/help/quotes), [Product Setup](/help/product-setup) and [New Builds Finder](/help/new-builds) for what you can do today and what is planned.
