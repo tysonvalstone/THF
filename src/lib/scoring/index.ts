@@ -11,7 +11,7 @@ import {
   fmtBasis,
   pctChange,
 } from "@/lib/market";
-import { busyWindows, climateFor, windowPositions, type WindowPosition } from "@/lib/season";
+import { busyWindows, climateFor, cropNoun, windowPositions, type WindowPosition } from "@/lib/season";
 import { buildEngagementIndex, engagementFor, type Engagement } from "./engagement";
 import { targetFromAccount, targetFromLead, type Target } from "./target";
 
@@ -210,6 +210,7 @@ function marketFactor(t: Target, asOf: Date): Factor {
   const commodity = t.commodities[0];
   const region = REGION_BY_ID[t.regionId];
   const key = commodity;
+  const noun = cropNoun(commodity).toLowerCase();
   const change = pctChange(key, asOf, 3);
   let points = 2 + Math.min(6, Math.abs(change) * 60);
   const parts: string[] = [];
@@ -217,16 +218,16 @@ function marketFactor(t: Target, asOf: Date): Factor {
     parts.push(
       t.facilityType === "Agronomy Retailer"
         ? change > 0
-          ? `${commodity.toLowerCase()} is up ${pct(change)} in 3 months, so growers are booking inputs early`
-          : `${commodity.toLowerCase()} is down ${pct(change)} in 3 months, so growers will push for prepay discounts`
-        : `${commodity.toLowerCase()} is ${change > 0 ? "up" : "down"} ${pct(change)} in 3 months, which means more contracts, hedges and pricing calls`,
+          ? `${noun} prices are up ${pct(change)} in 3 months, so growers are booking inputs early`
+          : `${noun} prices are down ${pct(change)} in 3 months, so growers will push for prepay discounts`
+        : `${noun} prices are ${change > 0 ? "up" : "down"} ${pct(change)} in 3 months, which means more contracts, hedges and pricing calls`,
     );
   }
   const basis = basisFor(t.regionId, commodity, asOf);
   const typical = region.typicalBasis[commodity];
   if (basis !== undefined && typical !== undefined && basis <= typical - 0.15) {
     points += 4;
-    parts.push(`local ${commodity.toLowerCase()} basis has widened to ${fmtBasis(basis)} (typically ${fmtBasis(typical)}), so storage and carry decisions multiply`);
+    parts.push(`local ${noun} basis has widened to ${fmtBasis(basis)} (typically ${fmtBasis(typical)}), so storage and carry decisions multiply`);
   }
   const climate = climateFor(t.regionId, asOf.getUTCFullYear());
   if (climate.yieldIndex >= 1.04) {
@@ -236,7 +237,7 @@ function marketFactor(t: Target, asOf: Date): Factor {
     points += 3;
     parts.push("a short crop means fierce competition for every bushel");
   }
-  return { key: "market", points: round1(clamp(points, 0, max)), max, reason: parts.join("; ") || `${commodity} prices and basis are steady` };
+  return { key: "market", points: round1(clamp(points, 0, max)), max, reason: parts.join("; ") || `${noun} prices and basis are steady` };
 }
 
 // ---------------------------------------------------------------------------
