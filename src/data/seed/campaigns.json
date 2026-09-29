@@ -1,0 +1,224 @@
+[
+ {
+  "Id": "701Hs0000000001AAC",
+  "Name": "2025 Fall Settlement Season - Corn Belt",
+  "Type": "Direct Mail",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2025-10-20",
+  "EndDate": "2025-12-15",
+  "BudgetedCost": 18000,
+  "ActualCost": 16236,
+  "ExpectedRevenue": 102900,
+  "ExpectedResponse": 7,
+  "NumberSent": 49,
+  "Description": "Settlement and 1099 season mailer: 'Close the year without the Excel all-nighters.'",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2025-10-06T15:00:00.000+0000",
+  "Season__c": "Post-harvest",
+  "Target_Regions__c": [
+   "western-corn-belt",
+   "eastern-corn-belt"
+  ],
+  "Target_Facility_Types__c": [
+   "Grain Elevator",
+   "Cooperative"
+  ],
+  "Target_Commodity__c": "Corn"
+ },
+ {
+  "Id": "701Hs0000000002AAC",
+  "Name": "Spring Agronomy Booking Push",
+  "Type": "Call Blitz",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2026-01-12",
+  "EndDate": "2026-02-20",
+  "BudgetedCost": 6000,
+  "ActualCost": 5114,
+  "ExpectedRevenue": 198000,
+  "ExpectedResponse": 11,
+  "NumberSent": 60,
+  "Description": "Call blitz to agronomy managers ahead of prepay and spring booking season.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2025-12-29T16:30:00.000+0000",
+  "Season__c": "Pre-planting",
+  "Target_Regions__c": [
+   "western-corn-belt",
+   "eastern-corn-belt",
+   "northern-plains",
+   "manitoba"
+  ],
+  "Target_Facility_Types__c": [
+   "Agronomy Retailer",
+   "Cooperative"
+  ]
+ },
+ {
+  "Id": "701Hs0000000003AAC",
+  "Name": "Ethanol Margin Management Webinar",
+  "Type": "Event",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2026-02-18",
+  "EndDate": "2026-02-18",
+  "BudgetedCost": 9000,
+  "ActualCost": 8475,
+  "ExpectedRevenue": 109200,
+  "ExpectedResponse": 14,
+  "NumberSent": 26,
+  "Description": "Webinar on locking crush margins with real-time corn origination and DDGS sales data.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2026-02-09T16:00:00.000+0000",
+  "Season__c": "Year-round",
+  "Target_Regions__c": [
+   "western-corn-belt",
+   "eastern-corn-belt",
+   "northern-plains",
+   "great-lakes"
+  ],
+  "Target_Facility_Types__c": [
+   "Ethanol Plant"
+  ],
+  "Target_Commodity__c": "Corn"
+ },
+ {
+  "Id": "701Hs0000000004AAC",
+  "Name": "AgTech Expo 2026 - Booth Follow-up",
+  "Type": "Event",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2026-03-05",
+  "EndDate": "2026-03-31",
+  "BudgetedCost": 42000,
+  "ActualCost": 43357,
+  "ExpectedRevenue": 118800,
+  "ExpectedResponse": 12,
+  "NumberSent": 33,
+  "Description": "Trade show booth scans and follow-up sequence.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2026-02-23T17:15:00.000+0000",
+  "Season__c": "Pre-planting",
+  "Target_Regions__c": [
+   "western-corn-belt",
+   "southern-plains",
+   "northern-plains",
+   "eastern-corn-belt"
+  ],
+  "Target_Facility_Types__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Ethanol Plant",
+   "Seed Processor"
+  ]
+ },
+ {
+  "Id": "701Hs0000000005AAC",
+  "Name": "Poultry Feed Mill Efficiency Series",
+  "Type": "Email",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2026-04-06",
+  "EndDate": "2026-05-15",
+  "BudgetedCost": 4500,
+  "ActualCost": 4533,
+  "ExpectedRevenue": 63000,
+  "ExpectedResponse": 5,
+  "NumberSent": 42,
+  "Description": "Three-part email series on batching accuracy, VFD records and delivery routing.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2026-03-19T20:30:00.000+0000",
+  "Season__c": "Year-round",
+  "Target_Regions__c": [
+   "southeast",
+   "mid-atlantic",
+   "delta"
+  ],
+  "Target_Facility_Types__c": [
+   "Feed Mill"
+  ]
+ },
+ {
+  "Id": "701Hs0000000006AAC",
+  "Name": "Winter Wheat Pre-Harvest - Southern Plains",
+  "Type": "Email",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2026-04-20",
+  "EndDate": "2026-05-29",
+  "BudgetedCost": 5000,
+  "ActualCost": 4656,
+  "ExpectedRevenue": 63000,
+  "ExpectedResponse": 6,
+  "NumberSent": 35,
+  "Description": "Scale house readiness sequence 4-6 weeks before winter wheat harvest.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2026-04-06T14:45:00.000+0000",
+  "Season__c": "Pre-harvest",
+  "Target_Regions__c": [
+   "southern-plains"
+  ],
+  "Target_Facility_Types__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Flour Mill"
+  ],
+  "Target_Commodity__c": "Winter Wheat"
+ },
+ {
+  "Id": "701Hs0000000007AAC",
+  "Name": "Prairie Canola Harvest Readiness",
+  "Type": "Multi-Channel",
+  "Status": "Completed",
+  "IsActive": false,
+  "StartDate": "2026-06-22",
+  "EndDate": "2026-08-14",
+  "BudgetedCost": 21000,
+  "ActualCost": 19346,
+  "ExpectedRevenue": 100800,
+  "ExpectedResponse": 8,
+  "NumberSent": 42,
+  "Description": "Postcard + email + call touchpoints ahead of canola and CWRS harvest.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2026-06-01T17:45:00.000+0000",
+  "Season__c": "Pre-harvest",
+  "Target_Regions__c": [
+   "western-prairies",
+   "manitoba"
+  ],
+  "Target_Facility_Types__c": [
+   "Grain Elevator",
+   "Oilseed Crusher",
+   "Seed Processor"
+  ],
+  "Target_Commodity__c": "Canola"
+ },
+ {
+  "Id": "701Hs0000000008AAC",
+  "Name": "Corn Belt Pre-Harvest Scale Readiness",
+  "Type": "Direct Mail",
+  "Status": "In Progress",
+  "IsActive": true,
+  "StartDate": "2026-08-10",
+  "EndDate": "2026-10-15",
+  "BudgetedCost": 24000,
+  "ActualCost": 14400,
+  "ExpectedRevenue": 81000,
+  "ExpectedResponse": 5,
+  "NumberSent": 54,
+  "Description": "Direct mail letter + follow-up call: kiosk tickets and real-time position before the dump pit backs up.",
+  "OwnerId": "005Hs00000000001AA",
+  "CreatedDate": "2026-07-22T16:00:00.000+0000",
+  "Season__c": "Pre-harvest",
+  "Target_Regions__c": [
+   "western-corn-belt",
+   "eastern-corn-belt",
+   "great-lakes"
+  ],
+  "Target_Facility_Types__c": [
+   "Grain Elevator",
+   "Cooperative"
+  ],
+  "Target_Commodity__c": "Corn"
+ }
+]

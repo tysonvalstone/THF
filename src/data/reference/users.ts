@@ -1,0 +1,69 @@
+import type { User } from "@/types/salesforce";
+
+/** ThiboLiSoft sales team (fictional). The first user is the demo "current user". */
+export const USERS: User[] = [
+  {
+    Id: "005Hs00000000001AA",
+    Name: "Jordan Avery",
+    Title: "VP of Sales",
+    Email: "jordan.avery@thibolisoft.example",
+    Territory__c: "North America",
+    Regions__c: [],
+  },
+  {
+    Id: "005Hs00000000002AA",
+    Name: "Dana Kowalski",
+    Title: "Account Executive",
+    Email: "dana.kowalski@thibolisoft.example",
+    Territory__c: "Western Corn Belt",
+    Regions__c: ["western-corn-belt"],
+  },
+  {
+    Id: "005Hs00000000003AA",
+    Name: "Marcus Reyes",
+    Title: "Account Executive",
+    Email: "marcus.reyes@thibolisoft.example",
+    Territory__c: "Plains & Pacific Northwest",
+    Regions__c: ["southern-plains", "pacific-northwest"],
+  },
+  {
+    Id: "005Hs00000000004AA",
+    Name: "Priya Sandhu",
+    Title: "Account Executive",
+    Email: "priya.sandhu@thibolisoft.example",
+    Territory__c: "Canadian Prairies",
+    Regions__c: ["western-prairies", "manitoba"],
+  },
+  {
+    Id: "005Hs00000000005AA",
+    Name: "Luke Brenneman",
+    Title: "Account Executive",
+    Email: "luke.brenneman@thibolisoft.example",
+    Territory__c: "Eastern Corn Belt, Great Lakes & Central Canada",
+    Regions__c: ["eastern-corn-belt", "great-lakes", "central-canada"],
+  },
+  {
+    Id: "005Hs00000000006AA",
+    Name: "Tasha Whitfield",
+    Title: "Account Executive",
+    Email: "tasha.whitfield@thibolisoft.example",
+    Territory__c: "South & East",
+    Regions__c: ["delta", "southeast", "mid-atlantic"],
+  },
+  {
+    Id: "005Hs00000000007AA",
+    Name: "Erik Halvorsen",
+    Title: "Account Executive",
+    Email: "erik.halvorsen@thibolisoft.example",
+    Territory__c: "Northern Plains",
+    Regions__c: ["northern-plains"],
+  },
+];
+
+export const CURRENT_USER_ID = USERS[0].Id;
+
+export const USER_BY_ID: Record<string, User> = Object.fromEntries(USERS.map((u) => [u.Id, u]));
+
+export function ownerForRegion(regionId: string): string {
+  return USERS.find((u) => u.Regions__c.includes(regionId as never))?.Id ?? CURRENT_USER_ID;
+}
