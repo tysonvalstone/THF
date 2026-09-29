@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Plus } from "lucide-react";
 import { useStore } from "@/lib/data/store";
 import { REGION_BY_ID } from "@/data/reference/regions";
 import { fmtShortDate } from "@/lib/dates";
 import { fmtMoney, fmtPct } from "@/lib/format";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CurrentWindowCard } from "@/components/season/selling-windows";
 import type { Campaign } from "@/types/salesforce";
 import { cn } from "@/lib/utils";
 
@@ -32,11 +29,6 @@ export function CampaignList() {
 
   return (
     <div className="space-y-5">
-      <Card className="py-4">
-        <CardContent className="px-5">
-          <CurrentWindowCard compact />
-        </CardContent>
-      </Card>
 
       <div className="overflow-hidden rounded-lg border bg-card">
         <div className="hidden grid-cols-[minmax(0,2.2fr)_repeat(5,minmax(0,1fr))] gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs font-medium text-muted-foreground md:grid">
@@ -76,7 +68,7 @@ export function CampaignList() {
       <div className="flex justify-end">
         <Button asChild>
           <Link href="/campaigns/new">
-            <Plus className="size-4" /> New seasonal campaign
+            New Campaign
           </Link>
         </Button>
       </div>

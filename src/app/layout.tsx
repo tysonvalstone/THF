@@ -18,11 +18,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "HarvestSignal · Seasonal selling for ThiboLiSoft",
+    default: "HarvestSignal",
     template: "%s · HarvestSignal",
   },
-  description:
-    "Who to call, why now, and what to send: season-, region- and market-aware prospecting for ag software sales.",
+  description: "Sales intelligence for grain, feed and processing markets.",
 };
 
 export const viewport: Viewport = {

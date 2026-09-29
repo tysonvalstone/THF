@@ -16,7 +16,7 @@ import { LEGACY_PLAYS, SEASON_PLAYS, type SeasonPlay } from "@/lib/content/messa
 import { SENDER } from "@/components/outreach/outreach-dialog";
 import { ContentEditor } from "./content-editor";
 import { statusClass } from "./campaign-list";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,7 +34,7 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
 }
 
 export function CampaignDetail({ id }: { id: string }) {
-  const { ready, data, asOf, ranked } = useStore();
+  const { ready, data, ranked } = useStore();
   if (!ready) return <Skeleton className="h-[520px]" />;
   const c = data.campaigns.find((x) => x.Id === id);
   if (!c) {
@@ -121,7 +121,6 @@ export function CampaignDetail({ id }: { id: string }) {
         <Card className="min-w-0 lg:col-span-3">
           <CardHeader>
             <CardTitle>Content</CardTitle>
-            <CardDescription>{c.Content__c ? (c.Content__c.source === "ai" ? "AI-written copy saved with this campaign." : "Template copy saved with this campaign.") : "Reconstructed from the campaign's season, region and audience."}</CardDescription>
           </CardHeader>
           <CardContent>
             <ContentEditor content={content} preview={rows[0] ? { FirstName: rows[0].person?.split(" ")[0], Company: rows[0].name } : undefined} />
@@ -130,7 +129,6 @@ export function CampaignDetail({ id }: { id: string }) {
         <Card className="min-w-0 lg:col-span-2">
           <CardHeader>
             <CardTitle>Members ({members.length})</CardTitle>
-            <CardDescription>CampaignMember records and response status.</CardDescription>
           </CardHeader>
           <CardContent className="px-0">
             <ul className="max-h-[640px] divide-y overflow-y-auto border-t">
@@ -156,7 +154,6 @@ export function CampaignDetail({ id }: { id: string }) {
           </CardContent>
         </Card>
       </div>
-      <p className="text-xs text-muted-foreground">As of {fmtDate(asOf)}.</p>
     </div>
   );
 }

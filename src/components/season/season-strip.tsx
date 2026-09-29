@@ -33,7 +33,7 @@ export function SeasonStrip({
   const months = Array.from({ length: 12 }, (_, i) => addMonths(start, i));
 
   if (!rows.length) {
-    return <p className="text-sm text-muted-foreground">No seasonal busy windows for this facility type; timing is driven by market signals.</p>;
+    return <p className="text-sm text-muted-foreground">Year-round operation</p>;
   }
 
   return (

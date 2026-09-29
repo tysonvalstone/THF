@@ -61,7 +61,7 @@ export function SellingWindowStrip() {
       <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         {(Object.keys(TONE) as SellingWindowDef["sellToGrain"][]).map((k) => (
           <li key={k} className="flex items-center gap-1.5">
-            <span className={cn("size-3 rounded-sm", TONE[k])} /> {TONE_LABEL[k]} for elevators & co-ops
+            <span className={cn("size-3 rounded-sm", TONE[k])} /> {TONE_LABEL[k]}
           </li>
         ))}
       </ul>

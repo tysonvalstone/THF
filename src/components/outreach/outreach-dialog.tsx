@@ -176,7 +176,7 @@ function OutreachWarnings({ s, readOnly }: { s: ScoredTarget; readOnly: boolean 
           {b.message}
         </p>
       )}
-      {readOnly && <p className="rounded-md border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-700">Live Salesforce is read-only in this app, so outreach actions are disabled. Log activity in Salesforce.</p>}
+      {readOnly && <p className="rounded-md border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-700">Read-only (Live Salesforce)</p>}
     </>
   );
 }
@@ -267,10 +267,6 @@ function EmailTab({ s, who, contact, onSend }: { s: ScoredTarget; who: Recipient
           </Button>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">
-        Sending logs a completed Email task, creates a follow-up task 3 business days later, closes overdue follow-ups and updates the
-        opportunity&apos;s next step. (Demo mode: no real email is sent.)
-      </p>
     </div>
   );
 }
@@ -359,15 +355,7 @@ function CallTab({ s, who, onSave }: { s: ScoredTarget; who: Recipient; onSave: 
         />
       </div>
       <div className="flex items-center justify-between gap-3 border-t pt-3">
-        <p className="text-xs text-muted-foreground">
-          {outcome === "Interested - Book Demo"
-            ? `Creates a demo event for ${fmtShortDate(demoDate)} and ${t.kind === "account" ? "creates or advances the opportunity" : "marks the lead Hot"}.`
-            : outcome === "Connected"
-              ? "Advances a Prospecting deal to Qualification and creates a recap task."
-              : outcome === "Not Interested - Revisit"
-                ? "Creates a revisit task in 90 days."
-                : "Creates a call-back task in 2 business days."}
-        </p>
+        <span />
         <Button size="sm" disabled={readOnly} onClick={() => onSave(outcome, notes, outcome === "Interested - Book Demo" ? demoDate : undefined)}>
           Save call
         </Button>
@@ -416,7 +404,7 @@ function CampaignTab({ s, onAdd }: { s: ScoredTarget; onAdd: (campaignId: string
           ))}
         </ul>
       ) : (
-        <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">No active campaigns on this date. Build one for their region and season.</p>
+        <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">No active campaigns</p>
       )}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
         <Button asChild variant="outline" size="sm">

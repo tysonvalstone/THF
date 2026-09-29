@@ -49,11 +49,7 @@ export function CampaignCalendar() {
   return (
     <div className="space-y-4">
       <div className="rounded-md border bg-card p-4">
-        <h2 className="text-base font-semibold">Selling windows for elevators and co-ops</h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          Harvest (mid-Aug to Thanksgiving) is no-contact, and spring planting is light no-contact, both a week or two later in the north and later still in Canada.
-          Ethanol plants, feed mills and processors can be worked all year.
-        </p>
+        <h2 className="text-base font-semibold">Selling Windows</h2>
         <div className="mt-4">
           <SellingWindowStrip />
         </div>
@@ -93,17 +89,12 @@ export function CampaignCalendar() {
         })}
       </div>
       <div className="rounded-md border bg-card p-4">
-        <p className="text-xs text-muted-foreground">First campaign</p>
         <h3 className="font-semibold">{WEBINAR_NAME}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          45 minutes for controllers and GMs on what examiners look for in price-later (DP) contracts. Proposed date {fmtShortDate(webinarDate(asOf))}, 10:00 CT. Includes
-          invite copy, a controller + GM target list, a 3-email sequence (invite, reminder, recording) and a call script.
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground tabular">{fmtShortDate(webinarDate(asOf))} · 10:00 CT · Controllers and GMs</p>
         <Button asChild size="sm" className="mt-3">
           <Link href={`/campaigns/new?preset=${WEBINAR_PRESET}`}>Open in campaign builder</Link>
         </Button>
       </div>
-      <p className="text-xs text-muted-foreground">During harvest, the plan is to support customers, collect NPS and testimonials, and sell to year-round segments.</p>
     </div>
   );
 }

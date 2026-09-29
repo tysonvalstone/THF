@@ -77,9 +77,9 @@ export function FacilitiesView() {
         {select(segment, setSegment, [[ALL, "All segments"], ...SEGMENTS.map((s) => [s, s] as [string, string])], "Segment")}
         {select(coverage, setCoverage, [[ALL, "Customers & prospects"], ["covered", "Customers (covered)"], ["open", "Prospects (not covered)"]], "Coverage")}
         <div className="space-y-2 border-t border-slate-300/70 pt-4">
-          <p className="text-xs text-muted-foreground">Salesforce-ready CSV (Account API field names)</p>
+          <p className="text-xs text-muted-foreground">CSV</p>
           <Button variant="outline" size="sm" className="w-full bg-card" onClick={exportCsv}>
-            Export {rows.length} accounts
+            Export ({rows.length})
           </Button>
           <Button variant="outline" size="sm" className="w-full bg-card" disabled={readOnly} onClick={() => fileRef.current?.click()}>
             Import CSV
@@ -95,16 +95,12 @@ export function FacilitiesView() {
               e.target.value = "";
             }}
           />
-          <p className="text-[11px] text-muted-foreground">{readOnly ? "Import is disabled with live Salesforce (read-only)." : "Rows with an existing Id update it; rows without one create a new account."}</p>
         </div>
       </aside>
 
       <div className="min-w-0 space-y-6">
         <section>
-          <h1 className="text-xl font-semibold">Target facilities</h1>
-          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-            The Illinois and Iowa core market: elevators, co-op locations, terminals, shuttle loaders, ethanol plants and feed mills, plus a lighter layer across the US and Canada.
-          </p>
+          <h1 className="text-2xl font-semibold">Facilities</h1>
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
             {pen.map((p) => (
               <div key={p.label} className="rounded-md border bg-card p-3">
@@ -122,8 +118,7 @@ export function FacilitiesView() {
 
         <section className="rounded-md border bg-card">
           <header className="border-b px-4 py-3">
-            <h2 className="text-base font-semibold">Whitespace counties ({whitespace.length})</h2>
-            <p className="text-xs text-muted-foreground">IL/IA counties with target facilities and zero ThiboLiSoft coverage, most prospects first.</p>
+            <h2 className="text-base font-semibold">Whitespace Counties ({whitespace.length})</h2>
           </header>
           <ul className="grid gap-x-6 px-4 py-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
             {whitespace.slice(0, 24).map((c) => (
@@ -135,13 +130,6 @@ export function FacilitiesView() {
               </li>
             ))}
           </ul>
-          <p className="px-4 pb-3 text-xs text-muted-foreground">
-            See them on the{" "}
-            <Link href="/map" className="text-primary hover:underline">
-              map
-            </Link>{" "}
-            with the whitespace layer on.
-          </p>
         </section>
 
         <section className="rounded-md border bg-card">

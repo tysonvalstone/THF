@@ -11,15 +11,26 @@
 
 | Page | What it does |
 |---|---|
-| **Segments** (`/`, home) | Segment prioritization. Left panel: sliders for the four weights (deal size, cycle speed, product fit, expansion potential) and prior strength *k*, plus Reset. Right: ranked segment cards showing close rate for deals created this month with a Wilson 95% interval bar and a `Measured` / `Blended` / `Prior` tag, sample size, median cycle, median won deal, a 12-month close-rate strip (hatched = not enough data) and the priority score. Below: the top 25 open deals by expected value, linking to the record. Every number has a plain-English tooltip. |
-| **Today** (`/today`) | Pipeline KPIs, the current selling window, top prospects to call, pipeline by stage, commodity markets. |
+| **Home** (`/`) | **Current Status** for the selected date: KPI row (Open Pipeline, Weighted Pipeline, Open Opportunities, Win Rate for the trailing 12 months, Accounts in No-Contact Period, each vs. the prior period), the **Opportunity Map** with drill-down, and the segment priority list. |
+| **Segments** (`/segments`) | Segment prioritization. Left panel: sliders for the four weights (deal size, cycle speed, product fit, expansion potential) and prior strength *k*, plus Reset. Right: ranked segment cards showing close rate for deals created this month with a Wilson 95% interval bar and a `Measured` / `Blended` / `Prior` tag, decided deals, median cycle, median won deal, a 12-month close-rate strip and the priority score. Below: the top 25 open deals by expected value, linking to the record. |
 | **Prospects** (`/prospects`, `/accounts/[id]`, `/leads/[id]`) | Every prospect scored 0–100 with reasons. The account page shows the segment, harvest window, calculated blackout status, fiscal year end, board meeting months, parent co-op and locations, and the buying committee. |
 | **Opportunity** (`/opportunities/[id]`) | In-app record for mock mode: stage path incl. **Board Approval**, buying committee, and close-date checks (before the next board meeting, inside a no-contact period, no economic buyer). |
-| **Map** (`/map`) | Seasonality heat map with real US state + Canadian province shapes. Commodity dropdown (Wheat, Corn, Soybeans, Rice, Lentils); colour varies within states by latitude; diverging blue (planting) → neutral → red (harvest peak); legend, hover tooltips, facility dots and whitespace-county layers. |
+| **Opportunity Map** (on Home) | Seasonality heat map with real US state + Canadian province shapes, a commodity dropdown (Wheat, Corn, Soybeans, Rice, Lentils) and colour that varies within states by latitude (blue = planting, red = harvest peak), with a legend. **Drill-down:** click a state to zoom to its region, and click again to zoom to the state (500 ms eased zoom), with a breadcrumb (North America › Western Corn Belt › Iowa) and Back/Reset. The side panel shows a one-line summary, key stats (facilities, customers, penetration, open pipeline, season phase), top potential customers (ranked, with estimated deal size and blackout status) and three insights. At state level, facility dots open the account. |
 | **Facilities** (`/facilities`) | ~457 IL/IA target facilities plus a lighter layer elsewhere. Coverage figures ("12 of 132 Iowa co-op locations"), whitespace counties, and Salesforce-ready CSV export/import. |
 | **Campaigns** (`/campaigns`, `/campaigns/new`) | Campaign builder with the four selling-window plays, template or AI copy, mail-list CSV, and Campaign / CampaignMember / Task creation (mock mode). |
 | **Calendar** (`/calendar`) | The four selling windows and the campaign for each, starting with the **Price-Later Contract Compliance Webinar** (invite copy, controller + GM target list, follow-up sequence). Crop calendar by region for reference. |
 | **Time travel** (header) | Pick any date: close rates, rankings, blackouts, the map and the campaign plays all recalculate. Presets: October, December, March, July, early August. |
+
+## Interface decisions (UI polish pass)
+
+- **Home** replaces the old "Right Now" / Today page: *Current Status* heading + date, then KPIs, the Opportunity Map and the priority list. `/today` and `/map` redirect to Home.
+- **No helper copy:** page subtitles, explainer captions, "how to use" hints and disclaimers are removed. Only the **Mock data / Live Salesforce** badge remains, and tooltips are one line.
+- **Navigation:** Home, Segments, Prospects, Facilities, Campaigns, Calendar. The time-travel date sits in the header; when it isn't today the button shows "As of …", and "Today" in the picker returns to the current date.
+- **Priority list on Home:** segments rather than individual deals, because the segment view carries the seasonal story. Deals stay one click away on Segments.
+- **Map drill-down levels:** North America → region (the 12 sales regions) → state/province. Summary lines for regions come from `src/data/reference/regions.ts`, and for key states from `src/lib/regionInsights.ts`. Stats, top accounts and insights are computed from the loaded data.
+- **Estimated deal size** on the map panel uses the account's open deal if it has one, otherwise the segment's median won deal.
+- **"Accounts in No-Contact Period"** counts parent accounts (not co-op locations) in a harvest or planting blackout on the selected date.
+- Removed the unused commodity-price strip and stage chart from the old Today page.
 
 ## Seasonality rules
 
@@ -131,7 +142,7 @@ npx tsx scripts/build-geo.ts   # regenerate /public/geo map files
 
 **0:00 – Setup (20 s).** "Vertical Software's CEO told us harvest isn't an opportunity, it's a no-contact period. So we built the tool around that." Point at the **Mock data** badge: it runs on Salesforce-shaped history, and the same code reads a real org read-only.
 
-**0:20 – October (75 s).** Time travel → **October: harvest**. On **Segments**, **ethanol plants and feed mills** are ranked first, and elevators and co-ops drop to the bottom. Hover the co-op close rate: *7% for deals created in October*, measured, with a 95% interval. "In October the tool says call ethanol plants and feed mills." Point at the hatched months in the strip and at River Terminal's **Not enough data · blended** tag: "We never show a bare percentage we can't back up."
+**0:20 – October (75 s).** On **Home**, set the date to **October: harvest**. The KPI row shows *Accounts in No-Contact Period* jump. Click Iowa on the Opportunity Map twice (region, then state): the panel lists ethanol plants and feed mills as the top potential customers, with *Harvest blackout ends Dec 1 – Dec 7* as the first insight. Then on **Segments**, **ethanol plants and feed mills** are ranked first, and elevators and co-ops drop to the bottom. Hover the co-op close rate: *7% for deals created in October*, measured, with a 95% interval. "In October the tool says call ethanol plants and feed mills." Point at the hatched months in the strip and at River Terminal's **Not enough data · blended** tag: "We never show a bare percentage we can't back up."
 
 **1:35 – December (60 s).** Time travel → **December: year-end**. The ranking flips: **Multi-Location Co-op moves to #1**. "In December it flips to co-ops: audits, boards, budgets." Move the **deal size** slider and **k**: the ranking updates instantly with no re-query. Scroll to the top 25 open deals and point out the "Before board" flag.
 
@@ -139,4 +150,4 @@ npx tsx scripts/build-geo.ts   # regenerate /public/geo map files
 
 **3:35 – Facilities (30 s).** "**12 of 132 Iowa co-op locations**" covered; whitespace counties; export a Salesforce-ready CSV.
 
-**4:05 – Map (55 s).** Open **Map** on October 12, Corn: red harvest band across Iowa and Illinois, and southern Illinois deeper than northern. Switch the dropdown to **Wheat**, then time travel to **July**: winter wheat harvest lights up Kansas and Oklahoma. Switch to **Lentils** in **August**: Saskatchewan and Montana. End: "Same data, different day, a different plan."
+**4:05 – Map (55 s).** Back on **Home** (Reset the map), October 12, Corn: red harvest band across Iowa and Illinois, and southern Illinois deeper than northern. Switch the dropdown to **Wheat**, then time travel to **July**: winter wheat harvest lights up Kansas and Oklahoma. Switch to **Lentils** in **August**: Saskatchewan and Montana. End: "Same data, different day, a different plan."

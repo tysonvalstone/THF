@@ -7,18 +7,10 @@ export const metadata: Metadata = { title: "Calendar" };
 export default function CalendarPage() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-xl font-semibold">Campaign calendar</h1>
-        <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-          Four selling windows for grain buyers, with the campaign to run in each. Harvest is for supporting customers, not selling to them.
-        </p>
-      </div>
+      <h1 className="text-2xl font-semibold">Calendar</h1>
       <CampaignCalendar />
       <section className="space-y-3">
-        <div>
-          <h2 className="text-base font-semibold">Crop calendar by region (reference)</h2>
-          <p className="text-sm text-muted-foreground">Planting, harvest and settlement periods, adjusted for this year&apos;s weather.</p>
-        </div>
+        <h2 className="text-lg font-semibold">Crop Calendar</h2>
         <SeasonCalendar />
       </section>
     </div>

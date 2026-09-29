@@ -33,7 +33,27 @@ export interface SeasonalityMapProps {
   whitespaceCountyFips?: string[];
   /** Preferred map height in px. Defaults to ~0.62 × width; capped on narrow screens. */
   height?: number;
+  /** Controlled commodity (optional). */
+  commodity?: MapCommodity;
+  onCommodityChange?: (c: MapCommodity) => void;
+  /** State/province codes to zoom to. Empty or undefined = full view. */
+  focusCodes?: string[];
+  /** Called with the state/province code under a click. */
+  onAreaClick?: (code: string) => void;
+  /** Called with a facility id when a dot is clicked. */
+  onFacilityClick?: (id: string) => void;
+  /** Hide the commodity select / layer toggles (the parent renders them). */
+  hideControls?: boolean;
 }
+
+interface View {
+  k: number;
+  tx: number;
+  ty: number;
+}
+const IDENTITY: View = { k: 1, tx: 0, ty: 0 };
+const ZOOM_MS = 500;
+const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 /* ------------------------------------------------------------------ constants */
 
@@ -195,13 +215,27 @@ export function SeasonalityMap({
   facilities,
   whitespaceCountyFips,
   height,
+  commodity: controlledCommodity,
+  onCommodityChange,
+  focusCodes,
+  onAreaClick,
+  onFacilityClick,
+  hideControls = false,
 }: SeasonalityMapProps): JSX.Element {
   const selectId = useId();
   const summaryId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [commodity, setCommodity] = useState<MapCommodity>(initialCommodity);
+  const [ownCommodity, setOwnCommodity] = useState<MapCommodity>(initialCommodity);
+  const commodity = controlledCommodity ?? ownCommodity;
+  const setCommodity = (c: MapCommodity) => {
+    setOwnCommodity(c);
+    onCommodityChange?.(c);
+  };
+  const [view, setView] = useState<View>(IDENTITY);
+  const viewRef = useRef<View>(IDENTITY);
+  const focusKey = (focusCodes ?? []).join(",");
   const [geo, setGeo] = useState<MapGeo | null>(null);
   const [counties, setCounties] = useState<MapCounty[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -260,6 +294,47 @@ export function SeasonalityMap({
     [geo, width, mapHeight],
   );
 
+  /* --- zoom: fit the focus features, animate the canvas transform --- */
+  const targetView = useMemo<View>(() => {
+    if (!geo || !projected || !focusKey) return IDENTITY;
+    const path = geoPath(projected.projection);
+    let x0 = Infinity,
+      y0 = Infinity,
+      x1 = -Infinity,
+      y1 = -Infinity;
+    for (const code of focusKey.split(",")) {
+      const r = geo.regionByCode.get(code);
+      if (!r) continue;
+      const [[a, b], [c, d]] = path.bounds(r.feature);
+      x0 = Math.min(x0, a);
+      y0 = Math.min(y0, b);
+      x1 = Math.max(x1, c);
+      y1 = Math.max(y1, d);
+    }
+    if (!Number.isFinite(x0)) return IDENTITY;
+    const k = Math.min(14, 0.86 * Math.min(width / Math.max(1, x1 - x0), mapHeight / Math.max(1, y1 - y0)));
+    return { k, tx: width / 2 - k * ((x0 + x1) / 2), ty: mapHeight / 2 - k * ((y0 + y1) / 2) };
+  }, [geo, projected, focusKey, width, mapHeight]);
+
+  useEffect(() => {
+    const from = viewRef.current;
+    const to = targetView;
+    if (from.k === to.k && from.tx === to.tx && from.ty === to.ty) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const start = performance.now();
+    let raf = 0;
+    const step = (now: number) => {
+      const t = reduce ? 1 : Math.min(1, (now - start) / ZOOM_MS);
+      const e = ease(t);
+      const v = { k: from.k + (to.k - from.k) * e, tx: from.tx + (to.tx - from.tx) * e, ty: from.ty + (to.ty - from.ty) * e };
+      viewRef.current = v;
+      setView(v);
+      if (t < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [targetView]);
+
   const regionsForCommodity = useMemo(() => {
     if (!geo) return [];
     return growingRegions(commodity)
@@ -285,6 +360,9 @@ export function SeasonalityMap({
     if (!ctx) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
+    const { k, tx, ty } = view;
+    ctx.setTransform(dpr * k, 0, 0, dpr * k, dpr * tx, dpr * ty);
+    const focusSet = new Set(focusKey ? focusKey.split(",") : []);
 
     // 1. Land base: every state/province in "Not grown" grey.
     ctx.fillStyle = NOT_GROWN_COLOR;
@@ -303,19 +381,29 @@ export function SeasonalityMap({
       ctx.restore();
     }
 
-    // 3. Borders.
+    // 3. Borders; outside the focus area is washed out.
     ctx.strokeStyle = BORDER;
-    ctx.lineWidth = 0.6;
+    ctx.lineWidth = 0.6 / k;
     ctx.lineJoin = "round";
     for (const p of projected.regionPath.values()) ctx.stroke(p);
+    if (focusSet.size) {
+      ctx.fillStyle = "rgba(248, 250, 252, 0.72)";
+      for (const [code, p] of projected.regionPath) if (!focusSet.has(code)) ctx.fill(p);
+      ctx.strokeStyle = "#334155";
+      ctx.lineWidth = 1.4 / k;
+      for (const code of focusSet) {
+        const p = projected.regionPath.get(code);
+        if (p) ctx.stroke(p);
+      }
+    }
 
     // 4. Whitespace counties (IL/IA): hatched fill + dashed outline.
     if (hasWhitespace && showWhitespace && whitespaceCounties.length) {
       const pattern = hatchPattern(ctx, dpr);
       ctx.save();
-      ctx.setLineDash([3, 2]);
+      ctx.setLineDash([3 / k, 2 / k]);
       ctx.strokeStyle = "#0f172a";
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1 / k;
       for (const c of whitespaceCounties) {
         const p = projected.countyPath(c);
         if (pattern) {
@@ -329,7 +417,7 @@ export function SeasonalityMap({
 
     // 5. Facilities.
     if (hasFacilities && showFacilities && facilities) {
-      const r = w < 480 ? 3 : 3.75;
+      const r = (w < 480 ? 3.5 : 4.5) / k;
       for (const f of facilities) {
         const pt = projected.projection([f.lon, f.lat]);
         if (!pt || pt[0] < 0 || pt[1] < 0 || pt[0] > w || pt[1] > h) continue;
@@ -339,12 +427,12 @@ export function SeasonalityMap({
           ctx.fillStyle = ACCENT;
           ctx.fill();
           ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1 / k;
         } else {
           ctx.fillStyle = "#ffffff";
           ctx.fill();
           ctx.strokeStyle = "#64748b"; // slate-500
-          ctx.lineWidth = 1.5;
+          ctx.lineWidth = 1.5 / k;
         }
         ctx.stroke();
       }
@@ -363,6 +451,8 @@ export function SeasonalityMap({
     hasFacilities,
     showFacilities,
     facilities,
+    view,
+    focusKey,
   ]);
 
   /* --- hover / tap --- */
@@ -373,7 +463,8 @@ export function SeasonalityMap({
       const rect = canvas.getBoundingClientRect();
       const x = clientX - rect.left;
       const y = clientY - rect.top;
-      const ll = projected.projection.invert?.([x, y]);
+      const v = viewRef.current;
+      const ll = projected.projection.invert?.([(x - v.tx) / v.k, (y - v.ty) / v.k]);
       if (!ll) {
         setProbe(null);
         return;
@@ -394,7 +485,7 @@ export function SeasonalityMap({
       for (const f of facilities) {
         const pt = projected.projection([f.lon, f.lat]);
         if (!pt) continue;
-        const d = (pt[0] - x) ** 2 + (pt[1] - y) ** 2;
+        const d = (pt[0] * view.k + view.tx - x) ** 2 + (pt[1] * view.k + view.ty - y) ** 2;
         if (d <= best) {
           best = d;
           facility = f;
@@ -425,6 +516,7 @@ export function SeasonalityMap({
     hasWhitespace,
     showWhitespace,
     counties,
+    view,
   ]);
 
   // Drop the probe when the map geometry changes (resize).
@@ -458,7 +550,7 @@ export function SeasonalityMap({
 
   return (
     <div className="w-full text-sm text-slate-700">
-      <div className="mb-2 flex flex-wrap items-center gap-x-5 gap-y-2">
+      <div className={hideControls ? "hidden" : "mb-2 flex flex-wrap items-center gap-x-5 gap-y-2"}>
         <label htmlFor={selectId} className="flex items-center gap-2">
           <span className="text-slate-600">Commodity</span>
           <select
@@ -508,7 +600,7 @@ export function SeasonalityMap({
           role="img"
           aria-label={ariaLabel}
           aria-describedby={summary ? summaryId : undefined}
-          className="absolute inset-0 block touch-manipulation"
+          className={`absolute inset-0 block touch-manipulation ${tooltip && (onAreaClick || (onFacilityClick && tooltip.facility)) ? "cursor-pointer" : ""}`}
           style={{ width: width || "100%", height: mapHeight || "100%" }}
           onPointerMove={(e) => {
             if (e.pointerType === "mouse") probeAt(e.clientX, e.clientY, false);
@@ -518,6 +610,34 @@ export function SeasonalityMap({
           }}
           onPointerLeave={(e) => {
             if (e.pointerType === "mouse") setProbe(null);
+          }}
+          onClick={(e) => {
+            if (!projected || !geo) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const v = viewRef.current;
+            if (onFacilityClick && facilities && showFacilities) {
+              let hit: MapFacility | null = null;
+              let best = 10 * 10;
+              for (const f of facilities) {
+                const pt = projected.projection([f.lon, f.lat]);
+                if (!pt) continue;
+                const d = (pt[0] * v.k + v.tx - x) ** 2 + (pt[1] * v.k + v.ty - y) ** 2;
+                if (d <= best) {
+                  best = d;
+                  hit = f;
+                }
+              }
+              if (hit) {
+                onFacilityClick(hit.id);
+                return;
+              }
+            }
+            const ll = projected.projection.invert?.([(x - v.tx) / v.k, (y - v.ty) / v.k]);
+            if (!ll || !onAreaClick) return;
+            const region = geo.regions.find((r) => inBounds(r.bounds, ll[0], ll[1]) && geoContains(r.feature, ll));
+            if (region) onAreaClick(region.code);
           }}
           onKeyDown={(e) => {
             if (e.key === "Escape") setProbe(null);

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useStore } from "@/lib/data/store";
-import { TimeTravel, TimeTravelBanner } from "./time-travel";
+import { TimeTravel } from "./time-travel";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,10 +20,9 @@ import { initials } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/", label: "Segments" },
-  { href: "/today", label: "Today" },
+  { href: "/", label: "Home" },
+  { href: "/segments", label: "Segments" },
   { href: "/prospects", label: "Prospects" },
-  { href: "/map", label: "Map" },
   { href: "/facilities", label: "Facilities" },
   { href: "/campaigns", label: "Campaigns" },
   { href: "/calendar", label: "Calendar" },
@@ -31,9 +30,8 @@ const NAV = [
 
 export function Logo() {
   return (
-    <Link href="/" className="leading-tight">
-      <span className="block text-[15px] font-semibold text-foreground">HarvestSignal</span>
-      <span className="block text-xs text-muted-foreground">ThiboLiSoft sales</span>
+    <Link href="/" className="text-[15px] font-semibold text-foreground">
+      HarvestSignal
     </Link>
   );
 }
@@ -42,7 +40,7 @@ function DataBadge() {
   const { mode, loadedAt, refreshing, refresh, warnings, ready } = useStore();
   const live = mode === "live";
   return (
-    <div className="hidden items-center gap-2 lg:flex">
+    <div className="hidden items-center gap-2 sm:flex">
       <Tooltip>
         <TooltipTrigger asChild>
           <span
@@ -56,15 +54,12 @@ function DataBadge() {
             {live ? "Live Salesforce" : "Mock data"}
           </span>
         </TooltipTrigger>
-        <TooltipContent className="max-w-72">
-          {live ? "Read-only connection to Salesforce. Data is cached for one hour." : "Salesforce-shaped demo data from the seed script. Set the SF_* environment variables to go live."}
-          {loadedAt ? ` Loaded ${new Date(loadedAt).toLocaleString()}.` : ""}
-          {warnings.length ? ` ${warnings.length} warning(s): ${warnings[0]}` : ""}
-        </TooltipContent>
+        <TooltipContent>{loadedAt ? `Loaded ${new Date(loadedAt).toLocaleString()}${warnings.length ? ` · ${warnings.length} warning(s)` : ""}` : "Loading"}</TooltipContent>
       </Tooltip>
       <Button
         variant="ghost"
         size="sm"
+        className="hidden lg:inline-flex"
         disabled={refreshing || !ready}
         onClick={async () => {
           await refresh();
@@ -98,18 +93,16 @@ function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-          {readOnly
-            ? "Live Salesforce is read-only in this app."
-            : `Demo changes: ${pendingChanges ? `${pendingChanges} saved in this browser` : "none yet"}`}
+          {readOnly ? "Read-only" : `${pendingChanges} local change${pendingChanges === 1 ? "" : "s"}`}
         </DropdownMenuLabel>
         <DropdownMenuItem
           disabled={!pendingChanges || readOnly}
           onSelect={() => {
             resetData();
-            toast.success("Demo data reset");
+            toast.success("Local changes reset");
           }}
         >
-          Reset demo data
+          Reset local changes
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -162,19 +155,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
       </header>
-      <TimeTravelBanner />
       {error && (
         <div className="border-b border-status-critical/30 bg-card px-4 py-2 text-center text-sm text-status-critical" role="alert">
-          {error}. Reload the page to try again.
+          {error}
         </div>
       )}
-      <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6">{children}</main>
-      <footer className="border-t bg-card">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-1 px-4 py-3 text-xs text-muted-foreground sm:flex-row sm:justify-between">
-          <span>HarvestSignal for ThiboLiSoft</span>
-          <span>Mock data uses fictional companies and people.</span>
-        </div>
-      </footer>
+      <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 pt-6 pb-12">{children}</main>
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { SegmentPrioritization } from "@/components/segments/segment-prioritization";
+import { Home } from "@/components/home/home";
 
-export default function Home() {
-  return <SegmentPrioritization />;
+export default function HomePage() {
+  return <Home />;
 }

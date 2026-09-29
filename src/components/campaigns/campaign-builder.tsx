@@ -44,7 +44,7 @@ import { COMMODITIES, FACILITY_TYPES, type CampaignContent, type Campaign, type 
 import { SENDER, announce } from "@/components/outreach/outreach-dialog";
 import { ContentEditor } from "./content-editor";
 import { ScorePill, TierLabel } from "@/components/shared/badges";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -213,8 +213,7 @@ function Builder({ params }: { params: URLSearchParams }) {
       {step === 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{webinar ? `${WEBINAR_NAME}: who to invite` : "Who is this campaign for?"}</CardTitle>
-            <CardDescription>Pick the season play, regions, facility types and commodity. The target list and copy follow from these.</CardDescription>
+            <CardTitle>{webinar ? WEBINAR_NAME : "Audience"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <section>
@@ -270,8 +269,8 @@ function Builder({ params }: { params: URLSearchParams }) {
                 </SelectContent>
               </Select>
             </section>
-            <p className="rounded-md bg-muted/60 p-3 text-sm">
-              <strong className="font-medium">{matched.length}</strong> prospects match. {cap(timingContext(brief).line)}.
+            <p className="text-sm text-muted-foreground">
+              <strong className="font-medium text-foreground">{matched.length}</strong> matching prospects
             </p>
           </CardContent>
         </Card>
@@ -280,8 +279,7 @@ function Builder({ params }: { params: URLSearchParams }) {
       {step === 1 && (
         <Card>
           <CardHeader>
-            <CardTitle>Target list</CardTitle>
-            <CardDescription>Ranked for {fmtShortDate(asOf)}. Uncheck anyone you want to leave out.</CardDescription>
+            <CardTitle>Targets</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -344,7 +342,7 @@ function Builder({ params }: { params: URLSearchParams }) {
           <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                Campaign content
+                Content
                 {content && (
                   <Badge variant="outline" className={cn("gap-1", content.source === "ai" && "border-primary/40 text-primary")}>
                     {content.source === "ai" ? <Sparkles className="size-3" /> : null}
@@ -352,10 +350,6 @@ function Builder({ params }: { params: URLSearchParams }) {
                   </Badge>
                 )}
               </CardTitle>
-              <CardDescription>
-                Written for {audience.play.toLowerCase()} in {brief.regionIds.map((r) => REGION_BY_ID[r].name).join(", ")}. Preview uses{" "}
-                {recipients[0] ? `${recipients[0].firstName} at ${recipients[0].company}` : "sample"} merge fields.
-              </CardDescription>
             </div>
             <div className="flex shrink-0 gap-2">
               <Button variant="outline" size="sm" onClick={() => generate(false)} disabled={generating}>
@@ -373,7 +367,6 @@ function Builder({ params }: { params: URLSearchParams }) {
             ) : (
               <Skeleton className="h-96" />
             )}
-            {aiAvailable === false && <p className="mt-3 text-xs text-muted-foreground">AI copy is off (no API key on the server). The built-in templates are tailored by season, region and facility type.</p>}
           </CardContent>
         </Card>
       )}
@@ -382,8 +375,7 @@ function Builder({ params }: { params: URLSearchParams }) {
         <div className="grid gap-5 lg:grid-cols-3">
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Launch settings</CardTitle>
-              <CardDescription>Creating the campaign writes the Campaign, CampaignMember and Task records for you.</CardDescription>
+              <CardTitle>Launch</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-1.5">
@@ -490,4 +482,3 @@ function Row({ k, v }: { k: string; v: string }) {
   );
 }
 
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);

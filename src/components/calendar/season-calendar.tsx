@@ -185,7 +185,6 @@ export function SeasonCalendar() {
           </div>
         </CardContent>
       </Card>
-      {todayInYear && <p className="text-xs text-muted-foreground">The vertical line marks the as-of date ({fmtShortDate(asOf)}). Use time travel in the header to move it.</p>}
     </div>
   );
 }

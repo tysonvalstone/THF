@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { useStore } from "@/lib/data/store";
 import { DEFAULT_K, DEFAULT_WEIGHTS, prioritize, WEIGHT_LABELS, type SegmentPriority, type Weights } from "@/lib/prioritization";
 import { formatRate, type RateEstimate, type Tag } from "@/lib/stats";
@@ -123,8 +122,8 @@ function SegmentCard({ s, maxScore }: { s: SegmentPriority; maxScore: number }) 
           <div>
             <h3 className="text-base font-semibold">{s.segment}</h3>
             <p className="text-xs text-muted-foreground">
-              <Num tip="Top-level accounts in this segment (co-op locations roll up to their parent).">{s.accounts}</Num> accounts ·{" "}
-              <Num tip="Open opportunities and their total amount.">
+              <Num tip="Parent accounts in this segment">{s.accounts}</Num> accounts ·{" "}
+              <Num tip="Open opportunities and amount">
                 {s.openDeals} open, {fmtMoney(s.openPipeline)}
               </Num>
             </p>
@@ -132,7 +131,7 @@ function SegmentCard({ s, maxScore }: { s: SegmentPriority; maxScore: number }) 
         </div>
         <div className="text-right">
           <Num
-            tip={`Priority = this month's close rate (relative to the best segment) × the weighted blend of deal size, cycle speed, product fit and expansion (${pct(s.blend)}).`}
+            tip={`Seasonal close rate × weighted blend (${pct(s.blend)})`}
             className="text-2xl font-semibold no-underline"
           >
             {s.score}
@@ -140,18 +139,17 @@ function SegmentCard({ s, maxScore }: { s: SegmentPriority; maxScore: number }) 
           <div className="mt-1 h-1 w-16 rounded-sm bg-slate-100">
             <div className="h-1 rounded-sm bg-primary" style={{ width: `${(s.score / Math.max(1, maxScore)) * 100}%` }} />
           </div>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">priority</p>
+          <p className="mt-0.5 text-[11px] text-muted-foreground">Priority</p>
         </div>
       </header>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))]">
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground">Close rate, deals created in {monthName}</p>
+          <p className="text-xs text-muted-foreground">Close Rate ({monthName})</p>
           <div className="mt-1 flex items-center gap-2">
             <Num tip={`${r.explanation} 95% Wilson interval: ${pct(r.low)}–${pct(r.high)}.`} className="text-lg font-semibold">
               {rateText(r)}
             </Num>
-            {!r.enoughData && <span className="text-xs text-muted-foreground tabular">{pct(r.rate)} used</span>}
             <TagChip tag={r.tag} />
           </div>
           <div className="mt-2">
@@ -162,14 +160,13 @@ function SegmentCard({ s, maxScore }: { s: SegmentPriority; maxScore: number }) 
           </div>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground">Sample size</p>
+          <p className="text-xs text-muted-foreground">Decided Deals</p>
           <Num tip={`${s.stats.won} won and ${s.stats.lost} lost deals (${s.stats.open} still open). Close rates need at least 10 decided deals.`} className="text-lg font-semibold">
             {s.stats.decided}
           </Num>
-          <p className="text-[11px] text-muted-foreground">decided deals</p>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground">Median cycle</p>
+          <p className="text-xs text-muted-foreground">Median Cycle</p>
           <Num
             tip={s.stats.medianDaysToClose === null ? "No closed deals yet; the company median is used for ranking." : "Median days from created to closed, over decided deals."}
             className="text-lg font-semibold"
@@ -179,7 +176,7 @@ function SegmentCard({ s, maxScore }: { s: SegmentPriority; maxScore: number }) 
           <p className="text-[11px] text-muted-foreground">{s.components.cycleSpeed.tag.toLowerCase()}</p>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground">Median won deal</p>
+          <p className="text-xs text-muted-foreground">Median Won Deal</p>
           <Num tip={s.stats.medianWonAmount === null ? "No won deals yet; the company median is used for ranking." : "Median Amount of won deals."} className="text-lg font-semibold">
             {s.stats.medianWonAmount === null ? "—" : fmtMoney(s.stats.medianWonAmount)}
           </Num>
@@ -189,11 +186,11 @@ function SegmentCard({ s, maxScore }: { s: SegmentPriority; maxScore: number }) 
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <div>
-          <p className="mb-1.5 text-xs text-muted-foreground">Close rate by month created (hatched = not enough data)</p>
+          <p className="mb-1.5 text-xs text-muted-foreground">Close rate by month created</p>
           <MonthStrip s={s} />
         </div>
         <div>
-          <p className="mb-1.5 text-xs text-muted-foreground">Priority inputs (scaled 0–1 across segments)</p>
+          <p className="mb-1.5 text-xs text-muted-foreground">Priority inputs</p>
           <ul className="space-y-1.5">
             {(Object.keys(WEIGHT_LABELS) as (keyof Weights)[]).map((k) => {
               const c = s.components[k];
@@ -236,7 +233,6 @@ function WeightPanel({ weights, setWeights, k, setK }: { weights: Weights; setWe
     <aside className="space-y-5 rounded-md border bg-panel p-4 lg:sticky lg:top-20 lg:self-start" aria-label="Weights">
       <div>
         <h2 className="text-sm font-semibold">Weights</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">Ranking updates live. Nothing is re-queried.</p>
       </div>
       {(Object.keys(WEIGHT_LABELS) as (keyof Weights)[]).map((key) => (
         <div key={key}>
@@ -306,26 +302,18 @@ export function SegmentPrioritization() {
   }
   const window = sellingWindowAt(asOf);
   const maxScore = Math.max(...p.segments.map((s) => s.score));
-  const lead = p.segments.slice(0, 2).map((s) => s.segment);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       <WeightPanel weights={weights} setWeights={setWeights} k={k} setK={setK} />
 
       <div className="min-w-0 space-y-6">
-        <section className="rounded-md border bg-card p-4">
-          <p className="text-xs text-muted-foreground">
-            {fmtDate(asOf)} · {window.name} ({window.when})
+        <header className="flex items-baseline justify-between gap-3">
+          <h1 className="text-2xl font-semibold">Segments</h1>
+          <p className="text-sm text-muted-foreground tabular">
+            {fmtDate(asOf)} · {window.name}
           </p>
-          <h1 className="mt-1 text-xl font-semibold">
-            Focus on {lead[0]} and {lead[1]} right now
-          </h1>
-          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-            {window.summary} Rankings use the close rate for deals created in {MONTHS_SHORT[p.month]}, from{" "}
-            <Num tip={`${p.stats.company.explanation}`}>{p.stats.company.decided.toLocaleString()} decided deals</Num> (company close rate{" "}
-            <Num tip={`95% Wilson interval ${pct(p.stats.company.low)}–${pct(p.stats.company.high)}.`}>{pct(p.stats.company.rate)}</Num>).
-          </p>
-        </section>
+        </header>
 
         <section aria-label="Ranked segments" className="space-y-3">
           {p.segments.map((s) => (
@@ -336,12 +324,9 @@ export function SegmentPrioritization() {
         <section className="rounded-md border bg-card">
           <header className="flex flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-base font-semibold">Top 25 open deals by expected value</h2>
-              <p className="text-xs text-muted-foreground">Expected value per day = applicable close rate × amount ÷ segment median cycle.</p>
+              <h2 className="text-base font-semibold">Top Open Deals by Expected Value</h2>
             </div>
-            <Link href="/prospects" className="text-sm text-primary hover:underline">
-              All prospects
-            </Link>
+
           </header>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[860px] text-sm">

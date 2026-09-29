@@ -11,9 +11,8 @@ import { scoreOne, sizeLabel, type ScoredTarget } from "@/lib/scoring";
 import { targetFromAccount, targetFromLead } from "@/lib/scoring/target";
 import { nextBestAction, type NextBestAction } from "@/lib/nba";
 import { PRODUCT_BY_ID } from "@/data/reference/products";
-import { REGION_BY_ID } from "@/data/reference/regions";
 import { VENDOR_BY_NAME } from "@/data/reference/software";
-import { fmtDate, fmtMonthYear, fmtRelative, fmtShortDate, parseDate, toISODate } from "@/lib/dates";
+import { fmtDate, fmtMonthYear, fmtRelative, fmtShortDate, toISODate } from "@/lib/dates";
 import { fmtMoney, fmtNumber } from "@/lib/format";
 import { type Account, type Contact, type Lead, type Opportunity } from "@/types/salesforce";
 import { ScorePill, TierLabel } from "@/components/shared/badges";
@@ -50,7 +49,6 @@ export function RecordView({ id }: { id: string }) {
     return (
       <div className="rounded-lg border border-dashed p-10 text-center">
         <p className="font-medium">Record not found</p>
-        <p className="mt-1 text-sm text-muted-foreground">It may have been removed when the demo data was reset.</p>
         <Button asChild variant="outline" className="mt-4">
           <Link href="/prospects">Back to prospects</Link>
         </Button>
@@ -66,7 +64,6 @@ export function RecordView({ id }: { id: string }) {
   const timeline = timelineFor(data, id);
   const openTasks = timeline.filter((i) => i.kind === "task" && i.record.Status !== "Completed").map((i) => i.record as never);
   const nba = nextBestAction(scored, { contacts, openOpps, openTasks, asOf });
-  const region = REGION_BY_ID[target.regionId];
   const children = account ? data.accounts.filter((c) => c.ParentId === account.Id) : [];
   const parent = account?.ParentId ? findAccount(data, account.ParentId) : undefined;
 
@@ -84,10 +81,7 @@ export function RecordView({ id }: { id: string }) {
           <NbaCard nba={nba} onAction={setTab} />
           <Card>
             <CardHeader>
-              <CardTitle>Seasonal calendar</CardTitle>
-              <CardDescription>
-                {region.name}: {region.summary}
-              </CardDescription>
+              <CardTitle>Seasonal Calendar</CardTitle>
             </CardHeader>
             <CardContent>
               <SeasonStrip entity={{ Region__c: target.regionId, Facility_Type__c: target.facilityType, Primary_Commodities__c: target.commodities }} asOf={asOf} />
@@ -151,16 +145,14 @@ export function RecordView({ id }: { id: string }) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                Prospect score
+                Score
                 <TierLabel tier={scored.tier} />
               </CardTitle>
               <CardDescription>As of {fmtDate(asOf)}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {target.isCustomer ? (
-                <p className="text-sm text-muted-foreground">
-                  Current ThiboLiSoft customer. Scores are shown for context; customers are not ranked as prospects.
-                </p>
+                <p className="text-sm text-muted-foreground">Current customer</p>
               ) : null}
               <div className="flex items-center gap-4">
                 <ScorePill score={scored.total} size="lg" />
@@ -274,7 +266,6 @@ function Highlights({
             )}
           </Field>
         </div>
-        {parent && <p className="text-xs text-muted-foreground">This is a co-op location. Deals, pipeline and buying decisions roll up to {parent.Name}.</p>}
       </CardContent>
     </Card>
   );
@@ -355,7 +346,7 @@ function ActivityTimeline({ items }: { items: TimelineItem[] }) {
     );
   };
 
-  if (!visible.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No activity yet. Your first touch will show up here.</p>;
+  if (!visible.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No activity</p>;
 
   return (
     <Card>
@@ -420,7 +411,7 @@ function ContactsList({ contacts }: { contacts: Contact[] }) {
 
 function OppList({ opps }: { opps: Opportunity[] }) {
   const { data, asOf } = useStore();
-  if (!opps.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No opportunities yet. Book a demo from a call to create one automatically.</p>;
+  if (!opps.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No opportunities</p>;
   return (
     <div className="space-y-3">
       {opps.map((o) => {
@@ -480,7 +471,7 @@ function OppList({ opps }: { opps: Opportunity[] }) {
 function CampaignHistory({ id }: { id: string }) {
   const { data } = useStore();
   const members = data.campaignMembers.filter((m) => m.AccountId === id || m.LeadId === id);
-  if (!members.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">Not in any campaigns yet.</p>;
+  if (!members.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No campaigns</p>;
   return (
     <Card className="py-0">
       <ul className="divide-y">
@@ -545,7 +536,6 @@ function Details({ account, lead }: { account?: Account; lead?: Lead }) {
             </div>
           ))}
         </dl>
-        <p className="mt-4 text-xs text-muted-foreground">Last scored {fmtDate(parseDate(toISODate(new Date())))} for the as-of date shown in the header.</p>
       </CardContent>
     </Card>
   );
