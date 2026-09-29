@@ -36,6 +36,8 @@ import type {
 import type { PriceSeries, PriceSeriesKey } from "../src/types/reference";
 import { SEGMENTS, OPEN_STAGES, type Segment } from "../src/types/salesforce";
 import countiesTopoJson from "us-atlas/counties-10m.json";
+import { writeExportTemplates } from "./prebuilt/exports";
+import { writeSequences } from "./prebuilt/sequences";
 import { feature } from "topojson-client";
 import { geoCentroid } from "d3-geo";
 import type { GeometryCollection, Topology } from "topojson-specification";
@@ -1281,6 +1283,9 @@ const files: Record<string, unknown> = {
 for (const [file, data] of Object.entries(files)) {
   writeFileSync(join(OUT_DIR, file), JSON.stringify(data, null, 1) + "\n");
 }
+// Prebuilt export templates and email sequences
+writeExportTemplates(OUT_DIR);
+writeSequences(OUT_DIR);
 
 const open = opportunities.filter((o) => !o.IsClosed);
 console.log(

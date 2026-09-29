@@ -1,0 +1,280 @@
+[
+ {
+  "id": "seq-post-harvest-coop",
+  "name": "Post-Harvest Co-op Outreach",
+  "description": "December outreach to multi-location co-ops: year-end close, audit prep and the next board meeting.",
+  "segment": "Multi-Location Co-op",
+  "month": 12,
+  "prebuilt": true,
+  "steps": [
+   {
+    "id": "st-phc-1",
+    "type": "email",
+    "day": 1,
+    "subject": "Year-end at {{account.name}}: {{account.locations}}, one set of books",
+    "body": "Hi {{contact.first_name}},\n\nWith {{commodity}} harvest wrapped up across {{region}}, most co-ops we work with are turning to year-end close. Running {{account.locations}} usually means scale tickets, settlements and price-later contracts that don't line up until someone reconciles them by hand.\n\nCeres and GrainSight give your office one ledger and one grain position across every location, so the numbers your auditor asks for are already tied out.\n\nYour fiscal year ends {{fiscal_year_end}}. Would 30 minutes before the holidays work to walk through what a close looks like for a co-op your size?\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": [
+     {
+      "id": "va-phc-1-late",
+      "name": "Harvest running late",
+      "rules": [
+       {
+        "field": "season_phase",
+        "op": "eq",
+        "value": "harvest"
+       }
+      ],
+      "subject": "After harvest at {{account.name}}",
+      "body": "Hi {{contact.first_name}},\n\nI know some of your {{account.locations}} are still bringing in {{commodity}}, so I'll keep this short.\n\nOnce the last trucks are across the scale, most co-ops turn straight to year-end close. Ceres and GrainSight give your office one ledger and one grain position across every location, so the numbers your auditor asks for are already tied out.\n\nNo need to reply now. I'll check back once harvest is done.\n\n{{sender.name}}\nThiboLiSoft"
+     },
+     {
+      "id": "va-phc-1-wheat",
+      "name": "Wheat co-op",
+      "rules": [
+       {
+        "field": "commodity",
+        "op": "eq",
+        "value": "wheat"
+       }
+      ],
+      "subject": "Year-end at {{account.name}}: wheat contracts and the audit",
+      "body": "Hi {{contact.first_name}},\n\nWheat co-ops tend to carry price-later and deferred-payment contracts well past harvest, and those open bushels are what auditors spend the most time on at year-end.\n\nWith {{account.locations}}, GrainSight gives your office one position that includes every open contract by location, and Ceres ties it to the balance sheet without a spreadsheet in between.\n\nYour fiscal year ends {{fiscal_year_end}}. Would 30 minutes in the next two weeks work to walk through how other wheat co-ops handle the close?\n\n{{sender.name}}\nThiboLiSoft"
+     }
+    ]
+   },
+   {
+    "id": "st-phc-2",
+    "type": "linkedin",
+    "day": 3,
+    "body": "Connect with {{contact.first_name}} ({{contact.title}}, {{account.name}}). Note: \"Following up on my email about year-end close across your {{account.locations}}. Happy to share how other {{region}} co-ops handle it.\"",
+    "variants": []
+   },
+   {
+    "id": "st-phc-3",
+    "type": "call",
+    "day": 5,
+    "body": "Call {{contact.first_name}} at {{account.name}}.\nOpen: year-end close across {{account.locations}}, fiscal year ends {{fiscal_year_end}}.\nAsk: how long did last year's close take? Who reconciles price-later bushels to the position? What's on the agenda for the {{next_board_meeting}} board meeting?\nGoal: 30-minute walkthrough with the GM and controller before the board meets.",
+    "variants": []
+   },
+   {
+    "id": "st-phc-4",
+    "type": "email",
+    "day": 8,
+    "subject": "Getting on the {{next_board_meeting}} board agenda",
+    "body": "Hi {{contact.first_name}},\n\nMost co-op software decisions go to the board, and yours meets next on {{next_board_meeting}}. If a system change is on the table for next year, the board will want a fixed price, a timeline and a reference or two.\n\nWe can put together a proposal sized to {{account.locations}}, with implementation scheduled to finish before spring planting. I can also connect you with a co-op controller in {{region}} who made the same move.\n\nWorth a short call this week?\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": []
+   },
+   {
+    "id": "st-phc-5",
+    "type": "email",
+    "day": 14,
+    "subject": "Closing the loop",
+    "body": "Hi {{contact.first_name}},\n\nI haven't heard back, so I'll assume the timing isn't right. If year-end close or the board packet becomes a priority before {{fiscal_year_end}}, reply here and I'll send over a proposal outline for {{account.name}}.\n\nThanks for your time this season.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": []
+   }
+  ]
+ },
+ {
+  "id": "seq-year-round-ethanol-feed",
+  "name": "Year-Round Ethanol & Feed",
+  "description": "October outreach to ethanol plants and feed mills while elevators are in harvest: procurement, scale traffic and margins.",
+  "segment": "Ethanol Plant",
+  "month": 10,
+  "prebuilt": true,
+  "steps": [
+   {
+    "id": "st-yef-1",
+    "type": "email",
+    "day": 1,
+    "subject": "Harvest receiving at {{account.name}}",
+    "body": "Hi {{contact.first_name}},\n\nThis is the busiest stretch of the year for grain receiving at plants in {{state}}. Trucks back up at the scale, grades and moisture get keyed twice, and procurement is working from yesterday's position.\n\nScaleTrac handles inbound tickets with grade and moisture capture at the scale, and GrainSight keeps {{commodity}} contracts, bids and position current as each load comes in.\n\nWould a 30-minute look at how other plants in {{region}} run harvest receiving be useful?\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": [
+     {
+      "id": "va-yef-1-feed",
+      "name": "Feed mill",
+      "rules": [
+       {
+        "field": "segment",
+        "op": "eq",
+        "value": "Feed Mill"
+       }
+      ],
+      "subject": "Ingredient receiving at {{account.name}}",
+      "body": "Hi {{contact.first_name}},\n\nFeed mills in {{state}} are taking in new-crop {{commodity}} right now, and receiving is usually where the day's numbers drift: tickets keyed twice, moisture discounts applied by hand, and inventory that doesn't match what was booked.\n\nScaleTrac captures the ticket, grade and discounts at the scale, and ScaleTrac Mobile checks drivers in before they reach the probe, so the office and the mill work from the same numbers.\n\nWould 30 minutes next week work to see how other mills in {{region}} set this up?\n\n{{sender.name}}\nThiboLiSoft"
+     },
+     {
+      "id": "va-yef-1-corn",
+      "name": "Corn buyer",
+      "rules": [
+       {
+        "field": "commodity",
+        "op": "eq",
+        "value": "corn"
+       }
+      ],
+      "subject": "Corn procurement at {{account.name}} this harvest",
+      "body": "Hi {{contact.first_name}},\n\nWith corn harvest moving across {{region}}, your procurement team is setting bids, booking contracts and watching basis every day. When the position lives in spreadsheets, it's hard to know where you stand on bushels and margin until the end of the day.\n\nGrainSight keeps corn contracts, bids and hedges in one live position, and ScaleTrac feeds each scale ticket straight into it.\n\nWould 30 minutes work to walk through how other plants handle procurement during harvest?\n\n{{sender.name}}\nThiboLiSoft"
+     }
+    ]
+   },
+   {
+    "id": "st-yef-2",
+    "type": "call",
+    "day": 4,
+    "body": "Call {{contact.first_name}} ({{contact.title}}) at {{account.name}}.\nAsk: how many trucks a day at peak? How long is the scale line? How does procurement see today's position?\nGoal: book a 30-minute demo of ScaleTrac and GrainSight.",
+    "variants": []
+   },
+   {
+    "id": "st-yef-3",
+    "type": "email",
+    "day": 7,
+    "subject": "Scale-to-position in one step",
+    "body": "Hi {{contact.first_name}},\n\nOne detail from plants like {{account.name}}: when the scale ticket posts straight to the position, procurement stops waiting on the office for a daily reconciliation, and settlement errors drop off.\n\nIf it helps, I can send a short outline of how a plant in {{region}} set this up in a few weeks, without disrupting harvest receiving.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": [
+     {
+      "id": "va-yef-3-feed",
+      "name": "Feed mill",
+      "rules": [
+       {
+        "field": "segment",
+        "op": "eq",
+        "value": "Feed Mill"
+       }
+      ],
+      "subject": "Receiving to inventory in one step",
+      "body": "Hi {{contact.first_name}},\n\nOne detail from mills like {{account.name}}: when each receiving ticket posts straight to ingredient inventory with the grade and discount attached, month-end shrink questions get much shorter.\n\nIf it helps, I can send a short outline of how a mill in {{region}} set this up in a few weeks.\n\n{{sender.name}}\nThiboLiSoft"
+     }
+    ]
+   },
+   {
+    "id": "st-yef-4",
+    "type": "linkedin",
+    "day": 10,
+    "body": "Connect with {{contact.first_name}} ({{contact.title}}, {{account.name}}). Note: \"Following up on scale and procurement workflows at {{account.name}}. Glad to share what other {{region}} plants are doing.\"",
+    "variants": []
+   },
+   {
+    "id": "st-yef-5",
+    "type": "email",
+    "day": 15,
+    "subject": "Worth a look before the new fiscal year?",
+    "body": "Hi {{contact.first_name}},\n\nI'll leave it here for now. If receiving or procurement comes up in planning before {{fiscal_year_end}}, reply and I'll set up a short demo for your team.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": []
+   }
+  ]
+ },
+ {
+  "id": "seq-price-later-webinar",
+  "name": "Price-Later Compliance Webinar",
+  "description": "Invite, reminder and follow-up for the price-later (deferred pricing) contract compliance webinar.",
+  "segment": "Country Elevator",
+  "month": 11,
+  "prebuilt": true,
+  "steps": [
+   {
+    "id": "st-plw-1",
+    "type": "email",
+    "day": 1,
+    "subject": "Webinar: price-later contracts, what examiners and auditors look for",
+    "body": "Hi {{contact.first_name}},\n\nPrice-later (deferred pricing) contracts are one of the most common findings in warehouse exams and year-end audits: open bushels that don't reconcile to the position, missing signatures, service charges applied inconsistently.\n\nWe're hosting a 45-minute webinar for grain controllers and managers covering:\n- What state and federal examiners check on price-later and deferred-payment contracts\n- Reconciling open price-later bushels to the daily position and the balance sheet\n- Service charges, pricing deadlines and the paper trail your auditor will ask for\n\nIt's timed ahead of year-end and your {{next_board_meeting}} board meeting. Reply \"yes\" and I'll save a seat for you and anyone else at {{account.name}}.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": [
+     {
+      "id": "va-plw-1-ia",
+      "name": "Iowa",
+      "rules": [
+       {
+        "field": "state",
+        "op": "eq",
+        "value": "IA"
+       }
+      ],
+      "subject": "Webinar: price-later contracts and Iowa grain dealer compliance",
+      "body": "Hi {{contact.first_name}},\n\nIn Iowa, price-later contracts sit under state grain dealer and warehouse licensing, and they're a regular focus in state examinations: signed contracts on file, open bushels that tie to the position, and the bonding and financial requirements that come with deferred-pricing obligations.\n\nWe're hosting a 45-minute webinar for grain controllers and managers covering:\n- What examiners check on price-later and deferred-payment contracts\n- Reconciling open price-later bushels to the daily position and the balance sheet\n- Record-keeping and the paper trail your auditor and examiner will ask for\n\nIt's timed ahead of year-end and your {{next_board_meeting}} board meeting. Reply \"yes\" and I'll save a seat for you and anyone else at {{account.name}}.\n\n{{sender.name}}\nThiboLiSoft"
+     }
+    ]
+   },
+   {
+    "id": "st-plw-2",
+    "type": "email",
+    "day": 6,
+    "subject": "Reminder: price-later compliance webinar",
+    "body": "Hi {{contact.first_name}},\n\nA quick reminder about the price-later contract compliance webinar. Bring your questions on service charges, pricing deadlines and year-end reconciliation and we'll answer them live.\n\nReply \"yes\" and I'll send the calendar invite. Everyone who registers gets the recording.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": []
+   },
+   {
+    "id": "st-plw-3",
+    "type": "call",
+    "day": 9,
+    "body": "Call {{contact.first_name}} ({{contact.title}}) at {{account.name}}.\nAsk: how many price-later contracts are open right now? How are they reconciled to the position at month-end? Any findings in the last exam or audit?\nGoal: register them for the webinar, or book a 20-minute GrainSight walkthrough.",
+    "variants": []
+   },
+   {
+    "id": "st-plw-4",
+    "type": "email",
+    "day": 14,
+    "subject": "Recording and checklist: price-later contracts",
+    "body": "Hi {{contact.first_name}},\n\nThanks for your interest in the price-later compliance session. I can send the recording and a one-page checklist covering signed contracts, open-bushel reconciliation, service charges and the records examiners ask for.\n\nIf it would help to see how GrainSight tracks price-later contracts by location for {{account.name}}, I'm happy to set up 20 minutes before your fiscal year ends on {{fiscal_year_end}}.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": [
+     {
+      "id": "va-plw-4-ia",
+      "name": "Iowa",
+      "rules": [
+       {
+        "field": "state",
+        "op": "eq",
+        "value": "IA"
+       }
+      ],
+      "subject": "Recording and checklist: price-later contracts in Iowa",
+      "body": "Hi {{contact.first_name}},\n\nThanks for your interest in the price-later compliance session. I can send the recording and a one-page checklist covering signed contracts, open-bushel reconciliation, and the record-keeping Iowa grain dealer and warehouse examiners ask for.\n\nIf it would help to see how GrainSight tracks price-later contracts by location for {{account.name}}, I'm happy to set up 20 minutes before your fiscal year ends on {{fiscal_year_end}}.\n\n{{sender.name}}\nThiboLiSoft"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "seq-visiting-next-week",
+  "name": "Visiting Next Week",
+  "description": "In-person visit request for stops on a planned trip: ask for 30 minutes on site, confirm by phone, remind.",
+  "prebuilt": true,
+  "steps": [
+   {
+    "id": "st-vnw-1",
+    "type": "email",
+    "day": 1,
+    "subject": "I'll be in {{state}} next week",
+    "body": "Hi {{contact.first_name}},\n\nI'll be in {{state}} next week visiting grain and feed operations in {{region}}, and I'd like to stop by {{account.name}} for 30 minutes.\n\nI'd mainly like to see how {{commodity}} moves from the scale to settlement across your {{account.locations}}, and hear what's working and what isn't. No slides unless you want them.\n\nIs there a morning or afternoon that works for you at the facility?\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": [
+     {
+      "id": "va-vnw-1-harvest",
+      "name": "During harvest",
+      "rules": [
+       {
+        "field": "season_phase",
+        "op": "eq",
+        "value": "harvest"
+       }
+      ],
+      "subject": "Quick stop at {{account.name}} next week?",
+      "body": "Hi {{contact.first_name}},\n\nI'll be in {{state}} next week, and I know {{commodity}} harvest has you busy, so I'll keep this short.\n\nIf you have 15 minutes, I can meet you at the scale house or wherever is easiest across your {{account.locations}}, and stay out of the way of the trucks. If it's a bad week, just say so and we'll pick a date after harvest.\n\n{{sender.name}}\nThiboLiSoft"
+     }
+    ]
+   },
+   {
+    "id": "st-vnw-2",
+    "type": "call",
+    "day": 3,
+    "body": "Call {{contact.first_name}} ({{contact.title}}) at {{account.name}} to confirm a time for next week's visit.\nIf no answer: leave a short voicemail with two time options and send a text or email.\nAsk: best location to meet, who else should join (GM, controller, scale house lead)?",
+    "variants": []
+   },
+   {
+    "id": "st-vnw-3",
+    "type": "email",
+    "day": 6,
+    "subject": "Confirming my visit to {{account.name}}",
+    "body": "Hi {{contact.first_name}},\n\nConfirming my stop at {{account.name}} this week. I'll bring nothing but questions; plan on 30 minutes. If anything changes on your end, reply here and I'll adjust.\n\n{{sender.name}}\nThiboLiSoft",
+    "variants": []
+   }
+  ]
+ }
+]

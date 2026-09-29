@@ -8,10 +8,15 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 export function LoginScreen() {
-  const { users, profile, signIn } = useAuth();
+  const { users, profile, signIn, ready } = useAuth();
   const [pending, setPending] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  // Full load so the server sees the new session cookie
+  const enter = () => {
+    const next = new URLSearchParams(window.location.search).get("next");
+    window.location.replace(next && next.startsWith("/") && !next.startsWith("//") ? next : "/");
+  };
 
   const choose = async (id: string) => {
     setError(false);
@@ -20,17 +25,20 @@ export function LoginScreen() {
       setPassword("");
       return;
     }
-    await signIn(id);
+    if (await signIn(id)) enter();
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pending) return;
     const ok = await signIn(pending, password);
-    if (!ok) setError(true);
+    if (ok) enter();
+    else setError(true);
   };
 
   const pendingUser = users.find((u) => u.Id === pending);
+  // Wait for saved profiles so a password is never skipped
+  if (!ready) return <div className="min-h-full bg-background" />;
 
   return (
     <div className="flex min-h-full items-center justify-center bg-background px-4 py-16">

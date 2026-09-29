@@ -23,6 +23,12 @@ export interface MapFacility {
   covered: boolean;
   /** Optional dot colour (e.g. by commodity) */
   color?: string;
+  /** Dot radius in screen px (e.g. sized by deal amount) */
+  radius?: number;
+  /** Draw as a numbered pin (trip stops) */
+  number?: number;
+  /** Second tooltip line (replaces Covered / Not covered) */
+  sublabel?: string;
 }
 
 export interface SeasonalityMapProps {
@@ -43,7 +49,7 @@ export interface SeasonalityMapProps {
   /** Called with the state/province code under a click. */
   onAreaClick?: (code: string) => void;
   /** Called with a facility id when a dot is clicked. */
-  onFacilityClick?: (id: string) => void;
+  onFacilityClick?: (id: string, point: { x: number; y: number }) => void;
   /** Hide the commodity select / layer toggles (the parent renders them). */
   hideControls?: boolean;
   /** Hide the built-in phase legend (the parent renders its own). */
@@ -54,6 +60,8 @@ export interface SeasonalityMapProps {
   /** Facility to emphasise (e.g. hovered in a list) */
   highlightId?: string | null;
   onFacilityHover?: (id: string | null) => void;
+  /** Polylines drawn under the dots (e.g. a trip route, one line per day) */
+  routes?: { lat: number; lon: number }[][];
 }
 
 interface View {
@@ -236,6 +244,7 @@ export function SeasonalityMap({
   regionColor,
   highlightId = null,
   onFacilityHover,
+  routes,
 }: SeasonalityMapProps): JSX.Element {
   const selectId = useId();
   const summaryId = useId();
@@ -449,15 +458,58 @@ export function SeasonalityMap({
       ctx.restore();
     }
 
-    // 5. Facilities.
+    // 5. Routes.
+    if (routes?.length) {
+      ctx.save();
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      for (const line of routes) {
+        const pts = line.map((p) => projected.projection([p.lon, p.lat])).filter((p): p is [number, number] => !!p);
+        if (pts.length < 2) continue;
+        ctx.beginPath();
+        pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 5 / k;
+        ctx.stroke();
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 2 / k;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // 6. Facilities.
     if (hasFacilities && showFacilities && facilities) {
       const r = (w < 480 ? 3.5 : 4.5) / k;
       for (const f of facilities) {
         const pt = projected.projection([f.lon, f.lat]);
         if (!pt || pt[0] < 0 || pt[1] < 0 || pt[0] > w || pt[1] > h) continue;
+        if (f.number !== undefined) {
+          const pr = 9 / k;
+          ctx.beginPath();
+          ctx.arc(pt[0], pt[1], pr, 0, Math.PI * 2);
+          ctx.fillStyle = f.color ?? "#0f172a";
+          ctx.fill();
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 2 / k;
+          ctx.stroke();
+          ctx.fillStyle = "#ffffff";
+          ctx.font = `600 ${10 / k}px Inter, system-ui, sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(String(f.number), pt[0], pt[1] + 0.5 / k);
+          continue;
+        }
         ctx.beginPath();
-        ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2);
-        if (f.color) {
+        ctx.arc(pt[0], pt[1], f.radius ? f.radius / k : r, 0, Math.PI * 2);
+        if (f.radius && f.color) {
+          ctx.fillStyle = f.color;
+          ctx.globalAlpha = 0.9;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          ctx.strokeStyle = "#0f172a";
+          ctx.lineWidth = 1.25 / k;
+        } else if (f.color) {
           ctx.fillStyle = f.color;
           ctx.fill();
           ctx.strokeStyle = f.covered ? "#0f172a" : "#ffffff";
@@ -478,17 +530,20 @@ export function SeasonalityMap({
       const hl = highlightId ? facilities.find((x) => x.id === highlightId) : undefined;
       const hp = hl ? projected.projection([hl.lon, hl.lat]) : null;
       if (hl && hp) {
+        const hr = hl.number !== undefined ? 9 / k : hl.radius ? hl.radius / k : r;
         ctx.beginPath();
-        ctx.arc(hp[0], hp[1], r * 2.1, 0, Math.PI * 2);
+        ctx.arc(hp[0], hp[1], hr * 2.1, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(31, 95, 74, 0.18)";
         ctx.fill();
         ctx.lineWidth = 2.5 / k;
         ctx.strokeStyle = "#0f172a";
         ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(hp[0], hp[1], r * 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = hl.color ?? ACCENT;
-        ctx.fill();
+        if (hl.number === undefined) {
+          ctx.beginPath();
+          ctx.arc(hp[0], hp[1], hr * 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = hl.color ?? ACCENT;
+          ctx.fill();
+        }
       }
     }
   }, [
@@ -512,6 +567,7 @@ export function SeasonalityMap({
     highlightId,
     hoverCode,
     onAreaClick,
+    routes,
   ]);
 
   /* --- hover / tap --- */
@@ -540,12 +596,13 @@ export function SeasonalityMap({
     // Nearest facility within a few px takes precedence.
     let facility: MapFacility | null = null;
     if (hasFacilities && showFacilities && facilities) {
-      let best = 8 * 8;
+      let best = Infinity;
       for (const f of facilities) {
         const pt = projected.projection([f.lon, f.lat]);
         if (!pt) continue;
+        const reach = Math.max(8, f.number !== undefined ? 10 : (f.radius ?? 0) + 2);
         const d = (pt[0] * view.k + view.tx - x) ** 2 + (pt[1] * view.k + view.ty - y) ** 2;
-        if (d <= best) {
+        if (d <= reach * reach && d <= best) {
           best = d;
           facility = f;
         }
@@ -744,18 +801,19 @@ export function SeasonalityMap({
             const v = viewRef.current;
             if (onFacilityClick && facilities && showFacilities) {
               let hit: MapFacility | null = null;
-              let best = 10 * 10;
+              let best = Infinity;
               for (const f of facilities) {
                 const pt = projected.projection([f.lon, f.lat]);
                 if (!pt) continue;
+                const reach = Math.max(10, f.number !== undefined ? 11 : (f.radius ?? 0) + 3);
                 const d = (pt[0] * v.k + v.tx - x) ** 2 + (pt[1] * v.k + v.ty - y) ** 2;
-                if (d <= best) {
+                if (d <= reach * reach && d <= best) {
                   best = d;
                   hit = f;
                 }
               }
               if (hit) {
-                onFacilityClick(hit.id);
+                onFacilityClick(hit.id, { x, y });
                 return;
               }
             }
@@ -797,7 +855,7 @@ export function SeasonalityMap({
             {tooltip.facility && (
               <div className={tooltip.region ? "mb-1.5 border-b border-slate-200 pb-1.5" : undefined}>
                 <div className="font-medium text-slate-900">{tooltip.facility.label}</div>
-                <div className="text-slate-500">{tooltip.facility.covered ? "Covered" : "Not covered"}</div>
+                <div className="text-slate-500">{tooltip.facility.sublabel ?? (tooltip.facility.covered ? "Covered" : "Not covered")}</div>
               </div>
             )}
             {tooltip.region && (

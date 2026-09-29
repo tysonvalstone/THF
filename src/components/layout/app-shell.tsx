@@ -18,16 +18,46 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/auth/avatar";
 import { LoginScreen } from "@/components/auth/login-screen";
+import { ChatPanel, useChatOpen } from "@/components/ai/chat-panel";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { href: "/", label: "Home" },
-  { href: "/segments", label: "Segments" },
-  { href: "/prospects", label: "Prospects" },
-  { href: "/facilities", label: "Facilities" },
-  { href: "/campaigns", label: "Campaigns" },
-  { href: "/calendar", label: "Calendar" },
+/** Top-level sections; each section's pages show as tabs under the header */
+const NAV: { href: string; label: string; tabs: [string, string][]; also: string[] }[] = [
+  { href: "/", label: "Home", tabs: [["/", "Overview"], ["/segments", "Segments"], ["/prospects", "Prospects"]], also: ["/accounts", "/leads", "/opportunities", "/settings"] },
+  { href: "/map", label: "Map", tabs: [["/map", "Map"], ["/facilities", "Facilities"]], also: [] },
+  { href: "/campaigns", label: "Campaigns", tabs: [["/campaigns", "Campaigns"], ["/campaigns/sequences", "Sequences"], ["/calendar", "Calendar"]], also: [] },
+  { href: "/templates", label: "Templates", tabs: [["/templates/exports", "Exports"]], also: [] },
 ];
+
+const within = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
+
+function sectionFor(pathname: string) {
+  return NAV.find((n) => n.tabs.some(([href]) => within(pathname, href)) || n.also.some((href) => within(pathname, href))) ?? NAV[0];
+}
+
+function SectionTabs({ pathname }: { pathname: string }) {
+  const section = sectionFor(pathname);
+  // Only on the section's own pages (not record pages), and only when there is a choice
+  const current = section.tabs.find(([href]) => pathname === href);
+  if (section.tabs.length < 2 || !current) return null;
+  return (
+    <nav className="mx-auto flex w-full max-w-[1400px] gap-5 border-b px-4" aria-label={`${section.label} pages`}>
+      {section.tabs.map(([href, label]) => (
+        <Link
+          key={href}
+          href={href}
+          aria-current={href === current[0] ? "page" : undefined}
+          className={cn(
+            "-mb-px border-b-2 border-transparent py-2.5 text-sm text-muted-foreground hover:text-foreground",
+            href === current[0] && "border-primary font-medium text-foreground",
+          )}
+        >
+          {label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
 
 export function Logo() {
   return (
@@ -117,12 +147,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { error } = useStore();
   const auth = useAuth();
-  if (!auth.ready) return <div className="min-h-full bg-background" />;
+  const chatOpen = useChatOpen();
+  if (pathname === "/login") return <>{children}</>;
   if (!auth.user) return <LoginScreen />;
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/prospects" && (pathname.startsWith("/accounts") || pathname.startsWith("/leads")));
+  const active = sectionFor(pathname).href;
+  const isActive = (href: string) => href === active;
   return (
-    <div className="flex min-h-full flex-col">
+    <div className={cn("flex min-h-full flex-col", chatOpen && "lg:pr-[400px]")}>
       <header className="sticky top-0 z-40 border-b bg-card">
         <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-6 px-4">
           <Logo />
@@ -167,7 +198,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {error}
         </div>
       )}
-      <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 pt-6 pb-12">{children}</main>
+      <SectionTabs pathname={pathname} />
+      <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 pt-6 pb-20">{children}</main>
+      <ChatPanel />
     </div>
   );
 }

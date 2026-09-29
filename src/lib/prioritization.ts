@@ -71,6 +71,8 @@ export interface Prioritization {
   stats: StatsResult;
   segments: SegmentPriority[];
   topOpen: OpenOppValue[];
+  /** Every open deal, same ordering as topOpen */
+  allOpen: OpenOppValue[];
   month: number;
 }
 
@@ -165,7 +167,7 @@ export function prioritize(data: DataSnapshot, asOf: Date, weights: Weights = DE
 
   // Top open deals by expected value per day of cycle
   const accName = new Map(data.accounts.map((a) => [a.Id, a.Name]));
-  const topOpen: OpenOppValue[] = open
+  const allOpen: OpenOppValue[] = open
     .filter((o) => seg.has(o.AccountId))
     .map((o) => {
       const segment = seg.get(o.AccountId)!;
@@ -182,10 +184,9 @@ export function prioritize(data: DataSnapshot, asOf: Date, weights: Weights = DE
         medianDays,
       };
     })
-    .sort((a, b) => b.expectedPerDay - a.expectedPerDay)
-    .slice(0, 25);
+    .sort((a, b) => b.expectedPerDay - a.expectedPerDay);
 
-  return { stats, segments: out, topOpen, month };
+  return { stats, segments: out, topOpen: allOpen.slice(0, 25), allOpen, month };
 }
 
 /** Days a deal has been open as of a date */

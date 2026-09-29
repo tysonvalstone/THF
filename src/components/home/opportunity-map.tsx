@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { setHandoff } from "@/lib/ai/handoff";
+import { usePublishCommodity } from "@/lib/ai/page-context";
 import { useStore } from "@/lib/data/store";
 import type { Prioritization } from "@/lib/prioritization";
 import { areaCodes, areaName, blackoutLabel, computeAreaInsights, estimateDeal, inArea, nextArea, type Area } from "@/lib/regionInsights";
@@ -19,6 +22,24 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { SourceNote } from "@/components/shared/source-note";
+import { TripPlanner } from "@/components/map/trip-planner";
+import type { TripPlan } from "@/lib/trips";
+import { PRODUCT_BY_ID } from "@/data/reference/products";
+import { USER_BY_ID } from "@/data/reference/users";
+import { REGION_BY_STATE } from "@/data/reference/regions";
+import { addDays, fmtShortDate } from "@/lib/dates";
+import type { Opportunity } from "@/types/salesforce";
+
+type Range = 30 | 60 | 90 | 365;
+const RANGE_LABEL: Record<Range, string> = { 30: "Last 30 days", 60: "Last 60 days", 90: "Last 90 days", 365: "Last 12 months" };
+const RANGE_SHORT: Record<Range, string> = { 30: "last 30 days", 60: "last 60 days", 90: "last 90 days", 365: "last 12 months" };
+/** Stands out against both ends of the red/blue heat map */
+const SALE_COLOR = "#facc15";
+
+interface Win {
+  opp: Opportunity;
+  account: Account;
+}
 
 type Status = "prospects" | "customers" | "all";
 type Size = "all" | "large" | "mid" | "small";
@@ -50,10 +71,15 @@ function Select<T extends string>({ value, onChange, options, label }: { value: 
   );
 }
 
-export function OpportunityMap({ prio }: { prio: Prioritization }) {
+export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; initialArea?: Area }) {
   const { data, asOf, ranked } = useStore();
   const { colors, setColor, reset } = useCommodityColors();
-  const [area, setArea] = useState<Area>({ level: "all" });
+  const [area, setArea] = useState<Area>(initialArea ?? { level: "all" });
+  const [sales, setSales] = useState(false);
+  const [range, setRange] = useState<Range>(90);
+  const [salePop, setSalePop] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [tab, setTab] = useState<"prospects" | "area" | "trip">("prospects");
+  const [trip, setTrip] = useState<TripPlan | null>(null);
   const [mode, setMode] = useState<"season" | "commodity">("season");
   const [crop, setCrop] = useState<MapCommodity>("Corn");
   const [commodity, setCommodity] = useState<ColorCommodity | "all">("all");
@@ -65,6 +91,8 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [limit, setLimit] = useState(40);
   const listRef = useRef<HTMLOListElement>(null);
+  const router = useRouter();
+  usePublishCommodity(mode === "season" ? crop : commodity === "all" ? undefined : commodity);
 
   const scoreById = useMemo(() => new Map(ranked.map((s) => [s.target.id, s.total])), [ranked]);
   const openByAccount = useMemo(() => {
@@ -94,7 +122,69 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
     );
   }, [data.accounts, area, status, size, segment, commodity, sort, scoreById, openByAccount, prio, asOf]);
 
-  const facilities = useMemo<MapFacility[]>(
+  const wins = useMemo<Win[]>(() => {
+    const byId = new Map(data.accounts.map((a) => [a.Id, a]));
+    const since = addDays(asOf, -range);
+    return data.opportunities
+      .filter((o) => o.IsWon && parseDate(o.CloseDate) > since && parseDate(o.CloseDate) <= asOf)
+      .map((o) => ({ opp: o, account: byId.get(o.AccountId)! }))
+      .filter((w) => w.account && inArea(area, w.account.BillingState))
+      .sort((x, y) => y.opp.CloseDate.localeCompare(x.opp.CloseDate));
+  }, [data.opportunities, data.accounts, asOf, range, area]);
+  const winsTotal = wins.reduce((t, w) => t + w.opp.Amount, 0);
+
+  const saleDots = useMemo<MapFacility[]>(() => {
+    if (!sales) return [];
+    const max = Math.max(1, ...wins.map((w) => w.opp.Amount));
+    return wins.map((w) => ({
+      id: `sale:${w.opp.Id}`,
+      lat: w.account.BillingLatitude,
+      lon: w.account.BillingLongitude,
+      label: w.account.Name,
+      sublabel: `Won ${fmtMoney(w.opp.Amount)} · ${fmtShortDate(w.opp.CloseDate)}`,
+      covered: true,
+      color: SALE_COLOR,
+      radius: 4 + 8 * Math.sqrt(w.opp.Amount / max),
+    }));
+  }, [sales, wins]);
+
+  const tripMode = tab === "trip" && !!trip?.stops.length;
+  const stopPins = useMemo<MapFacility[]>(
+    () =>
+      tripMode && trip
+        ? trip.stops.map((st, i) => ({
+            id: st.account.Id,
+            lat: st.account.BillingLatitude,
+            lon: st.account.BillingLongitude,
+            label: `${i + 1}. ${st.account.Name}`,
+            sublabel: `Day ${st.day} · ${st.blackout.text}`,
+            covered: false,
+            number: i + 1,
+            color: st.blackout.status === "hard" ? "#b45309" : undefined,
+          }))
+        : [],
+    [tripMode, trip],
+  );
+  const routes = useMemo(() => {
+    if (!tripMode || !trip) return undefined;
+    return trip.days.map((d, i) => {
+      const pts = d.stops.map((st) => ({ lat: st.account.BillingLatitude, lon: st.account.BillingLongitude }));
+      return i === 0 && trip.start ? [{ lat: trip.start.lat, lon: trip.start.lon }, ...pts] : pts;
+    });
+  }, [tripMode, trip]);
+
+  const onTripPlan = useCallback((p: TripPlan | null) => {
+    setTrip(p);
+    if (!p) return;
+    const dest = p.request.destination;
+    const isRegion = dest in REGION_BY_ID;
+    const regionId = (isRegion ? dest : REGION_BY_STATE[dest.toUpperCase()]) as Area["regionId"];
+    if (!regionId) return;
+    const next: Area = isRegion ? { level: "region", regionId } : { level: "state", regionId, state: dest.toUpperCase() };
+    setArea((cur) => (cur.level === next.level && cur.regionId === next.regionId && cur.state === next.state ? cur : next));
+  }, []);
+
+  const baseDots = useMemo<MapFacility[]>(
     () =>
       rows.slice(0, 600).map((r) => ({
         id: r.account.Id,
@@ -106,6 +196,8 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
       })),
     [rows, mode, colors],
   );
+  const facilities = useMemo(() => [...(tripMode ? stopPins : baseDots), ...saleDots], [tripMode, stopPins, baseDots, saleDots]);
+  const popWin = salePop ? wins.find((w) => `sale:${w.opp.Id}` === salePop.id) : undefined;
 
   const insights = useMemo(() => computeAreaInsights(data, area, asOf, crop, ranked, prio), [data, area, asOf, crop, ranked, prio]);
   const regionColor = useCallback(
@@ -132,7 +224,7 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
     <div className="space-y-3">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">Opportunity Map</h2>
+        <h1 className="text-2xl font-semibold">Map</h1>
         <div className="flex flex-wrap items-center gap-2">
           <div className="inline-flex rounded-md border bg-card p-0.5 text-sm" role="tablist" aria-label="Map view">
             {(["season", "commodity"] as const).map((m) => (
@@ -177,6 +269,19 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
               </PopoverContent>
             </Popover>
           )}
+          <Button variant={sales ? "default" : "outline"} size="sm" aria-pressed={sales} onClick={() => setSales((v) => !v)}>
+            <span className="size-2.5 rounded-full border border-slate-900" style={{ backgroundColor: SALE_COLOR }} aria-hidden />
+            Recent sales
+          </Button>
+          {sales && (
+            <select value={range} onChange={(e) => setRange(Number(e.target.value) as Range)} aria-label="Sales time range" className="h-8 rounded-md border border-input bg-card px-2 text-sm">
+              {([30, 60, 90, 365] as Range[]).map((r) => (
+                <option key={r} value={r}>
+                  {RANGE_LABEL[r]}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
@@ -204,6 +309,18 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
               </Button>
             )}
           </div>
+          {sales && (
+            <p className="mb-2 rounded-md bg-panel px-3 py-1.5 text-sm tabular">
+              <span className="font-semibold">
+                {wins.length} deal{wins.length === 1 ? "" : "s"} · {fmtMoney(winsTotal)}
+              </span>{" "}
+              <span className="text-muted-foreground">
+                · {RANGE_SHORT[range]}
+                {area.level !== "all" ? ` · ${areaName(area)}` : ""}
+              </span>
+            </p>
+          )}
+          <div className="relative">
           <SeasonalityMap
             date={asOf}
             commodity={crop}
@@ -223,8 +340,48 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
                 setLimit(40);
               }
             }}
-            onFacilityClick={(id) => setSelectedId(id)}
+            onFacilityClick={(id, pt) => {
+              if (id.startsWith("sale:")) setSalePop({ id, ...pt });
+              else if (!tripMode) setSelectedId(id);
+            }}
+            routes={routes}
           />
+          {popWin && salePop && (
+            <div
+              className="absolute z-20 w-64 rounded-md border bg-card p-3 text-sm shadow-lg"
+              style={{ left: Math.max(8, salePop.x - 128), top: salePop.y + 14 }}
+              role="dialog"
+              aria-label="Closed deal"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <Link href={recordHref(popWin.account.Id)} className="font-semibold hover:text-primary hover:underline">
+                  {popWin.account.Name}
+                </Link>
+                <button type="button" aria-label="Close" className="text-muted-foreground hover:text-foreground" onClick={() => setSalePop(null)}>
+                  ×
+                </button>
+              </div>
+              <dl className="mt-2 grid grid-cols-[80px_minmax(0,1fr)] gap-x-2 gap-y-1 text-xs">
+                <dt className="text-muted-foreground">Amount</dt>
+                <dd className="font-medium tabular">{fmtMoney(popWin.opp.Amount)}</dd>
+                <dt className="text-muted-foreground">Products</dt>
+                <dd>
+                  {data.lineItems
+                    .filter((li) => li.OpportunityId === popWin.opp.Id)
+                    .map((li) => PRODUCT_BY_ID[li.Product2Id]?.Name ?? li.Product2Id)
+                    .join(", ") || "—"}
+                </dd>
+                <dt className="text-muted-foreground">Closed</dt>
+                <dd className="tabular">{fmtShortDate(popWin.opp.CloseDate)}</dd>
+                <dt className="text-muted-foreground">Owner</dt>
+                <dd>{USER_BY_ID[popWin.opp.OwnerId]?.Name ?? "—"}</dd>
+              </dl>
+              <Link href={`/opportunities/${popWin.opp.Id}`} className="mt-2 inline-block text-xs font-medium text-primary hover:underline">
+                Open record
+              </Link>
+            </div>
+          )}
+          </div>
           {/* Legend */}
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
             {mode === "season" ? (
@@ -258,10 +415,11 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
 
         {/* Sidebar */}
         <aside className="min-w-0 rounded-md border bg-card">
-          <Tabs defaultValue="prospects" className="gap-0">
-            <TabsList className="m-3 mb-0 grid w-[calc(100%-1.5rem)] grid-cols-2">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="gap-0">
+            <TabsList className="m-3 mb-0 grid w-[calc(100%-1.5rem)] grid-cols-3">
               <TabsTrigger value="prospects">Prospects</TabsTrigger>
               <TabsTrigger value="area">Area</TabsTrigger>
+              <TabsTrigger value="trip">Plan a Trip</TabsTrigger>
             </TabsList>
 
             <TabsContent value="prospects" className="mt-0">
@@ -274,9 +432,22 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
                   <Select<Sort> label="Sort by" value={sort} onChange={setSort} options={[["score", "Score"], ["deal", "Est. deal size"], ["name", "Name"]]} />
                 </div>
               </div>
-              <p className="px-3 pt-2 text-xs text-muted-foreground tabular">
-                {rows.length.toLocaleString()} on map{rows.length > 600 ? " (top 600 shown)" : ""}
-              </p>
+              <div className="flex items-center justify-between gap-2 px-3 pt-2">
+                <p className="text-xs text-muted-foreground tabular">
+                  {rows.length.toLocaleString()} on map{rows.length > 600 ? " (top 600 shown)" : ""}
+                </p>
+                <Button
+                  variant="ghost"
+                  size="xs"
+                  disabled={!rows.length}
+                  onClick={() => {
+                    setHandoff("enroll", { accountIds: rows.slice(0, 25).map((r) => r.account.Id), from: `Map: ${areaName(area)}` });
+                    router.push("/campaigns/sequences?enroll=1");
+                  }}
+                >
+                  Enroll top {Math.min(25, rows.length)} in sequence
+                </Button>
+              </div>
               <ol ref={listRef} className="max-h-[460px] divide-y overflow-y-auto" onMouseLeave={() => setHoverId(null)}>
                 {rows.slice(0, limit).map((r) => {
                   const active = activeId === r.account.Id;
@@ -354,6 +525,27 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
                 </div>
               </dl>
               <div>
+                <h4 className="flex justify-between text-xs font-medium text-muted-foreground">
+                  <span>Recent Wins</span>
+                  <span className="font-normal tabular">
+                    {wins.length} · {fmtMoney(winsTotal)} · {RANGE_SHORT[range]}
+                  </span>
+                </h4>
+                <ul className="mt-2 divide-y rounded-md border">
+                  {wins.slice(0, 8).map((w) => (
+                    <li key={w.opp.Id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-sm">
+                      <Link href={recordHref(w.account.Id)} className="min-w-0 truncate hover:text-primary hover:underline">
+                        {w.account.Name}
+                      </Link>
+                      <span className="shrink-0 text-xs text-muted-foreground tabular">
+                        {fmtMoney(w.opp.Amount)} · {fmtShortDate(w.opp.CloseDate)}
+                      </span>
+                    </li>
+                  ))}
+                  {!wins.length && <li className="px-2.5 py-3 text-center text-xs text-muted-foreground">No wins in this range</li>}
+                </ul>
+              </div>
+              <div>
                 <h4 className="text-xs font-medium text-muted-foreground">Key Insights</h4>
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm">
                   {insights.insights.map((i) => (
@@ -361,6 +553,16 @@ export function OpportunityMap({ prio }: { prio: Prioritization }) {
                   ))}
                 </ul>
               </div>
+            </TabsContent>
+
+            <TabsContent value="trip" className="mt-0 max-h-[760px] overflow-y-auto">
+              <TripPlanner
+                prio={prio}
+                defaultDestination={area.state ?? area.regionId ?? "IL"}
+                onPlan={onTripPlan}
+                highlightId={activeId}
+                onHover={setHoverId}
+              />
             </TabsContent>
           </Tabs>
         </aside>

@@ -80,7 +80,11 @@ export function opportunityUrl(lightningBaseUrl: string, id: string): string {
 /** Max rows fetched per object. */
 const MAX_ROWS = 20_000;
 
-export async function loadSalesforceSnapshot(): Promise<LiveLoadResult> {
+/**
+ * Authenticated jsforce connection for the configured org. Callers must only
+ * read (query/describe); nothing in this app writes to Salesforce.
+ */
+export async function getSalesforceConnection(): Promise<Connection> {
   if (!isLiveConfigured()) {
     const missing = SF_ENV_VARS.filter((n) => !(process.env[n] ?? "").trim());
     throw new Error(`Salesforce is not configured. Missing env vars: ${missing.join(", ")}`);
@@ -102,6 +106,11 @@ export async function loadSalesforceSnapshot(): Promise<LiveLoadResult> {
   } catch (err) {
     throw new Error(`Salesforce login failed (${safeErrorCode(err)}). Check SF_LOGIN_URL, the connected app and the integration user's credentials/security token.`);
   }
+  return conn;
+}
+
+export async function loadSalesforceSnapshot(): Promise<LiveLoadResult> {
+  const conn = await getSalesforceConnection();
 
   const warnings: string[] = [];
   const instanceUrl = (conn.instanceUrl ?? "").replace(/\/+$/, "");
