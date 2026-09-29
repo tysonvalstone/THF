@@ -9,6 +9,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-green-dark: var(--brand-green-dark);
+  --color-brand-green-soft: var(--brand-green-soft);
+  --color-phase-pre: var(--phase-pre);
+  --color-phase-harvest: var(--phase-harvest);
+  --color-phase-post: var(--phase-post);
+  --color-phase-planting: var(--phase-planting);
+  --color-phase-growing: var(--phase-growing);
+  --color-phase-dormant: var(--phase-dormant);
+  --color-status-good: var(--status-good);
+  --color-status-warning: var(--status-warning);
+  --color-status-critical: var(--status-critical);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -49,72 +61,61 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  /* HarvestSignal brand: field green + harvest gold on a warm neutral plane */
+  --background: #f4f5f1;
+  --foreground: #121a15;
+  --card: #ffffff;
+  --card-foreground: #121a15;
+  --popover: #ffffff;
+  --popover-foreground: #121a15;
+  --primary: #1e5a3c;
+  --primary-foreground: #ffffff;
+  --secondary: #eef1ec;
+  --secondary-foreground: #1b2a21;
+  --muted: #eef0ec;
+  --muted-foreground: #5a625c;
+  --accent: #fbf3de;
+  --accent-foreground: #5a4204;
+  --destructive: #d03b3b;
+  --border: #e0e3dc;
+  --input: #d6dad2;
+  --ring: #1e5a3c;
+  --radius: 0.5rem;
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --brand-gold: #d99a1e;
+  --brand-green-dark: #133d28;
+  --brand-green-soft: #e6f0e9;
+
+  /* Charts (validated default categorical order) */
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --viz-grid: #e1e0d9;
+  --viz-axis: #898781;
+
+  /* Crop phases */
+  --phase-pre: #2a78d6;
+  --phase-harvest: #eb6834;
+  --phase-post: #1baf7a;
+  --phase-planting: #b7c9b9;
+  --phase-growing: #d3dcd2;
+  --phase-dormant: #e6e8e3;
+
+  /* Status */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-critical: #d03b3b;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #121a15;
+  --sidebar-primary: #1e5a3c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef1ec;
+  --sidebar-accent-foreground: #121a15;
+  --sidebar-border: #e0e3dc;
+  --sidebar-ring: #1e5a3c;
 }
 
 @layer base {
@@ -130,4 +131,9 @@
   html {
     @apply font-sans;
   }
+}
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
 }

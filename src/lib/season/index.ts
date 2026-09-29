@@ -154,13 +154,13 @@ export function cropStatusLabel(s: CropStatus): string {
     case "Pre-harvest":
       return `${cropNoun(s.commodity)} harvest in ${Math.max(1, Math.round(s.daysToHarvest / 7))} wk${s.daysToHarvest >= 11 ? "s" : ""}`;
     case "Post-harvest":
-      return `${s.commodity} post-harvest`;
+      return `${cropNoun(s.commodity)} post-harvest`;
     case "Planting":
-      return `${s.commodity} planting`;
+      return `${cropNoun(s.commodity)} planting`;
     case "Growing":
-      return `${s.commodity} growing`;
+      return `${cropNoun(s.commodity)} growing`;
     default:
-      return `${s.commodity} off-season`;
+      return `${cropNoun(s.commodity)} off-season`;
   }
 }
 

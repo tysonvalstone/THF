@@ -21,7 +21,7 @@ export const CANADIAN_PROVINCES = ["AB", "BC", "MB", "NB", "NL", "NS", "ON", "PE
 export const TILE_GRID: Record<string, [number, number]> = {
   // Canada
   BC: [1, 0], AB: [2, 0], SK: [3, 0], MB: [4, 0], ON: [6, 0], QC: [8, 0], NL: [10, 0],
-  NB: [9, 1], PE: [10, 1], NS: [10, 2],
+  NB: [9, 1], PE: [10, 1], NS: [11, 1],
   // United States
   AK: [0, 2], ME: [11, 2],
   WI: [6, 3], VT: [10, 3], NH: [11, 3],

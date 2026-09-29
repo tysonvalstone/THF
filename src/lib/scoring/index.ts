@@ -410,7 +410,7 @@ export function scoreTarget(t: Target, asOf: Date, engagement: Engagement): Scor
   return {
     target: t,
     total,
-    tier: total >= 75 ? "Hot" : total >= 62 ? "Warm" : "Cool",
+    tier: total >= 72 ? "Hot" : total >= 60 ? "Warm" : "Cool",
     factors,
     whyNow: composeWhyNow(factors),
     timing: position,
