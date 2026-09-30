@@ -95,14 +95,14 @@ function SectionTabs({ pathname }: { pathname: string }) {
     <div className="border-b">
       <div className="mx-auto flex w-full max-w-[1400px] items-center gap-5 px-4">
         {showTabs && (
-          <nav className="flex gap-5" aria-label={`${section.label} pages`}>
+          <nav className="scrollbar-none flex min-w-0 gap-5 overflow-x-auto" aria-label={`${section.label} pages`}>
             {section.tabs.map(([href, label]) => (
               <Link
                 key={href}
                 href={href}
                 aria-current={href === current![0] ? "page" : undefined}
                 className={cn(
-                  "-mb-px border-b-2 border-transparent py-2.5 text-sm text-muted-foreground hover:text-foreground",
+                  "-mb-px shrink-0 border-b-2 border-transparent py-2.5 text-sm whitespace-nowrap text-muted-foreground hover:text-foreground",
                   href === current![0] && "border-primary font-medium text-foreground",
                 )}
               >
@@ -114,7 +114,7 @@ function SectionTabs({ pathname }: { pathname: string }) {
         <button
           type="button"
           onClick={() => openHelp(helpSlugFor(pathname))}
-          className="ml-auto flex h-10 items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          className="ml-auto flex h-10 shrink-0 items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
           aria-label="Help for this page"
         >
           <CircleHelp className="size-3.5" aria-hidden />

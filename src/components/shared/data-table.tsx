@@ -181,7 +181,7 @@ export function DataTable<T>({
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-md border bg-card">
+      <div className="relative overflow-x-auto rounded-md border bg-card">
         <table className="w-full text-sm" style={minWidth ? { minWidth } : undefined}>
           {caption && <caption className="sr-only">{caption}</caption>}
           <thead className="bg-slate-50 text-left text-xs text-muted-foreground">

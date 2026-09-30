@@ -120,7 +120,7 @@ export function LineItems({ quote, editable }: { quote: Quote; editable: boolean
           </Button>
         )}
       </div>
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <table className="w-full min-w-[760px] text-sm">
           <caption className="sr-only">Quote line items</caption>
           <thead className="bg-slate-50 text-left text-xs text-muted-foreground">

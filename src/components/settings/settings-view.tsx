@@ -83,8 +83,8 @@ function AccountDetails() {
           <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sales" />
         </div>
         <div className="grid gap-1.5">
-          <Label>Email</Label>
-          <Input value={session.email} disabled />
+          <Label htmlFor="account-email">Email</Label>
+          <Input id="account-email" value={session.email} disabled />
         </div>
         <div>
           <Button type="submit" size="sm" disabled={pending}>
@@ -149,8 +149,8 @@ function ProfileTab() {
           }}
         >
           <div className="grid gap-1.5">
-            <Label>Name</Label>
-            <Input value={user.Name} disabled />
+            <Label htmlFor="profile-name">Name</Label>
+            <Input id="profile-name" value={user.Name} disabled />
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="title">Title</Label>
