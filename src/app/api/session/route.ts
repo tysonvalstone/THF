@@ -1,12 +1,15 @@
 import { cookies } from "next/headers";
 import { APP_USERS } from "@/data/reference/users";
 import { SESSION_COOKIE, createSessionValue } from "@/lib/session";
+import { supabaseConfigured } from "@/lib/supabase/config";
 
 /**
- * Starts or ends the 30-day session. The optional per-user password is a
+ * Demo mode: starts or ends the 30-day session. The optional per-user password is a
  * browser-side demo check (see src/lib/auth.tsx) that runs before this call.
  */
 export async function POST(req: Request) {
+  // Demo sign-in only; with Supabase configured, accounts sign in with email and password
+  if (supabaseConfigured()) return Response.json({ error: "Not found" }, { status: 404 });
   let userId: string | undefined;
   try {
     ({ userId } = (await req.json()) as { userId?: string });

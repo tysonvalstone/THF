@@ -9,11 +9,28 @@ HarvestSignal helps ThiboLiSoft's sales team decide who to call and when. It rea
 
 ## Sign in
 
-1. Open the app. If you are not signed in, you see **Select user**.
-2. Click your name (Jeffrey Li, Jesse Thibodeau, Braydon Viragh or Adam D'Cunha).
-3. If you have set a password in Settings, enter it.
+1. Open the app and enter your work email and password.
+2. If an administrator gave you a temporary password, you are asked to choose your own before you continue.
+3. Forgot your password? Click **Forgot password?** on the sign-in page and follow the link in the email.
 
-Signing in sets a signed session cookie that lasts 30 days. You are not asked to sign in again when you move between pages, refresh or reopen the browser. To end the session, click your avatar in the top right and choose **Sign out**.
+You stay signed in as you move between pages, refresh or reopen the browser. To end the session, click your avatar in the top right and choose **Sign out**.
+
+Accounts are created by an administrator; there is no self sign-up. To change your name, title or password, open **Settings** from the avatar menu.
+
+### Administrators
+
+Administrators see **Users** in the avatar menu and under **Settings**. From there you can:
+
+1. **Add user:** enter their name, email, title and role, link them to a Salesforce user (so records they create have the right owner), and choose how they get access: a temporary password you share with them, or an invitation email.
+2. **Edit** a user's name, title, role or Salesforce user.
+3. **Reset a password** by emailing a reset link or setting a new temporary password.
+4. **Disable** an account to block sign-in without deleting it, or **Delete** it.
+
+You can't remove your own administrator role, disable or delete yourself, or remove the last administrator.
+
+When the app is first set up, the sign-in page asks for the first administrator's details instead.
+
+In demo deployments without an account service, the sign-in page shows **Select user** with the four demo users instead.
 
 Records you create in the app (tasks, events, campaigns) are owned by the signed-in user, and you are the sender on generated emails.
 

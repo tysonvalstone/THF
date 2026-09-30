@@ -6,6 +6,7 @@ import type { HelpArticle, HelpIndexEntry } from "@/lib/help/types";
 import { MdxArticle } from "./mdx-article";
 import { HelpSearch } from "./help-search";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "@/components/brand/logo";
 
 export function HelpCenter({ index, article }: { index: HelpIndexEntry[]; article: HelpArticle }) {
   const router = useRouter();
@@ -32,7 +33,10 @@ export function HelpCenter({ index, article }: { index: HelpIndexEntry[]; articl
   return (
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <h1 className="shrink-0 text-2xl font-semibold sm:w-[240px]">Help</h1>
+        <h1 className="flex shrink-0 items-center gap-2 text-2xl font-semibold sm:w-[240px]">
+          <LogoMark size={26} decorative />
+          Help
+        </h1>
         <div className="min-w-0 flex-1">
           <HelpSearch index={index} onSelect={(slug) => router.push(`/help/${slug}`)} />
         </div>

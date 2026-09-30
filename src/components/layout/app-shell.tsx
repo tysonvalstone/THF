@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useStore } from "@/lib/data/store";
 import { SeasonBar } from "./season-bar";
+import { Logo as BrandLogo } from "@/components/brand/logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/auth/avatar";
-import { LoginScreen } from "@/components/auth/login-screen";
 import { ChatPanel, useChatOpen } from "@/components/ai/chat-panel";
 import { cn } from "@/lib/utils";
 import { CircleHelp } from "lucide-react";
@@ -81,11 +81,7 @@ function SectionTabs({ pathname }: { pathname: string }) {
 }
 
 export function Logo() {
-  return (
-    <Link href="/" className="text-[15px] font-semibold text-foreground">
-      HarvestSignal
-    </Link>
-  );
+  return <BrandLogo href="/" size="sm" compact className="rounded-md" />;
 }
 
 function DataBadge() {
@@ -126,7 +122,7 @@ function DataBadge() {
 
 function UserMenu() {
   const { pendingChanges, resetData, readOnly } = useStore();
-  const { user, me: profile, signOut } = useAuth();
+  const { user, me: profile, signOut, session, isAdmin } = useAuth();
   if (!user) return null;
   return (
     <DropdownMenu>
@@ -138,12 +134,20 @@ function UserMenu() {
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel>
           <span className="block">{user.Name}</span>
-          {profile.email && <span className="block text-xs font-normal text-muted-foreground">{profile.email}</span>}
+          {(session?.mode === "supabase" ? session.email : profile.email) && (
+            <span className="block text-xs font-normal text-muted-foreground">{session?.mode === "supabase" ? session.email : profile.email}</span>
+          )}
+          {isAdmin && <span className="mt-1 block text-xs font-normal text-primary">Administrator</span>}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/settings">Settings</Link>
         </DropdownMenuItem>
+        {isAdmin && session?.mode === "supabase" && (
+          <DropdownMenuItem asChild>
+            <Link href="/settings?tab=users">Users</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
           {readOnly ? "Read-only" : `${pendingChanges} local change${pendingChanges === 1 ? "" : "s"}`}
@@ -169,8 +173,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { error } = useStore();
   const auth = useAuth();
   const chatOpen = useChatOpen();
-  if (pathname === "/login") return <>{children}</>;
-  if (!auth.user) return <LoginScreen />;
+  // Sign-in and password pages render on their own, without the app chrome
+  if (pathname === "/login" || pathname.startsWith("/auth/") || pathname === "/account/password" || !auth.user) return <>{children}</>;
   const active = sectionFor(pathname)?.href;
   const isActive = (href: string) => href === active;
   return (

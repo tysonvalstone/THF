@@ -22,6 +22,7 @@ import {
   type TripPlan,
 } from "@/lib/trips";
 import { downloadText } from "@/lib/csv";
+import { drawPdfFooterBrand, drawPdfLogo, loadPdfLogo } from "@/lib/exports/pdf-brand";
 import type { ColumnDef } from "@/lib/columns";
 import { ExportCsvButton } from "@/components/shared/column-picker";
 import { fmtShortDate, parseDate } from "@/lib/dates";
@@ -136,15 +137,17 @@ export function TripPlanner({
   };
 
   const exportPdf = async (p: TripPlan) => {
-    const [{ jsPDF }, { autoTable }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+    const [{ jsPDF }, { autoTable }, logo] = await Promise.all([import("jspdf"), import("jspdf-autotable"), loadPdfLogo()]);
     const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "letter" });
+    drawPdfLogo(doc, logo, 38, 24, 16);
+    const top = 64;
     doc.setFontSize(14);
-    doc.text(`Trip: ${p.destinationName}`, 40, 40);
+    doc.text(`Trip: ${p.destinationName}`, 40, top);
     doc.setFontSize(9);
     doc.setTextColor(100);
-    doc.text(`${p.stops.length} stops · ${p.days.length} day${p.days.length === 1 ? "" : "s"} · ${p.totalMiles} mi · ${fmtDrive(p.totalDriveMinutes)} driving${p.start ? ` · from ${p.start.name}` : ""}`, 40, 56);
+    doc.text(`${p.stops.length} stops · ${p.days.length} day${p.days.length === 1 ? "" : "s"} · ${p.totalMiles} mi · ${fmtDrive(p.totalDriveMinutes)} driving${p.start ? ` · from ${p.start.name}` : ""}`, 40, top + 16);
     autoTable(doc, {
-      startY: 70,
+      startY: top + 30,
       head: [["#", "Day", "Arrive", "Account", "Segment", "City", "Why", "Open", "Last contact", "Blackout"]],
       body: itineraryRows(p).map((r) => [
         r.stop,
@@ -161,6 +164,7 @@ export function TripPlanner({
       styles: { fontSize: 8, cellPadding: 4 },
       headStyles: { fillColor: [241, 245, 249], textColor: [15, 23, 42], fontStyle: "bold" },
       columnStyles: { 6: { cellWidth: 150 } },
+      didDrawPage: () => drawPdfFooterBrand(doc, doc.internal.pageSize.getHeight() - 18),
     });
     doc.save(`trip-${slug(p.destinationName)}-${p.request.startDate}.pdf`);
   };

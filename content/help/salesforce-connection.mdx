@@ -58,7 +58,7 @@ This screen is a demonstration. It does not change where the data comes from. Li
 
 ## Sign-in and sessions
 
-- Users pick their name on **Select user**. A user can set a password in **Settings**, **Security** (at least 6 characters); passwords are stored in the browser as salted SHA-256 hashes.
+- Users sign in with email and password (Supabase Auth) and administrators manage accounts under **Settings**, **Users**. Deployments without Supabase configured fall back to a demo **Select user** screen. See [Getting Started](/help/getting-started).
 - Signing in sets a signed, HTTP-only session cookie valid for 30 days. Every page request checks it. Set `SESSION_SECRET` in production to sign it; otherwise a built-in demo value is used.
 - For production, use Salesforce SSO or the company identity provider.
 

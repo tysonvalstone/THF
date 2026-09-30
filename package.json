@@ -13,6 +13,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
     "@mdx-js/mdx": "^3.1.1",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.2",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "d3-geo": "^3.1.1",

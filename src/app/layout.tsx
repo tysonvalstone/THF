@@ -3,8 +3,8 @@ import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/lib/data/store";
 import { AuthProvider } from "@/lib/auth";
-import { cookies } from "next/headers";
-import { SESSION_COOKIE, readSessionValue } from "@/lib/session";
+import { getSessionUser } from "@/lib/supabase/session";
+import { supabaseConfigured } from "@/lib/supabase/config";
 import { AppShell } from "@/components/layout/app-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // Absolute URLs for the social preview image; Vercel sets the production host
+  metadataBase: new URL(process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000"),
+  applicationName: "HarvestSignal",
   title: {
     default: "HarvestSignal",
     template: "%s · HarvestSignal",
@@ -32,11 +35,11 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const userId = await readSessionValue((await cookies()).get(SESSION_COOKIE)?.value);
+  const user = await getSessionUser();
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full bg-background">
-        <AuthProvider initialUserId={userId}>
+        <AuthProvider initialUser={user} mode={supabaseConfigured() ? "supabase" : "demo"}>
           <StoreProvider>
             <TooltipProvider delayDuration={150}>
               <AppShell>{children}</AppShell>

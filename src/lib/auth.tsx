@@ -1,17 +1,24 @@
 "use client";
 
 /**
- * Simple sign-in: pick a user, with an optional per-user password.
+ * The signed-in user, on the client.
  *
- * The session is a signed, HTTP-only cookie valid for 30 days (src/lib/session.ts,
- * checked by src/proxy.ts), so the login screen only appears on the first visit.
- * Profiles and the optional password hashes live in the browser's localStorage
- * (a demo check). Production would use Salesforce SSO or the company identity provider.
+ * Supabase mode (production): email + password accounts in Supabase Auth.
+ * The server reads the verified session and passes it in as `initialUser`;
+ * administrators add and manage users under Settings → Users.
+ *
+ * Demo mode (no Supabase env vars): pick one of the demo users, with an
+ * optional per-user password kept in this browser. The session is a signed,
+ * HTTP-only cookie (src/lib/session.ts).
+ *
+ * Profile photos are stored in this browser in both modes.
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { APP_USERS } from "@/data/reference/users";
 import type { User } from "@/types/salesforce";
 import type { Sender } from "@/lib/content/templates";
+import type { SessionUser } from "@/lib/supabase/config";
+import { signOut as supabaseSignOut } from "@/lib/account/actions";
 
 const PROFILES_KEY = "harvest-signal:profiles:v1";
 const SF_KEY = "harvest-signal:salesforce-connection:v1";
@@ -20,6 +27,7 @@ export interface Profile {
   photo?: string;
   email?: string;
   title?: string;
+  /** Demo mode only */
   passwordHash?: string;
 }
 
@@ -35,13 +43,19 @@ export interface SalesforceConnection {
 
 interface AuthValue {
   ready: boolean;
+  mode: "supabase" | "demo";
+  session: SessionUser | null;
+  isAdmin: boolean;
   user: User | null;
+  /** Demo users (demo mode sign-in) */
   users: User[];
   profile: (id: string) => Profile;
   me: Profile;
+  /** Demo mode sign-in */
   signIn: (id: string, password?: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   updateProfile: (patch: Partial<Omit<Profile, "passwordHash">>) => void;
+  /** Demo mode password */
   setPassword: (current: string | undefined, next: string | null) => Promise<boolean>;
   salesforce: SalesforceConnection | null;
   setSalesforce: (c: SalesforceConnection | null) => void;
@@ -68,15 +82,16 @@ function write(key: string, value: unknown) {
     if (value === null) window.localStorage.removeItem(key);
     else window.localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // storage blocked: the session still works in memory
+    // storage blocked: nothing to persist
   }
 }
 
-export function AuthProvider({ children, initialUserId }: { children: React.ReactNode; initialUserId: string | null }) {
+export function AuthProvider({ children, initialUser, mode }: { children: React.ReactNode; initialUser: SessionUser | null; mode: "supabase" | "demo" }) {
   const [ready, setReady] = useState(false);
-  const [userId, setUserId] = useState<string | null>(initialUserId && APP_USERS.some((u) => u.Id === initialUserId) ? initialUserId : null);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [salesforce, setSf] = useState<SalesforceConnection | null>(null);
+  const session = initialUser;
+  const userId = session?.id ?? null;
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- browser-only state loads after mount */
@@ -96,19 +111,21 @@ export function AuthProvider({ children, initialUserId }: { children: React.Reac
       const p = profiles[id];
       if (p?.passwordHash && (!password || (await hash(id, password)) !== p.passwordHash)) return false;
       const res = await fetch("/api/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: id }) });
-      if (!res.ok) return false;
-      setUserId(id);
-      return true;
+      return res.ok;
     },
     [profiles],
   );
 
   const signOut = useCallback(async () => {
+    if (mode === "supabase") {
+      await supabaseSignOut();
+      return;
+    }
     await fetch("/api/session", { method: "DELETE" }).catch(() => undefined);
     // Full load so the server-rendered layout drops the session
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign("/login");
-  }, []);
+  }, [mode]);
 
   const updateProfile = useCallback(
     (patch: Partial<Omit<Profile, "passwordHash">>) => {
@@ -135,10 +152,16 @@ export function AuthProvider({ children, initialUserId }: { children: React.Reac
     write(SF_KEY, c);
   }, []);
 
-  const value = useMemo<AuthValue>(
-    () => ({
+  const value = useMemo<AuthValue>(() => {
+    const user: User | null = session
+      ? { Id: session.id, Name: session.name, Title: session.title, Email: session.email, Territory__c: "", Regions__c: [] }
+      : null;
+    return {
       ready,
-      user: APP_USERS.find((u) => u.Id === userId) ?? null,
+      mode,
+      session,
+      isAdmin: session?.role === "admin",
+      user,
       users: APP_USERS,
       profile: (id) => profiles[id] ?? {},
       me: (userId && profiles[userId]) || {},
@@ -148,9 +171,8 @@ export function AuthProvider({ children, initialUserId }: { children: React.Reac
       setPassword,
       salesforce,
       setSalesforce,
-    }),
-    [ready, userId, profiles, signIn, signOut, updateProfile, setPassword, salesforce, setSalesforce],
-  );
+    };
+  }, [ready, mode, session, userId, profiles, signIn, signOut, updateProfile, setPassword, salesforce, setSalesforce]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
@@ -162,14 +184,15 @@ export function useAuth(): AuthValue {
 
 /** Email signature details for the signed-in user */
 export function useSender(): Sender {
-  const { user, me } = useAuth();
-  const name = user?.Name ?? "ThiboLiSoft";
-  const title = me.title || "Sales";
-  const email = me.email ?? "";
+  const { session, me } = useAuth();
+  const name = session?.name ?? "ThiboLiSoft";
+  const title = session?.title || me.title || "Sales";
+  const email = (session?.mode === "supabase" ? session.email : me.email) ?? "";
   return useMemo(() => ({ name, title, email }), [name, title, email]);
 }
 
-/** The signed-in user's Id (for OwnerId on records they create) */
+/** Owner Id for records the user creates: their linked Salesforce user, else their own id */
 export function useUserId(): string {
-  return useAuth().user?.Id ?? APP_USERS[0].Id;
+  const { session } = useAuth();
+  return session?.sfUserId ?? session?.id ?? APP_USERS[0].Id;
 }

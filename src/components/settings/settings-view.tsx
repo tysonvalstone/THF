@@ -1,6 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { changePassword, updateMyProfile } from "@/lib/account/actions";
+import { MIN_PASSWORD } from "@/lib/supabase/config";
+import { UsersAdmin } from "./users-admin";
 import { toast } from "sonner";
 import { useAuth, type SalesforceConnection } from "@/lib/auth";
 import { useStore } from "@/lib/data/store";
@@ -44,8 +48,53 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+function AccountDetails() {
+  const { session } = useAuth();
+  const router = useRouter();
+  const [name, setName] = useState(session?.name ?? "");
+  const [title, setTitle] = useState(session?.title ?? "");
+  const [pending, start] = useTransition();
+  if (!session) return null;
+  return (
+    <Section title="Details">
+      <form
+        className="grid max-w-md gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          start(async () => {
+            const r = await updateMyProfile({ name, title });
+            if (r.error) toast.error(r.error);
+            else {
+              toast.success("Profile saved");
+              router.refresh();
+            }
+          });
+        }}
+      >
+        <div className="grid gap-1.5">
+          <Label htmlFor="name">Name</Label>
+          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+        </div>
+        <div className="grid gap-1.5">
+          <Label htmlFor="title">Title</Label>
+          <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sales" />
+        </div>
+        <div className="grid gap-1.5">
+          <Label>Email</Label>
+          <Input value={session.email} disabled />
+        </div>
+        <div>
+          <Button type="submit" size="sm" disabled={pending}>
+            {pending ? "Saving…" : "Save"}
+          </Button>
+        </div>
+      </form>
+    </Section>
+  );
+}
+
 function ProfileTab() {
-  const { user, me, updateProfile } = useAuth();
+  const { user, me, updateProfile, mode } = useAuth();
   const [email, setEmail] = useState(me.email ?? "");
   const [title, setTitle] = useState(me.title ?? "");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -84,6 +133,9 @@ function ProfileTab() {
           />
         </div>
       </Section>
+      {mode === "supabase" ? (
+        <AccountDetails />
+      ) : (
       <Section title="Details">
         <form
           className="grid max-w-md gap-4"
@@ -112,17 +164,67 @@ function ProfileTab() {
           </div>
         </form>
       </Section>
+      )}
     </div>
   );
 }
 
+function AccountPassword() {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, start] = useTransition();
+  return (
+    <Section title="Password">
+      <form
+        className="grid max-w-md gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setError(null);
+          if (next !== confirm) return setError("Passwords don't match.");
+          start(async () => {
+            const r = await changePassword(current, next);
+            if (r.error) return setError(r.error);
+            setCurrent("");
+            setNext("");
+            setConfirm("");
+            toast.success("Password changed");
+          });
+        }}
+      >
+        <div className="grid gap-1.5">
+          <Label htmlFor="current">Current password</Label>
+          <Input id="current" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} required />
+        </div>
+        <div className="grid gap-1.5">
+          <Label htmlFor="new">New password</Label>
+          <Input id="new" type="password" autoComplete="new-password" minLength={MIN_PASSWORD} value={next} onChange={(e) => setNext(e.target.value)} required />
+        </div>
+        <div className="grid gap-1.5">
+          <Label htmlFor="confirm">Confirm password</Label>
+          <Input id="confirm" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+        </div>
+        {error && <p className="text-sm text-status-critical">{error}</p>}
+        <div>
+          <Button type="submit" size="sm" disabled={pending}>
+            {pending ? "Saving…" : "Change password"}
+          </Button>
+        </div>
+      </form>
+    </Section>
+  );
+}
+
 function SecurityTab() {
-  const { me, setPassword } = useAuth();
+  const { me, setPassword, mode } = useAuth();
   const has = !!me.passwordHash;
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  if (mode === "supabase") return <AccountPassword />;
 
   const submit = async (remove = false) => {
     setError(null);
@@ -336,15 +438,25 @@ function SalesforceTab() {
   );
 }
 
+const TABS = ["profile", "security", "salesforce", "users"] as const;
+type Tab = (typeof TABS)[number];
+
 export function SettingsView() {
+  const { isAdmin, mode } = useAuth();
+  const router = useRouter();
+  const params = useSearchParams();
+  const showUsers = isAdmin && mode === "supabase";
+  const requested = params.get("tab") as Tab | null;
+  const tab: Tab = requested && TABS.includes(requested) && (requested !== "users" || showUsers) ? requested : "profile";
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Settings</h1>
-      <Tabs defaultValue="profile">
+      <Tabs value={tab} onValueChange={(v) => router.replace(v === "profile" ? "/settings" : `/settings?tab=${v}`, { scroll: false })}>
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="salesforce">Salesforce</TabsTrigger>
+          {showUsers && <TabsTrigger value="users">Users</TabsTrigger>}
         </TabsList>
         <TabsContent value="profile" className="mt-4 max-w-3xl">
           <ProfileTab />
@@ -355,6 +467,11 @@ export function SettingsView() {
         <TabsContent value="salesforce" className="mt-4 max-w-3xl">
           <SalesforceTab />
         </TabsContent>
+        {showUsers && (
+          <TabsContent value="users" className="mt-4">
+            <UsersAdmin />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

@@ -9,6 +9,7 @@ import { columnLabel, formatCell, type ExportResult, type ExportRow } from "@/li
 import type { ColumnDef, ColumnSetup } from "@/lib/columns";
 import { fmtDate, parseDate } from "@/lib/dates";
 import { plural } from "@/lib/format";
+import { drawPdfFooterBrand, drawPdfLogo, loadPdfLogo } from "./pdf-brand";
 
 export interface ExportOptions {
   /** As-of date, YYYY-MM-DD */
@@ -200,20 +201,22 @@ function pdfText(s: string): string {
 }
 
 async function exportPdf(spec: ExportSpec, result: ExportResult, cols: Col[], filename: string, asOf: string) {
-  const [{ jsPDF }, { autoTable }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+  const [{ jsPDF }, { autoTable }, logo] = await Promise.all([import("jspdf"), import("jspdf-autotable"), loadPdfLogo()]);
   type RowInput = import("jspdf-autotable").RowInput;
   type CellDef = import("jspdf-autotable").CellDef;
 
   const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "letter", compress: true });
   const margin = 36;
+  drawPdfLogo(doc, logo, margin - 2, margin - 14, 16);
+  const top = margin + 22;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
   doc.setTextColor(15, 23, 42);
-  doc.text(pdfText(spec.name), margin, margin + 8);
+  doc.text(pdfText(spec.name), margin, top + 8);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(100, 116, 139);
-  doc.text(pdfText(`As of ${fmtDate(asOf)}  |  ${plural(result.rows.length, "row")}`), margin, margin + 24);
+  doc.text(pdfText(`As of ${fmtDate(asOf)}  |  ${plural(result.rows.length, "row")}`), margin, top + 24);
 
   const cell = (r: ExportRow, c: Col): string => pdfText(formatCell(r[c.field], c.type));
   const sumCells = (label: string, sums: Record<string, number>): CellDef[] =>
@@ -246,7 +249,7 @@ async function exportPdf(spec: ExportSpec, result: ExportResult, cols: Col[], fi
   });
 
   autoTable(doc, {
-    startY: margin + 38,
+    startY: top + 38,
     margin: { left: margin, right: margin, top: margin, bottom: margin },
     theme: "plain",
     head: [cols.map((c) => ({ content: pdfText(c.label), styles: { halign: isNum(c.type) ? "right" : "left" } }))],
@@ -266,6 +269,7 @@ async function exportPdf(spec: ExportSpec, result: ExportResult, cols: Col[], fi
       doc.setTextColor(148, 163, 184);
       doc.text(`Page ${n}`, w - margin, h - 18, { align: "right" });
       doc.text(pdfText(spec.name), margin, h - 18);
+      drawPdfFooterBrand(doc, h - 18);
     },
   });
   doc.save(filename);
