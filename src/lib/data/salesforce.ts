@@ -19,6 +19,12 @@ import { Connection } from "jsforce";
 import { REGIONS, REGION_BY_ID, REGION_BY_STATE } from "@/data/reference/regions";
 import { CANADIAN_PROVINCES, STATE_NAMES } from "@/data/reference/geo";
 import { TOWNS } from "@/data/reference/towns";
+import { catalogReference } from "@/data/reference/catalog";
+
+/** App-side collections that live Salesforce doesn't provide */
+function emptyPlatform() {
+  return { contracts: [], contractClauses: [], clauses: [], invoices: [], payments: [], onboardingProjects: [], onboardingTasks: [], healthSignals: [], supportTickets: [], quotas: [], commissionPlans: [], approvals: [], auditLog: [], calls: [] };
+}
 import type { DataSnapshot } from "@/lib/data/types";
 import {
   ALL_STAGES,
@@ -154,6 +160,15 @@ export async function loadSalesforceSnapshot(): Promise<LiveLoadResult> {
       campaignMembers,
       tasks,
       events,
+      // Catalog and price books come from the in-app reference data; quotes and
+      // new builds are app-side records (live Salesforce stays read-only)
+      ...catalogReference(),
+      quotes: [],
+      quoteLineItems: [],
+      newBuilds: [],
+      // Contracts, billing, success and Call Desk records are app-side (Salesforce stays read-only);
+      // the clause library starts from the reference set
+      ...emptyPlatform(),
     },
     instanceUrl,
     lightningBaseUrl,

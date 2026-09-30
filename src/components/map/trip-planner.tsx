@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeftRight, X } from "lucide-react";
+import { ArrowLeftRight, Pencil, X } from "lucide-react";
 import { useStore } from "@/lib/data/store";
 import type { Prioritization } from "@/lib/prioritization";
 import type { TripRequest } from "@/lib/ai/types";
@@ -32,7 +32,18 @@ import { REGIONS } from "@/data/reference/regions";
 import { STATE_NAMES } from "@/data/reference/geo";
 import { SEGMENTS } from "@/types/salesforce";
 import { Button } from "@/components/ui/button";
+import { DataTable, type Column } from "@/components/shared/data-table";
+import { RecordDrawer } from "@/components/shared/record-drawer";
+import { ScheduleCallButton } from "@/components/call-desk/schedule-call";
 import { cn } from "@/lib/utils";
+
+/** Weekday before a visit, for a confirm-the-visit call */
+const dayBefore = (iso: string) => {
+  const d = new Date(`${iso}T00:00:00Z`);
+  do d.setUTCDate(d.getUTCDate() - 1);
+  while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+  return d.toISOString().slice(0, 10);
+};
 
 type ItineraryRow = ReturnType<typeof itineraryRows>[number];
 
@@ -64,7 +75,7 @@ interface SavedTrip {
 
 const trips = localCollection<SavedTrip>("harvest-signal:trips:v1");
 const NO_PREBUILT: SavedTrip[] = [];
-const MAX_SAVED = 8;
+const MAX_SAVED = 30;
 
 const inputCls = "h-8 w-full min-w-0 rounded-md border border-input bg-card px-2 text-sm text-foreground";
 const weekday = (iso: string) => parseDate(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
@@ -92,6 +103,7 @@ export function TripPlanner({
   const [form, setForm] = useState<TripRequest>(() => parseTripLocally("", asOf, defaultDestination));
   const [request, setRequest] = useState<TripRequest | null>(null);
   const [exclude, setExclude] = useState<string[]>([]);
+  const [renaming, setRenaming] = useState<SavedTrip | null>(null);
 
   const plan = useMemo(
     () => (request ? planTrip(request, { data, asOf, prio, ranked }, new Set(exclude)) : null),
@@ -170,6 +182,57 @@ export function TripPlanner({
   };
 
   const recent = saved.items.filter((t) => !t.prebuilt).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  const deleteTrip = (t: SavedTrip) => {
+    saved.remove(t.id);
+    toast.success("Trip deleted", { duration: 5000, action: { label: "Undo", onClick: () => trips.save(t) } });
+  };
+
+  const tripColumns: Column<SavedTrip>[] = [
+    {
+      key: "name",
+      header: "Saved trip",
+      cell: (t) => (
+        <span className="block max-w-52 truncate">
+          {t.name}
+          <span className="text-xs text-muted-foreground"> · {t.request.stops} stops</span>
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: <span className="sr-only">Actions</span>,
+      align: "right",
+      cell: (t) => (
+        <span className="inline-flex gap-0.5">
+          <button
+            type="button"
+            aria-label={`Rename ${t.name}`}
+            title="Rename"
+            className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+            onClick={(e) => {
+              e.stopPropagation();
+              setRenaming(t);
+            }}
+          >
+            <Pencil className="size-3.5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            aria-label={`Delete ${t.name}`}
+            title="Delete"
+            className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteTrip(t);
+            }}
+          >
+            <X className="size-3.5" aria-hidden />
+          </button>
+        </span>
+      ),
+    },
+  ];
 
   return (
     <div className="space-y-4 p-3">
@@ -261,23 +324,31 @@ export function TripPlanner({
       </div>
 
       {!plan && recent.length > 0 && (
-        <div>
-          <h4 className="text-xs font-medium text-muted-foreground">Recent trips</h4>
-          <ul className="mt-1.5 divide-y rounded-md border">
-            {recent.map((t) => (
-              <li key={t.id} className="flex items-center gap-2 px-2.5 py-1.5 text-sm">
-                <button type="button" className="min-w-0 flex-1 truncate text-left hover:text-primary" onClick={() => run(t.request, t.exclude)}>
-                  {t.name}
-                  <span className="text-xs text-muted-foreground"> · {t.request.stops} stops</span>
-                </button>
-                <button type="button" aria-label={`Delete ${t.name}`} className="text-muted-foreground hover:text-foreground" onClick={() => saved.remove(t.id)}>
-                  <X className="size-3.5" aria-hidden />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <DataTable
+          rows={recent}
+          columns={tripColumns}
+          rowKey={(t) => t.id}
+          param="trp"
+          pageSize={5}
+          pageSizes={[]}
+          dense
+          onRowClick={(t) => run(t.request, t.exclude)}
+          caption="Saved trips"
+        />
       )}
+      <RecordDrawer
+        open={!!renaming}
+        onOpenChange={(o) => !o && setRenaming(null)}
+        title="Rename trip"
+        fields={[{ name: "name", label: "Name", required: true, wide: true }]}
+        initial={{ name: renaming?.name ?? "" }}
+        onSubmit={(v) => {
+          if (!renaming) return;
+          saved.save({ ...renaming, name: String(v.name) });
+          toast.success("Trip renamed");
+          setRenaming(null);
+        }}
+      />
 
       {plan && (
         <>
@@ -337,6 +408,7 @@ export function TripPlanner({
                               {s.account.Name}
                             </Link>
                             <span className="flex shrink-0 gap-0.5">
+                              <ScheduleCallButton iconOnly label={`Schedule a call with ${s.account.Name}`} prefill={{ accountId: s.account.Id, callType: "Check-in", date: dayBefore(s.date), time: "09:00" }} />
                               <button
                                 type="button"
                                 aria-label={`Swap ${s.account.Name}`}
@@ -409,7 +481,7 @@ export function TripPlanner({
                 variant="outline"
                 onClick={() => {
                   setHandoff("enroll", { accountIds: plan.stops.map((s) => s.account.Id), from: `Trip: ${plan.destinationName}, ${fmtShortDate(plan.request.startDate)}` });
-                  router.push("/campaigns/sequences?enroll=1");
+                  router.push("/outreach/sequences?enroll=1");
                 }}
               >
                 Enroll in sequence

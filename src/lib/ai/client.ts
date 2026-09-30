@@ -3,6 +3,8 @@
 /** Browser helpers for /api/ai. The API key stays on the server. */
 import { useEffect, useState } from "react";
 import type {
+  CallBriefResponse,
+  CallNotesResponse,
   ChatContext,
   ChatEvent,
   ChatRequest,
@@ -89,6 +91,16 @@ export async function aiRewriteStep(step: { type: StepType; subject?: string; bo
 
 export async function aiParseTrip(prompt: string, context: ChatContext): Promise<TripParseResponse> {
   return postJson<TripParseResponse>({ kind: "trip-parse", prompt, context });
+}
+
+/** Call Desk: AI summary, questions and talking points from a digest of the account's data */
+export async function aiCallBrief(digest: string, context: ChatContext): Promise<CallBriefResponse> {
+  return postJson<CallBriefResponse>({ kind: "call-brief", digest, context });
+}
+
+/** Call Desk: AI Notes from a transcript and the rep's notes */
+export async function aiCallNotes(input: { meta: string; transcript: string; repNotes: string }, context: ChatContext): Promise<CallNotesResponse> {
+  return postJson<CallNotesResponse>({ kind: "call-notes", ...input, context });
 }
 
 /** Whether the server has an AI key, and which model (fetched once per page load) */

@@ -32,8 +32,8 @@ const loadLive = unstable_cache(
  * seeded JSON; live mode is enabled by the SF_* environment variables and is
  * read-only by design.
  */
-export async function loadAppData(): Promise<AppData> {
-  if (!isLiveConfigured()) {
+export async function loadAppData(opts: { forceMock?: boolean } = {}): Promise<AppData> {
+  if (opts.forceMock || !isLiveConfigured()) {
     return { mode: "mock", loadedAt: new Date().toISOString(), warnings: [], snapshot: SEED };
   }
   try {

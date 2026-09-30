@@ -8,6 +8,8 @@ import { playForDate, type SeasonPlay } from "@/lib/content/messaging";
 import { isSeasonalSegment } from "@/lib/seasonality";
 import { segmentOf } from "@/lib/scoring/target";
 import { buildCsv, defaultSetup, type ColumnDef } from "@/lib/columns";
+import { harvestRiskFor } from "@/lib/harvest/summary";
+import { harvestLinkSync, prefetchHarvestLinks } from "@/lib/harvest/links";
 
 export interface MailRecipient {
   targetId: string;
@@ -23,6 +25,8 @@ export interface MailRecipient {
   country: string;
   email: string;
   score: number;
+  /** Harvest Day Simulator: season dollars at risk (accounts with truck receiving only) */
+  harvestAtRisk?: number;
 }
 
 export function recipientFor(data: DataSnapshot, s: ScoredTarget): MailRecipient | undefined {
@@ -48,6 +52,9 @@ export function recipientFor(data: DataSnapshot, s: ScoredTarget): MailRecipient
   const a = findAccount(data, s.target.id);
   if (!a) return undefined;
   const c = preferredContact(s, contactsFor(data, a.Id));
+  const risk = harvestRiskFor(a);
+  // Queue the signed share link now so it is ready when the CSV is exported
+  if (risk) void prefetchHarvestLinks([a.Id]);
   return {
     targetId: a.Id,
     whoId: c?.Id,
@@ -62,6 +69,7 @@ export function recipientFor(data: DataSnapshot, s: ScoredTarget): MailRecipient
     country: c?.MailingCountry ?? a.BillingCountry,
     email: c?.Email ?? "",
     score: s.total,
+    harvestAtRisk: risk?.dollars,
   };
 }
 
@@ -79,6 +87,10 @@ export const MAIL_LIST_COLUMNS: ColumnDef<MailRecipient>[] = [
   { key: "score", label: "Score", type: "number", value: (r) => r.score },
   { key: "record_id", label: "Salesforce Record Id", value: (r) => r.targetId },
   { key: "who_id", label: "Salesforce Contact/Lead Id", value: (r) => r.whoId },
+  // Letter merge fields {{HarvestLoss}} and {{HarvestLink}}. Links are signed server-side and cached per session
+  // (src/lib/harvest/links.ts); recipientFor queues them, so they are filled in by export time.
+  { key: "harvest_at_risk", label: "Harvest $ at risk", type: "currency", value: (r) => (r.harvestAtRisk === undefined ? undefined : Math.round(r.harvestAtRisk)) },
+  { key: "harvest_link", label: "Harvest day link", value: (r) => (r.harvestAtRisk === undefined ? "" : harvestLinkSync(r.targetId)) },
 ];
 
 export function mailListCsv(rows: MailRecipient[]): string {

@@ -11,6 +11,7 @@ import { FIELD_LABEL, STEP_TYPE_LABEL, canEmail, type Recipient } from "./sequen
 import { RenderedText } from "./parts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ScheduleCallButton } from "@/components/call-desk/schedule-call";
 
 /** Default preview recipient: first emailable contact at an account in the sequence's segment */
 export function defaultRecipient(data: DataSnapshot, segment?: string): Recipient | null {
@@ -158,6 +159,13 @@ export function SequencePreview({
                 </span>
               )}
               <span className="ml-auto text-muted-foreground">{rendered.variant ? `Variant: ${rendered.variant.name}` : "Default"}</span>
+              {step.type === "call" && recipient && (
+                <ScheduleCallButton
+                  size="xs"
+                  variant="ghost"
+                  prefill={{ accountId: recipient.account.Id, contactIds: recipient.contact ? [recipient.contact.Id] : undefined, callType: "Follow-up", date, time: "10:00" }}
+                />
+              )}
             </div>
             <div className="space-y-2 px-3 py-2.5 text-sm">
               {rendered.subject && (

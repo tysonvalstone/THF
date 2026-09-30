@@ -118,7 +118,7 @@ const MD: Components = {
 export function ChatPanel() {
   const router = useRouter();
   const pathname = usePathname();
-  const { asOfISO } = useStore();
+  const { asOfISO, demoMode, changeLog } = useStore();
   const commodity = usePageCommodity();
   const { available } = useAiStatus();
   const open = useChatOpen();
@@ -173,7 +173,7 @@ export function ChatPanel() {
       await streamChat(
         {
           messages: history,
-          context: { asOf: asOfISO, commodity, page: pathname, pageTitle: document.title.split(" · ")[0] },
+          context: { asOf: asOfISO, commodity, page: pathname, pageTitle: document.title.split(" · ")[0], demo: demoMode, mutations: changeLog() },
         },
         (e) => {
           if (e.type === "text") update(reply.id, (t) => ({ ...t, content: t.content + e.text, status: undefined }));
@@ -195,7 +195,7 @@ export function ChatPanel() {
       update(reply.id, (t) => (t.streaming ? { ...t, streaming: false, status: undefined, error: t.content ? undefined : "Stopped" } : t));
       abortRef.current = null;
     },
-    [busy, turns, asOfISO, commodity, pathname, update],
+    [busy, turns, asOfISO, commodity, pathname, update, demoMode, changeLog],
   );
 
   const questionFor = (id: string) => {
@@ -287,7 +287,7 @@ export function ChatPanel() {
                                   size="sm"
                                   onClick={() => {
                                     setHandoff("export", { prompt: questionFor(t.id) ?? t.content.slice(0, 200), answer: t.content, accountIds: t.accountIds });
-                                    router.push("/templates/exports");
+                                    router.push("/outreach/exports");
                                   }}
                                 >
                                   Export this
@@ -299,7 +299,7 @@ export function ChatPanel() {
                                   size="sm"
                                   onClick={() => {
                                     setHandoff("enroll", { accountIds: t.accountIds!, from: "AI chat" });
-                                    router.push("/campaigns/sequences?enroll=1");
+                                    router.push("/outreach/sequences?enroll=1");
                                   }}
                                 >
                                   Start sequence

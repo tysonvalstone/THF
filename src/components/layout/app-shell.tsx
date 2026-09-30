@@ -11,26 +11,65 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { APP_ROLES, APP_ROLE_LABEL, type AppRole } from "@/lib/supabase/config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/auth/avatar";
 import { ChatPanel, useChatOpen } from "@/components/ai/chat-panel";
 import { cn } from "@/lib/utils";
-import { CircleHelp } from "lucide-react";
+import { ChevronRight, CircleHelp } from "lucide-react";
+import { ApprovalsInbox } from "./approvals-inbox";
+import { LifecycleAutomation } from "./lifecycle-automation";
+import { ScheduleCallHost } from "@/components/call-desk/schedule-call";
+import { Fragment } from "react";
 import { HelpDrawer, openHelp } from "@/components/help/help-drawer";
 import { helpSlugFor } from "@/lib/help/types";
 
 /** Top-level sections; each section's pages show as tabs under the header */
-const NAV: { href: string; label: string; tabs: [string, string][]; also: string[] }[] = [
-  { href: "/", label: "Home", tabs: [["/", "Overview"], ["/segments", "Segments"], ["/prospects", "Prospects"]], also: ["/accounts", "/leads", "/opportunities", "/settings"] },
-  { href: "/map", label: "Map", tabs: [["/map", "Map"], ["/facilities", "Facilities"]], also: [] },
-  { href: "/campaigns", label: "Campaigns", tabs: [["/campaigns", "Campaigns"], ["/campaigns/sequences", "Sequences"], ["/calendar", "Calendar"]], also: [] },
-  { href: "/templates", label: "Templates", tabs: [["/templates/exports", "Exports"]], also: [] },
+const NAV: { href: string; label: string; tabs: [string, string][]; also: string[]; separate?: boolean }[] = [
+  {
+    href: "/",
+    label: "Home",
+    tabs: [["/", "Overview"], ["/pipeline", "Pipeline"], ["/prospects", "Prospects"], ["/contacts", "Contacts"], ["/segments", "Segments"]],
+    also: ["/accounts", "/leads", "/opportunities", "/settings"],
+  },
+  { href: "/map", label: "Map", tabs: [["/map", "Map"], ["/facilities", "Facilities"], ["/new-builds", "New Builds"]], also: [] },
+  { href: "/campaigns", label: "Campaigns", tabs: [["/campaigns", "Campaigns"], ["/calendar", "Calendar"]], also: [] },
+  { href: "/outreach/sequences", label: "Outreach", tabs: [["/outreach/sequences", "Sequences"], ["/outreach/exports", "Export templates"]], also: ["/outreach"] },
+  { href: "/call-desk", label: "Call Desk", tabs: [["/call-desk", "Today"], ["/call-desk/history", "Past calls"]], also: [] },
+  { href: "/quotes", label: "Quoting", tabs: [["/quotes", "Quotes"], ["/contracts", "Contracts"], ["/quotes/products", "Products"], ["/quotes/price-books", "Price books"]], also: [] },
+  {
+    href: "/finance",
+    label: "Finance",
+    tabs: [["/finance", "Revenue"], ["/finance/invoices", "Invoices"], ["/finance/forecast", "Forecast"], ["/finance/commissions", "Commissions"]],
+    also: [],
+  },
+  { href: "/customers", label: "Customers", tabs: [["/customers", "Health"], ["/customers/onboarding", "Onboarding"], ["/customers/renewals", "Renewals"]], also: [] },
+  { href: "/harvest-day", label: "Harvest Day", tabs: [["/harvest-day", "Simulator"]], also: [], separate: true },
 ];
+
+/** Tabs limited to certain roles (everything else is open to all roles) */
+const TAB_ROLES: Record<string, AppRole[]> = {
+  "/finance": ["manager", "finance", "admin"],
+  "/finance/invoices": ["manager", "finance", "admin"],
+  "/finance/forecast": ["rep", "manager", "finance", "admin"],
+  "/finance/commissions": ["rep", "manager", "finance", "admin"],
+};
+const tabAllowed = (href: string, role: AppRole) => !TAB_ROLES[href] || TAB_ROLES[href].includes(role);
+
+/** Navigation for a role: hidden tabs removed, sections with no tabs left removed */
+function navFor(role: AppRole) {
+  return NAV.map((n) => {
+    const tabs = n.tabs.filter(([href]) => tabAllowed(href, role));
+    return { ...n, tabs, href: tabs.some(([h]) => h === n.href) ? n.href : (tabs[0]?.[0] ?? n.href) };
+  }).filter((n) => n.tabs.length > 0);
+}
 
 const within = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
 
@@ -41,7 +80,9 @@ function sectionFor(pathname: string) {
 
 /** Section tabs (when the section has several pages) and the page's help link */
 function SectionTabs({ pathname }: { pathname: string }) {
-  const section = sectionFor(pathname);
+  const { role } = useAuth();
+  const found = sectionFor(pathname);
+  const section = found && { ...found, tabs: found.tabs.filter(([href]) => tabAllowed(href, role)) };
   if (!section) return null;
   // Tabs only on the section's own pages (not record pages), and only when there is a choice
   const current = section.tabs.find(([href]) => pathname === href);
@@ -86,7 +127,16 @@ export function Logo() {
 
 function DataBadge() {
   const { mode, loadedAt, refreshing, refresh, warnings, ready } = useStore();
+  const { isGuest } = useAuth();
   const live = mode === "live";
+  if (isGuest) {
+    return (
+      <span className="hidden h-7 items-center gap-1.5 rounded-md border px-2 text-xs font-medium text-muted-foreground sm:inline-flex">
+        <span className="size-1.5 rounded-full bg-slate-400" aria-hidden />
+        Guest · Demo data
+      </span>
+    );
+  }
   return (
     <div className="hidden items-center gap-2 sm:flex">
       <Tooltip>
@@ -107,7 +157,7 @@ function DataBadge() {
       <Button
         variant="ghost"
         size="sm"
-        className="hidden lg:inline-flex"
+        className="hidden 2xl:inline-flex"
         disabled={refreshing || !ready}
         onClick={async () => {
           await refresh();
@@ -122,7 +172,7 @@ function DataBadge() {
 
 function UserMenu() {
   const { pendingChanges, resetData, readOnly } = useStore();
-  const { user, me: profile, signOut, session, isAdmin } = useAuth();
+  const { user, me: profile, signOut, session, isAdmin, role, canSwitchRole, setRole } = useAuth();
   if (!user) return null;
   return (
     <DropdownMenu>
@@ -162,6 +212,19 @@ function UserMenu() {
           Reset local changes
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        {canSwitchRole && (
+          <>
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">View as</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={role} onValueChange={(v) => setRole(v as AppRole)}>
+              {APP_ROLES.map((r) => (
+                <DropdownMenuRadioItem key={r} value={r} onSelect={(e) => e.preventDefault()}>
+                  {APP_ROLE_LABEL[r]}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem onSelect={signOut}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -174,31 +237,41 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
   const chatOpen = useChatOpen();
   // Sign-in and password pages render on their own, without the app chrome
-  if (pathname === "/login" || pathname.startsWith("/auth/") || pathname === "/account/password" || !auth.user) return <>{children}</>;
-  const active = sectionFor(pathname)?.href;
-  const isActive = (href: string) => href === active;
+  if (pathname === "/login" || pathname.startsWith("/auth/") || pathname === "/account/password" || pathname.startsWith("/share/") || !auth.user) return <>{children}</>;
+  const active = sectionFor(pathname)?.label;
+  const nav = navFor(auth.role);
+  const isActive = (label: string) => label === active;
   return (
     <div className={cn("flex min-h-full flex-col", chatOpen && "lg:pr-[400px]")}>
       <header className="sticky top-0 z-40 border-b bg-card">
         <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-6 px-4">
           <Logo />
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
-            {NAV.map((n) => (
-              <Link
-                key={n.href}
-                href={n.href}
-                className={cn(
-                  "rounded-md px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
-                  isActive(n.href) && "bg-accent-soft font-medium text-primary hover:bg-accent-soft hover:text-primary",
-                )}
-                aria-current={isActive(n.href) ? "page" : undefined}
-              >
-                {n.label}
-              </Link>
+          {/* The sales workflow, left to right, spread across the header */}
+          <nav className="hidden min-w-0 flex-1 items-center xl:flex" aria-label="Main">
+            {nav.map((n, i) => (
+              <Fragment key={n.href}>
+                {i > 0 &&
+                  (n.separate ? (
+                    <span className="mx-2 h-5 w-px shrink-0 bg-border" aria-hidden />
+                  ) : (
+                    <ChevronRight className="size-3.5 shrink-0 text-slate-300" aria-hidden />
+                  ))}
+                <Link
+                  href={n.href}
+                  className={cn(
+                    "flex-1 rounded-md px-2 py-1.5 text-center text-sm whitespace-nowrap text-muted-foreground hover:bg-muted hover:text-foreground",
+                    isActive(n.label) && "bg-accent-soft font-medium text-primary hover:bg-accent-soft hover:text-primary",
+                  )}
+                  aria-current={isActive(n.label) ? "page" : undefined}
+                >
+                  {n.label}
+                </Link>
+              </Fragment>
             ))}
           </nav>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-2 xl:ml-0">
             <DataBadge />
+            <ApprovalsInbox />
             <Link
               href="/help"
               aria-label="Help Center"
@@ -212,12 +285,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <UserMenu />
           </div>
         </div>
-        <nav className="scrollbar-none flex gap-1 overflow-x-auto border-t px-2 py-1.5 md:hidden" aria-label="Main">
-          {NAV.map((n) => (
+        <nav className="scrollbar-none flex gap-1 overflow-x-auto border-t px-2 py-1.5 xl:hidden" aria-label="Main">
+          {nav.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className={cn("shrink-0 rounded-md px-2.5 py-1 text-sm text-muted-foreground", isActive(n.href) && "bg-accent-soft font-medium text-primary")}
+              className={cn("flex-1 shrink-0 rounded-md px-2.5 py-1 text-center text-sm whitespace-nowrap text-muted-foreground", isActive(n.label) && "bg-accent-soft font-medium text-primary")}
             >
               {n.label}
             </Link>
@@ -234,6 +307,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 pt-6 pb-20">{children}</main>
       <ChatPanel />
       <HelpDrawer />
+      <LifecycleAutomation />
+      <ScheduleCallHost />
     </div>
   );
 }

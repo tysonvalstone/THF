@@ -16,6 +16,7 @@ import {
   runTool,
   toMapCommodity,
   type AccountSearchResult,
+  type CallSearchResult,
   type OpportunitySearchResult,
   type PipelineSummaryResult,
   type RegionInsightsResult,
@@ -38,6 +39,7 @@ const HELP = `I can answer a few questions without the AI service. Try one of th
 - Summarize the Eastern Corn Belt
 - Which segment should we prioritize?
 - Corn harvest status in Illinois
+- What did Cedar Bend Cooperative say about budget last month?
 - How do I plan a trip?`;
 
 /* ---------------------------------------------------------------- parsing */
@@ -292,6 +294,75 @@ async function season(ctx: ToolContext, where: { area: Area; label: string } | u
   };
 }
 
+/* ------------------------------------------------------------- call notes */
+
+const MONTH_NAMES = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+
+/** Date range named in a question ("last month", "this week", "in September"); default the last 90 days */
+function callRange(q: string, asOf: Date): { from: string; to: string; label: string } {
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  const y = asOf.getUTCFullYear();
+  const m = asOf.getUTCMonth();
+  if (/last month/.test(q)) return { from: iso(new Date(Date.UTC(y, m - 1, 1))), to: iso(new Date(Date.UTC(y, m, 0))), label: "last month" };
+  if (/this month/.test(q)) return { from: iso(new Date(Date.UTC(y, m, 1))), to: iso(asOf), label: "this month" };
+  if (/last week/.test(q)) return { from: iso(new Date(asOf.getTime() - 7 * 86_400_000)), to: iso(asOf), label: "in the last week" };
+  const named = MONTH_NAMES.findIndex((n) => new RegExp(`\\bin ${n}\\b`).test(q));
+  if (named >= 0) {
+    const yr = named > m ? y - 1 : y;
+    return { from: iso(new Date(Date.UTC(yr, named, 1))), to: iso(new Date(Date.UTC(yr, named + 1, 0))), label: `in ${MONTH_NAMES[named][0].toUpperCase()}${MONTH_NAMES[named].slice(1)}` };
+  }
+  return { from: iso(new Date(asOf.getTime() - 90 * 86_400_000)), to: iso(asOf), label: "in the last 90 days" };
+}
+
+const TIME_WORDS = /\s+(?:last|this)\s+(?:month|week)|\s+in\s+(?:the\s+)?last\s+\d+\s+days|\s+in\s+[a-z]+$|\s+recently|\s+on (?:the|our|their) calls?/g;
+
+/** "What did Heartland Co-op say about budget last month?", "Which calls mentioned scale tickets?" */
+function parseCallQuestion(question: string): { account?: string; topic?: string } | null {
+  const q = question.replace(/[’']/g, "'").replace(/[?.!]+\s*$/, "").trim();
+  const said = q.match(/\bwhat (?:did|has|have) (.+?) (?:say|said|mention|mentioned|tell us|told us)(?: about (.+))?$/i);
+  if (said) return { account: said[1].replace(/^the\s+/i, "").replace(TIME_WORDS, "").trim(), topic: said[2]?.toLowerCase().replace(TIME_WORDS, "").trim() || undefined };
+  const calls = q.match(/\b(?:calls?|conversations?|transcripts?)\b.*?\b(?:mention(?:ed|ing)?|about|talked about|discuss(?:ed|ing)?)\s+(.+)$/i);
+  if (calls) return { topic: calls[1].toLowerCase().replace(TIME_WORDS, "").trim() };
+  return null;
+}
+
+async function callNotesAnswer(ctx: ToolContext, question: string, parsed: { account?: string; topic?: string }): Promise<Answer> {
+  const range = callRange(question.toLowerCase(), ctx.asOf);
+  let account = parsed.account;
+  let note = "";
+  if (account) {
+    // Try the full name, then without a trailing "co-op" / "cooperative" / "grain" style suffix
+    const first = await runTool("search_calls", { account, query: parsed.topic, date_from: range.from, date_to: range.to, limit: 5 }, ctx);
+    const r = first.result as CallSearchResult | { error: string };
+    if (!("error" in r)) return formatCalls(ctx, r, first.accountIds, parsed.topic, range.label);
+    const short = account.replace(/\s+(co-?op|cooperative|coop|grain|inc\.?|llc|elevator)s?$/i, "").trim();
+    const retry = short !== account ? await runTool("search_calls", { account: short, query: parsed.topic, date_from: range.from, date_to: range.to, limit: 5 }, ctx) : null;
+    if (retry && !("error" in (retry.result as object))) return formatCalls(ctx, retry.result as CallSearchResult, retry.accountIds, parsed.topic, range.label);
+    note = `I couldn't find an account named **${account}**. `;
+    account = undefined;
+  }
+  const run = await runTool("search_calls", { query: parsed.topic, date_from: range.from, date_to: range.to, limit: 5 }, ctx);
+  const answer = formatCalls(ctx, run.result as CallSearchResult, run.accountIds, parsed.topic, range.label);
+  return { ...answer, markdown: note ? `${note}Here's what came up on calls with any account instead.\n\n${answer.markdown}` : answer.markdown };
+}
+
+function formatCalls(ctx: ToolContext, r: CallSearchResult, accountIds: string[], topic: string | undefined, label: string): Answer {
+  const who = r.account ? link(r.account.name, r.account.href) : "any account";
+  const about = topic ? ` about "${topic}"` : "";
+  if (!r.total_matches) return { markdown: `No calls with ${who}${about} ${label}.`, accountIds: [], exportable: false };
+  const qualKey = topic && /budget|money|spend|price|cost/.test(topic) ? "budget" : topic && /competitor|harvestcore|agriledger|plantworks|feedlogic|fieldbooks|silotrack|agrodesk/.test(topic) ? "competitors" : topic && /timing|timeline|when|go live|go-live/.test(topic) ? "timeline" : topic && /board|decision|sign/.test(topic) ? "decisionMaker" : null;
+  const lines = r.calls.map((c) => {
+    const q = qualKey && c.qualification ? (c.qualification as Record<string, string | undefined>)[qualKey] : undefined;
+    const quote = q ?? c.snippets[0]?.replace(/^[^:]{2,40}:\s*/, "") ?? c.summary?.split(". ")[0];
+    return `- **${day(c.date, ctx)}** · ${c.type} · ${link(c.account, c.account_href)} with ${c.rep}${c.sentiment ? ` · ${c.sentiment}` : ""} · [notes](${c.call_href})${quote ? `\n  > ${quote}` : ""}`;
+  });
+  return {
+    markdown: `**${plural(r.total_matches, "call")} with ${who}${about} ${label}.**${r.total_matches > r.calls.length ? ` Showing the ${r.calls.length} most recent.` : ""}\n\n${lines.join("\n")}`,
+    accountIds,
+    exportable: false,
+  };
+}
+
 /* -------------------------------------------------------------- dispatcher */
 
 /** "How do I…" questions: point to Help Center articles */
@@ -314,6 +385,8 @@ export async function answerOffline(question: string, ctx: ToolContext): Promise
     const answer = await howTo(question);
     if (answer) return answer;
   }
+  const callQuestion = parseCallQuestion(question);
+  if (callQuestion) return callNotesAnswer(ctx, question, callQuestion);
   if (/blackout|no[- ]contact|go(?:ne)? dark|come out of harvest/.test(q)) return blackout(ctx, q, where);
   if (/\bsegments?\b|win rates?|close rates?|prioriti[sz]e/.test(q)) return segments(ctx);
   if ((commodity || /\bcrop\b/.test(q)) && /harvest|planting|season|phase|progress|status|crop/.test(q)) return season(ctx, where, commodity);

@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 import { useStore } from "@/lib/data/store";
+import { useCrud } from "@/lib/data/crud";
 import { contactName, contactsFor, findAccount, userName } from "@/lib/data/selectors";
 import { closeDateFlags, nextBoardMeeting } from "@/lib/seasonality";
 import { prioritize } from "@/lib/prioritization";
-import { PRODUCT_BY_ID } from "@/data/reference/products";
 import { fmtDate, fmtShortDate, MONTHS_SHORT, parseDate } from "@/lib/dates";
 import { fmtMoney } from "@/lib/format";
 import { formatRate } from "@/lib/stats";
@@ -14,7 +16,14 @@ import { DocTitle } from "@/components/shared/doc-title";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { ConfirmDialog, LocalChangeTag } from "@/components/shared/confirm-dialog";
+import { OpportunityQuotes } from "@/components/quotes/opportunity-quotes";
+import { OpportunityDrawer } from "./forms";
+import { StageSelect, useStageChange } from "./stage-control";
+import { TasksPanel } from "./tasks-panel";
+import { ScheduleCallButton } from "@/components/call-desk/schedule-call";
+import { opportunityDeletePlan } from "./delete-rules";
 
 export function StagePath({ stage }: { stage: Opportunity["StageName"] }) {
   const path = ALL_STAGES.filter((s) => s !== "Closed Lost");
@@ -48,15 +57,21 @@ const COMMITTEE: { role: BuyingRole; label: string }[] = [
 
 export function OpportunityView({ id }: { id: string }) {
   const { ready, data, asOf } = useStore();
+  const { remove } = useCrud();
+  const router = useRouter();
+  const stage = useStageChange();
+  const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [gone, setGone] = useState(false);
   const prio = useMemo(() => (ready ? prioritize(data, asOf) : null), [ready, data, asOf]);
-  if (!ready || !prio) return <Skeleton className="h-[520px]" />;
+  if (!ready || !prio || gone) return <Skeleton className="h-[520px]" />;
   const o = data.opportunities.find((x) => x.Id === id);
   if (!o) {
     return (
       <div className="rounded-md border border-dashed p-10 text-center">
         <p className="font-medium">Opportunity not found</p>
         <Button asChild variant="outline" className="mt-4">
-          <Link href="/">Back to segments</Link>
+          <Link href="/pipeline">Back to pipeline</Link>
         </Button>
       </div>
     );
@@ -65,6 +80,8 @@ export function OpportunityView({ id }: { id: string }) {
   const flags = closeDateFlags(o, a, asOf);
   const contacts = a ? contactsFor(data, a.Id) : [];
   const lines = data.lineItems.filter((l) => l.OpportunityId === o.Id);
+  const productName = new Map(data.products.map((p) => [p.Id, p.Name]));
+  const plan = opportunityDeletePlan(data, o.Id);
   const seg = prio.segments.find((s) => s.segment === a?.Segment__c);
   const createdMonth = parseDate(o.CreatedDate).getUTCMonth();
   const rate = seg?.stats.byCreatedMonth[createdMonth];
@@ -77,14 +94,17 @@ export function OpportunityView({ id }: { id: string }) {
   return (
     <div className="space-y-5">
       <DocTitle title={o.Name} />
-      <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
-        Segments
+      <Link href="/pipeline" className="text-sm text-muted-foreground hover:text-foreground">
+        Pipeline
       </Link>
       <section className="space-y-4 rounded-md border bg-card p-5">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="text-xs text-muted-foreground">Opportunity · {o.Type}</p>
-            <h1 className="text-xl font-semibold">{o.Name}</h1>
+            <h1 className="text-xl font-semibold">
+              {o.Name}
+              <LocalChangeTag id={o.Id} />
+            </h1>
             {a && (
               <p className="mt-0.5 text-sm text-muted-foreground">
                 <Link href={`/accounts/${a.Id}`} className="text-primary hover:underline">
@@ -94,7 +114,22 @@ export function OpportunityView({ id }: { id: string }) {
               </p>
             )}
           </div>
-          <p className="text-2xl font-semibold tabular">{fmtMoney(o.Amount, { compact: false })}</p>
+          <div className="flex flex-col gap-2 md:items-end">
+            <p className="text-2xl font-semibold tabular">{fmtMoney(o.Amount, { compact: false })}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                Stage
+                <StageSelect opp={o} onChange={stage.move} className="h-8 text-sm" />
+              </label>
+              <ScheduleCallButton prefill={{ accountId: o.AccountId, opportunityId: o.Id, contactIds: [o.Economic_Buyer__c, o.Primary_Contact__c].filter((x): x is string => !!x) }} />
+              <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
+                <Pencil /> Edit
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => setDeleting(true)}>
+                <Trash2 /> Delete
+              </Button>
+            </div>
+          </div>
         </div>
         <StagePath stage={o.StageName} />
         <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-3 lg:grid-cols-6">
@@ -126,6 +161,11 @@ export function OpportunityView({ id }: { id: string }) {
         {!o.IsClosed && (
           <p className="text-sm">
             <span className="text-muted-foreground">Next step:</span> {o.NextStep}
+          </p>
+        )}
+        {o.StageName === "Closed Lost" && o.Loss_Reason__c && (
+          <p className="text-sm">
+            <span className="text-muted-foreground">Loss reason:</span> {o.Loss_Reason__c}
           </p>
         )}
         {flags.length > 0 && (
@@ -168,7 +208,7 @@ export function OpportunityView({ id }: { id: string }) {
               {lines.map((l) => (
                 <li key={l.Id} className="flex justify-between gap-3 px-4 py-2">
                   <span>
-                    {PRODUCT_BY_ID[l.Product2Id]?.Name ?? l.Product2Id}
+                    {productName.get(l.Product2Id) ?? l.Product2Id}
                     {l.Quantity > 1 ? <span className="text-muted-foreground"> × {l.Quantity}</span> : null}
                   </span>
                   <span className="tabular text-muted-foreground">{fmtMoney(l.TotalPrice, { compact: false })}</span>
@@ -180,6 +220,12 @@ export function OpportunityView({ id }: { id: string }) {
           )}
         </section>
       </div>
+
+      <OpportunityQuotes opportunityId={o.Id} />
+
+      <section className="space-y-2">
+        <TasksPanel opportunityId={o.Id} param="tp" title="Tasks" />
+      </section>
 
       <section className="rounded-md border bg-card">
         <header className="border-b px-4 py-3">
@@ -203,6 +249,28 @@ export function OpportunityView({ id }: { id: string }) {
           <p className="px-4 py-3 text-sm text-muted-foreground">No activity logged on this deal.</p>
         )}
       </section>
+
+      {stage.dialog}
+      <OpportunityDrawer
+        open={editing}
+        onOpenChange={setEditing}
+        record={o}
+        onDelete={() => {
+          setEditing(false);
+          setDeleting(true);
+        }}
+      />
+      <ConfirmDialog
+        open={deleting}
+        onOpenChange={setDeleting}
+        title={`Delete ${o.Name}?`}
+        description={`${plan.detail} You can undo this for a few seconds afterwards.`}
+        onConfirm={() => {
+          setGone(true);
+          remove("Opportunity", o.Id, "Opportunity", plan.cascade);
+          router.push(a ? `/accounts/${a.Id}` : "/pipeline");
+        }}
+      />
     </div>
   );
 }

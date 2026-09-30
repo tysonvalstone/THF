@@ -1,8 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Download, Mail, Megaphone } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Download, Megaphone, Pencil, Plus, Trash2, X } from "lucide-react";
 import { useStore } from "@/lib/data/store";
+import { useCrud } from "@/lib/data/crud";
+import { DataTable, type Column } from "@/components/shared/data-table";
+import { ConfirmDialog, LocalChangeTag } from "@/components/shared/confirm-dialog";
+import { CampaignDrawer } from "@/components/records/forms";
+import { campaignDeletePlan, campaignMemberDeletePlan, type DeletePlan } from "@/components/records/delete-rules";
+import { AddMembersDialog } from "./add-members-dialog";
 import { REGION_BY_ID } from "@/data/reference/regions";
 import { contactName, userName } from "@/lib/data/selectors";
 import { fmtDate, fmtShortDate } from "@/lib/dates";
@@ -11,7 +19,7 @@ import { recordHref } from "@/lib/links";
 import { templateCampaignContent } from "@/lib/content/templates";
 import { MAIL_LIST_COLUMNS, mailListFilename, recipientFor } from "@/lib/campaigns";
 import { ExportCsvButton } from "@/components/shared/column-picker";
-import type { Commodity } from "@/types/salesforce";
+import type { CampaignMember, Commodity } from "@/types/salesforce";
 import { LEGACY_PLAYS, SEASON_PLAYS, type SeasonPlay } from "@/lib/content/messaging";
 import { useSender } from "@/lib/auth";
 import { ContentEditor } from "./content-editor";
@@ -35,8 +43,15 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
 
 export function CampaignDetail({ id }: { id: string }) {
   const { ready, data, ranked } = useStore();
+  const { remove } = useCrud();
+  const router = useRouter();
   const SENDER = useSender();
-  if (!ready) return <Skeleton className="h-[520px]" />;
+  const [editing, setEditing] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [deleting, setDeleting] = useState<DeletePlan | null>(null);
+  const [gone, setGone] = useState(false);
+  const [removing, setRemoving] = useState<{ m: CampaignMember; name: string; plan: DeletePlan } | null>(null);
+  if (!ready || gone) return <Skeleton className="h-[520px]" />;
   const c = data.campaigns.find((x) => x.Id === id);
   if (!c) {
     return (
@@ -68,6 +83,37 @@ export function CampaignDetail({ id }: { id: string }) {
     return { m, targetId, name: account?.Name ?? lead?.Company ?? "Unknown", place: account ? `${account.BillingCity}, ${account.BillingState}` : lead ? `${lead.City}, ${lead.State}` : "", person: contactName(data, m.ContactId ?? m.LeadId) };
   });
 
+  type MemberRow = (typeof rows)[number];
+  const memberColumns: Column<MemberRow>[] = [
+    {
+      key: "name",
+      header: "Recipient",
+      sortValue: (r) => r.name,
+      cell: (r) => (
+        <div className="min-w-0 max-w-56">
+          <Link href={recordHref(r.targetId)} className="block truncate font-medium hover:underline">
+            {r.name}
+          </Link>
+          <p className="truncate text-xs text-muted-foreground">
+            <span className={cn(r.m.HasResponded && "font-medium text-primary")}>{r.m.Status}</span>
+            {r.person ? ` · ${r.person}` : ""}
+            {r.place ? ` · ${r.place}` : ""}
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "remove",
+      header: <span className="sr-only">Remove</span>,
+      align: "right",
+      cell: (r) => (
+        <Button variant="ghost" size="icon-xs" aria-label={`Remove ${r.name}`} onClick={() => setRemoving({ m: r.m, name: r.name, plan: campaignMemberDeletePlan(data, r.m.Id) })}>
+          <X />
+        </Button>
+      ),
+    },
+  ];
+
   const recips = rows
     .map((r) => scoredById.get(r.targetId))
     .filter(Boolean)
@@ -92,10 +138,20 @@ export function CampaignDetail({ id }: { id: string }) {
                   Campaign · {c.Type}
                   <Badge className={cn("border-0", statusClass(c.Status))}>{c.Status}</Badge>
                 </p>
-                <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">{c.Name}</h1>
+                <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                  {c.Name}
+                  <LocalChangeTag id={c.Id} />
+                </h1>
                 <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{c.Description}</p>
               </div>
             </div>
+            <div className="flex shrink-0 flex-wrap gap-2">
+            <Button variant="outline" onClick={() => setEditing(true)}>
+              <Pencil /> Edit
+            </Button>
+            <Button variant="outline" onClick={() => setDeleting(campaignDeletePlan(data, c.Id))}>
+              <Trash2 /> Delete
+            </Button>
             <ExportCsvButton
               disabled={!rows.length}
               className="shrink-0"
@@ -110,6 +166,7 @@ export function CampaignDetail({ id }: { id: string }) {
               rows={recips}
               filename={mailListFilename(c.Name)}
             />
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4 border-t pt-4 sm:grid-cols-3 lg:grid-cols-6">
             <Stat label="Dates" value={`${fmtShortDate(c.StartDate)} – ${fmtShortDate(c.EndDate)}`} />
@@ -135,34 +192,56 @@ export function CampaignDetail({ id }: { id: string }) {
             <ContentEditor content={content} preview={rows[0] ? { FirstName: rows[0].person?.split(" ")[0], Company: rows[0].name } : undefined} />
           </CardContent>
         </Card>
-        <Card className="min-w-0 lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Members ({members.length})</CardTitle>
-          </CardHeader>
-          <CardContent className="px-0">
-            <ul className="max-h-[640px] divide-y overflow-y-auto border-t">
-              {rows.map((r) => (
-                <li key={r.m.Id} className="flex items-center justify-between gap-3 px-5 py-2.5">
-                  <div className="min-w-0">
-                    <Link href={recordHref(r.targetId)} className="block truncate text-sm font-medium hover:underline">
-                      {r.name}
-                    </Link>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {r.person ? `${r.person} · ` : ""}
-                      {r.place}
-                    </p>
-                  </div>
-                  <Badge variant={r.m.HasResponded ? "default" : "outline"} className="shrink-0">
-                    {r.m.HasResponded ? <Mail className="size-3" /> : null}
-                    {r.m.Status}
-                  </Badge>
-                </li>
-              ))}
-              {!rows.length && <li className="px-5 py-6 text-center text-sm text-muted-foreground">No members yet.</li>}
-            </ul>
-          </CardContent>
-        </Card>
+        <section className="min-w-0 space-y-2 lg:col-span-2">
+          <h2 className="text-base font-semibold">Members ({members.length})</h2>
+          <DataTable
+            rows={rows}
+            columns={memberColumns}
+            rowKey={(r) => r.m.Id}
+            param="mp"
+            dense
+            pageSizes={[]}
+            search={{ placeholder: "Search members", text: (r) => `${r.name} ${r.person ?? ""} ${r.place}` }}
+            actions={
+              <Button size="sm" variant="outline" onClick={() => setAdding(true)}>
+                <Plus /> Add
+              </Button>
+            }
+            empty="No members yet"
+          />
+        </section>
       </div>
+
+      <CampaignDrawer
+        open={editing}
+        onOpenChange={setEditing}
+        record={c}
+        onDelete={() => {
+          setEditing(false);
+          setDeleting(campaignDeletePlan(data, c.Id));
+        }}
+      />
+      <AddMembersDialog campaign={c} open={adding} onOpenChange={setAdding} />
+      <ConfirmDialog
+        open={!!deleting}
+        onOpenChange={(o) => !o && setDeleting(null)}
+        title={`Delete ${c.Name}?`}
+        description={[deleting?.detail, "You can undo this for a few seconds afterwards."].filter(Boolean).join(" ")}
+        onConfirm={() => {
+          if (!deleting) return;
+          setGone(true);
+          remove("Campaign", c.Id, "Campaign", deleting.cascade);
+          router.push("/campaigns");
+        }}
+      />
+      <ConfirmDialog
+        open={!!removing}
+        onOpenChange={(o) => !o && setRemoving(null)}
+        title={`Remove ${removing?.name ?? "member"} from this campaign?`}
+        description={[removing?.plan.detail, "You can undo this for a few seconds afterwards."].filter(Boolean).join(" ")}
+        confirmLabel="Remove"
+        onConfirm={() => removing && remove("CampaignMember", removing.m.Id, "Campaign member", removing.plan.cascade)}
+      />
     </div>
   );
 }

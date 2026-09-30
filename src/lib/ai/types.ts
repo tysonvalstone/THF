@@ -22,6 +22,10 @@ export interface ChatContext {
   page: string;
   /** Human title of the current page, e.g. "Prospects" */
   pageTitle?: string;
+  /** Demo Mode or guest: answer from the mock data */
+  demo?: boolean;
+  /** The browser's local changes (creates, edits, deletes) so answers match the screen */
+  mutations?: unknown[];
 }
 
 export interface ChatRequest {
@@ -192,7 +196,9 @@ export interface Enrollment {
 export type AiJsonRequest =
   | { kind: "export-spec"; prompt: string; context: ChatContext }
   | { kind: "draft-sequence"; goal: string; segment: string; season: string; context: ChatContext }
-  | { kind: "rewrite-step"; step: { type: StepType; subject?: string; body: string }; instruction: string; context: ChatContext };
+  | { kind: "rewrite-step"; step: { type: StepType; subject?: string; body: string }; instruction: string; context: ChatContext }
+  | CallBriefRequest
+  | CallNotesRequest;
 
 export type ExportSpecResponse = { ok: true; spec: Omit<ExportSpec, "id"> } | { ok: false; reason: string };
 export type DraftSequenceResponse = { ok: true; sequence: Omit<Sequence, "id"> } | { ok: false; reason: string };
@@ -215,3 +221,35 @@ export interface TripRequest {
 
 export type TripParseRequest = { kind: "trip-parse"; prompt: string; context: ChatContext };
 export type TripParseResponse = { ok: true; trip: TripRequest } | { ok: false; reason: string };
+
+/* -------------------------------------------------------------- call desk */
+
+/** Pre-call brief parts written by the model from a digest of the account's store data */
+export interface CallBriefAi {
+  /** 2–3 short lines: where things stand and what this call must achieve */
+  summary: string[];
+  /** 5–7 tailored questions */
+  questions: string[];
+  talkingPoints: string[];
+  objections: { objection: string; response: string }[];
+}
+
+export type CallBriefRequest = { kind: "call-brief"; digest: string; context: ChatContext };
+export type CallBriefResponse = { ok: true; brief: CallBriefAi } | { ok: false; reason: string };
+
+/** AI Notes from a call transcript and the rep's rough notes */
+export interface CallNotesAi {
+  summary: string[];
+  keyPoints: string[];
+  painPoints: string[];
+  objections: { objection: string; response: string }[];
+  qualification: { budget: string | null; decisionMaker: string | null; timeline: string | null; competitors: string | null; locations: number | null };
+  nextSteps: { text: string; owner: "rep" | "customer"; ownerName: string; due: string | null }[];
+  sentiment: "Positive" | "Neutral" | "Concerned";
+  followUpEmail: { subject: string; body: string };
+  /** Suggested CRM changes; nothing is applied until the rep confirms */
+  updates: { stage: string | null; closeDate: string | null; economicBuyerName: string | null };
+}
+
+export type CallNotesRequest = { kind: "call-notes"; meta: string; transcript: string; repNotes: string; context: ChatContext };
+export type CallNotesResponse = { ok: true; notes: CallNotesAi } | { ok: false; reason: string };

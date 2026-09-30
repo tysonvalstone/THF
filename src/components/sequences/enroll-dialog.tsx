@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { DataTable } from "@/components/shared/data-table";
 
 const ALL = "__all";
 const MAX_ROWS = 300;
@@ -172,6 +173,13 @@ function EnrollBody({
   const ready = chosen.filter((x) => x.status === "ready");
   const skipped = chosen.filter((x) => x.status !== "ready");
   const allOn = rows.length > 0 && rows.every((x) => selected.has(x.r.key));
+  const toggle = (key: string) =>
+    setSelected((cur) => {
+      const n = new Set(cur);
+      if (n.has(key)) n.delete(key);
+      else n.add(key);
+      return n;
+    });
 
   return (
     <>
@@ -232,61 +240,70 @@ function EnrollBody({
         </span>
       </div>
 
-      <div className="overflow-hidden rounded-md border">
-        <div className="hidden grid-cols-[1.5rem_minmax(0,1.4fr)_minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground md:grid">
-          <Checkbox
-            checked={allOn}
-            onCheckedChange={(v) => setSelected(v ? new Set(rows.map((x) => x.r.key)) : new Set())}
-            aria-label="Select all"
-          />
-          <span>Recipient</span>
-          <span>Account</span>
-          <span>Variant</span>
-          <span>Status</span>
-        </div>
-        <ul className="max-h-[46vh] divide-y overflow-y-auto">
-          {rows.map((x) => (
-            <li key={x.r.key}>
-              <label className="grid cursor-pointer grid-cols-[1.5rem_minmax(0,1fr)] gap-x-3 gap-y-0.5 px-3 py-2 text-sm hover:bg-muted/30 md:grid-cols-[1.5rem_minmax(0,1.4fr)_minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-center">
-                <Checkbox
-                  checked={selected.has(x.r.key)}
-                  onCheckedChange={(v) =>
-                    setSelected((s) => {
-                      const n = new Set(s);
-                      if (v) n.add(x.r.key);
-                      else n.delete(x.r.key);
-                      return n;
-                    })
-                  }
-                  aria-label={`Select ${recipientName(x.r)}`}
-                />
-                <span className="min-w-0">
-                  <span className="block truncate">{x.r.contact ? x.r.contact.Name : "Account only"}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{x.r.contact?.Title ?? "No contact"}</span>
+      <DataTable
+        rows={rows}
+        columns={[
+          {
+            key: "pick",
+            header: <Checkbox checked={allOn} onCheckedChange={(v) => setSelected(v ? new Set(rows.map((x) => x.r.key)) : new Set())} aria-label="Select all" />,
+            className: "w-8",
+            cell: (x) => (
+              <Checkbox
+                checked={selected.has(x.r.key)}
+                onClick={(e) => e.stopPropagation()}
+                onCheckedChange={() => toggle(x.r.key)}
+                aria-label={`Select ${recipientName(x.r)}`}
+              />
+            ),
+          },
+          {
+            key: "recipient",
+            header: "Recipient",
+            cell: (x) => (
+              <span className="block min-w-0 max-w-52">
+                <span className="block truncate">{x.r.contact ? x.r.contact.Name : "Account only"}</span>
+                <span className="block truncate text-xs text-muted-foreground">{x.r.contact?.Title ?? "No contact"}</span>
+              </span>
+            ),
+          },
+          {
+            key: "account",
+            header: "Account",
+            hideBelow: "sm",
+            cell: (x) => (
+              <span className="block min-w-0 max-w-56">
+                <span className="block truncate">{x.r.account.Name}</span>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {x.r.account.BillingState} · {REGION_BY_ID[x.r.account.Region__c]?.shortName} · {x.r.account.Type === "Prospect" ? "Prospect" : "Customer"}
                 </span>
-                <span className="col-start-2 min-w-0 md:col-start-auto">
-                  <span className="block truncate">{x.r.account.Name}</span>
-                  <span className="block truncate text-xs text-muted-foreground">
-                    {x.r.account.BillingState} · {REGION_BY_ID[x.r.account.Region__c]?.shortName} · {x.r.account.Type === "Prospect" ? "Prospect" : "Customer"}
-                  </span>
-                </span>
-                <span className="col-start-2 truncate text-xs text-muted-foreground md:col-start-auto md:text-sm md:text-foreground">{x.variant}</span>
-                <span className="col-start-2 md:col-start-auto">
-                  <span
-                    className={cn(
-                      "inline-block rounded-md px-1.5 py-0.5 text-xs",
-                      x.status === "missing" ? "bg-amber-100 text-amber-900" : x.status === "enrolled" ? "text-muted-foreground" : "bg-muted text-foreground",
-                    )}
-                  >
-                    {x.label}
-                  </span>
-                </span>
-              </label>
-            </li>
-          ))}
-          {!rows.length && <li className="px-3 py-6 text-center text-sm text-muted-foreground">No matching recipients</li>}
-        </ul>
-      </div>
+              </span>
+            ),
+          },
+          { key: "variant", header: "Variant", hideBelow: "md", cell: (x) => <span className="block max-w-32 truncate">{x.variant}</span> },
+          {
+            key: "status",
+            header: "Status",
+            cell: (x) => (
+              <span
+                className={cn(
+                  "inline-block rounded-md px-1.5 py-0.5 text-xs whitespace-nowrap",
+                  x.status === "missing" ? "bg-amber-100 text-amber-900" : x.status === "enrolled" ? "text-muted-foreground" : "bg-muted text-foreground",
+                )}
+              >
+                {x.label}
+              </span>
+            ),
+          },
+        ]}
+        rowKey={(x) => x.r.key}
+        urlState={false}
+        dense
+        filterKey={JSON.stringify(filters)}
+        onRowClick={(x) => toggle(x.r.key)}
+        rowClassName={(x) => (selected.has(x.r.key) ? "bg-accent-soft/60" : undefined)}
+        empty="No matching recipients"
+        caption="Recipients"
+      />
 
       <div className="flex flex-col gap-2 border-t pt-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-xs text-muted-foreground">

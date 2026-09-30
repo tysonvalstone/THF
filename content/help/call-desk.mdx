@@ -1,0 +1,89 @@
+---
+title: Call Desk
+summary: Prepare for back-to-back calls in about a minute with a pre-call brief, take the call with AI Notes, and save the notes, next steps and CRM updates to the account.
+order: 9
+related: [ai-assistant, campaigns-sequences, segment-prioritization]
+---
+
+Call Desk lives under **Call Desk** in the top navigation, with two tabs: **Today** and **Past calls**. It gives you a short brief before each call and turns the call itself into a transcript and structured notes, called **AI Notes**. The notes feed the next brief for that account.
+
+Reps see their own calls. Managers can switch between **My calls** and **Team**.
+
+## Today's calls
+
+The left column is the agenda for the app date (time travel changes it). Use the arrows or the date box to look at another day, and **Today** to come back.
+
+Each call shows the time and length, the account, the contacts on the invite, the call type (Discovery, Demo, Follow-up, Negotiation, Renewal or Check-in), the linked opportunity and a status:
+
+- **Brief ready**: an upcoming call.
+- **Next**: the next call is outlined, with a countdown such as "in 12 min". The countdown uses the app date at the current time of day.
+- **Notes saved** or **Notes pending**: calls that already happened.
+
+Click a call to open its brief on the right. The next call opens by default. On a phone the brief appears under the agenda.
+
+<Screenshot caption="Today's calls with the next call highlighted and its brief open" />
+
+## Schedule a call
+
+1. Click **Schedule call** and pick the account.
+2. Choose the call type, opportunity, date, time, length and the contacts to invite. Managers also pick the rep.
+3. Click **Schedule**.
+
+You can also schedule from an account page, an opportunity page, the map drill-down list, a Trip Planner stop (a confirmation call the weekday before the visit) and a call step in a sequence preview. Each has a small **Schedule call** button.
+
+To change or cancel a call, open it and click **Edit**. **Delete** asks for confirmation, and you can undo it for a few seconds.
+
+## The pre-call brief
+
+The brief is built to be read in about 60 seconds. The blocks are, in order:
+
+1. **Snapshot**: account, segment, locations, main commodity and region, the season status (for example "In harvest blackout until Nov 26", or "Year-round" for ethanol plants, feed mills and processors), customer health, open pipeline, the active quote and contract, and overdue invoices.
+2. **Who's on the call**: each contact's title and buying role, when you last spoke, and gaps such as "Economic buyer not identified".
+3. **Last time**: a three-line summary of the most recent call, the commitments on both sides (overdue ones in amber) and the questions that were answered.
+4. **Interaction timeline**: calls with their AI summaries, emails and sequence steps, meetings, quotes, contract events, support tickets and invoices, newest first. Filter by type; 10 per page.
+5. **Questions to ask**: five to seven questions tailored to the segment, deal stage, season, missing information and what was said last time. Check them off as you ask them; the checks are saved with the call.
+6. **Talking points**: products that fit the facility, a nearby reference customer (a recent win in the same segment, same region when possible) and likely objections with short answers.
+7. **Risks**: a close date inside a blackout or before the next board meeting, a missing economic buyer, a competitor from the last call, falling health, overdue invoices and quotes about to expire.
+
+**Copy brief** puts the brief on the clipboard as plain text. **PDF** downloads a branded one-page brief.
+
+When an AI key is set, the assistant writes the at-a-glance summary, the questions, the talking points and the objections from the account's data, and the brief is tagged **AI brief**. Without a key, the rules version fills every block and is tagged **Rules brief**.
+
+## Take the call with AI Notes
+
+1. Click **Start call**. The call opens in a focused view.
+2. Pick the transcription:
+   - **Simulated transcript** (the default, and the only option in Demo Mode) plays a realistic conversation for this call type and segment, line by line, with the rep and contact names.
+   - **Microphone** uses the browser's speech recognition where it's supported. Tell everyone on the call that it's being recorded and transcribed, and confirm that before you start. A red **Recording** indicator shows while it runs.
+3. During the call you see the questions to check off, the brief (collapsed), the live transcript, your own notes and a timer. **Skip ahead** fills in the rest of a simulated transcript.
+4. Click **End call**.
+
+<Screenshot caption="A call in progress with the live transcript and my notes" />
+
+## Review and save AI Notes
+
+After the call, AI Notes combines the transcript and your rough notes into:
+
+- **Summary** (three or four lines), **Key points** and **Pain points**
+- **Objections raised** and how you handled them
+- **Qualification**: budget, decision maker or economic buyer, timeline, competitors and number of locations
+- **Next steps**: action items with an owner (you or the customer) and a due date
+- **Sentiment**: Positive, Neutral or Concerned
+- **Suggested CRM updates**, such as the next stage, a new close date, the economic buyer or the location count
+- A **follow-up email** draft filled in with the same merge fields as sequences
+
+Everything is editable. Nothing in **Suggested CRM updates** is applied until you check it. A deal can't leave Prospecting until the economic buyer is identified, so a stage change that needs it stays disabled until you also confirm the economic buyer.
+
+**Send via Outreach** logs the follow-up email on the account with a follow-up task, the same way the Email button does.
+
+**Save to account** marks the call completed with its transcript, your notes, the AI Notes and the commitments, creates a task for each next step and applies the updates you confirmed. Every change is recorded in the audit log. With live Salesforce, changes stay in the app and are tagged **Local change, not synced**.
+
+The next brief for that account shows these notes, the open commitments and the questions you answered. To change or remove notes later, open the call and use **Edit** or **Delete** on the AI Notes.
+
+## Past calls
+
+**Call Desk → Past calls** lists completed calls, 10 to a page. Filter by account, call type, sentiment (or notes pending) and date range; managers can switch to **Team** and filter by rep. The search box looks through transcripts and notes, so "scale tickets" or "competitor" finds the calls where it came up and shows the matching line.
+
+Click a call to read its notes, commitments, questions asked, the actions taken when the notes were saved, and the full transcript.
+
+You can also ask the assistant, for example "What did Cedar Bend Cooperative say about budget last month?". It searches the same call notes, with or without an AI key.

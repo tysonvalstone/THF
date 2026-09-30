@@ -13,7 +13,9 @@ import { REGIONS, REGION_BY_STATE } from "../src/data/reference/regions";
 import { TOWNS } from "../src/data/reference/towns";
 import { AREA_CODES, POSTAL_FSA_LETTER, ZIP_PREFIX, CANADIAN_PROVINCES } from "../src/data/reference/geo";
 import { SOFTWARE_VENDORS } from "../src/data/reference/software";
-import { PRODUCTS } from "../src/data/reference/products";
+import { PRODUCTS as ALL_PRODUCTS } from "../src/data/reference/products";
+// Deal history uses the original seven modules so later catalog additions don't reshuffle it
+const PRODUCTS = ALL_PRODUCTS.filter((p) => !["HW-KIOSK", "SVC-PROBE", "SVC-PREM"].includes(p.ProductCode));
 import { USERS, ownerForRegion, CURRENT_USER_ID } from "../src/data/reference/users";
 import type {
   Account,
@@ -38,6 +40,9 @@ import { SEGMENTS, OPEN_STAGES, type Segment } from "../src/types/salesforce";
 import countiesTopoJson from "us-atlas/counties-10m.json";
 import { writeExportTemplates } from "./prebuilt/exports";
 import { writeSequences } from "./prebuilt/sequences";
+import { addReceivingProfiles, buildNewBuilds, buildQuotes } from "./prebuilt/quoting";
+import { buildPlatform } from "./prebuilt/platform";
+import { catalogReference } from "../src/data/reference/catalog";
 import { feature } from "topojson-client";
 import { geoCentroid } from "d3-geo";
 import type { GeometryCollection, Topology } from "topojson-specification";
@@ -1266,6 +1271,14 @@ const prices: PriceSeries[] = PRICE_SPECS.map((spec) => {
 // ---------------------------------------------------------------------------
 // Write
 // ---------------------------------------------------------------------------
+// Harvest-day receiving equipment, catalog, quotes and new builds (hash-based, so earlier records don't change)
+addReceivingProfiles(accounts);
+const catalog = catalogReference();
+const { quotes, quoteLineItems } = buildQuotes(accounts, contacts, opportunities, lineItems, ANCHOR);
+const newBuilds = buildNewBuilds(ANCHOR);
+// Contracts, invoices, customer success, quotas, commissions, Call Desk (each module has its own builder)
+const platform = buildPlatform({ anchor: ANCHOR, users: USERS, accounts, contacts, opportunities, lineItems, quotes, quoteLineItems, products: catalog.products });
+
 mkdirSync(OUT_DIR, { recursive: true });
 const files: Record<string, unknown> = {
   "users.json": USERS,
@@ -1279,6 +1292,27 @@ const files: Record<string, unknown> = {
   "tasks.json": tasks,
   "events.json": events,
   "prices.json": prices,
+  "product-types.json": catalog.productTypes,
+  "products.json": catalog.products,
+  "pricebooks.json": catalog.pricebooks,
+  "pricebook-entries.json": catalog.pricebookEntries,
+  "quotes.json": quotes,
+  "quote-line-items.json": quoteLineItems,
+  "new-builds.json": newBuilds,
+  "contracts.json": platform.contracts,
+  "contract-clauses.json": platform.contractClauses,
+  "clauses.json": platform.clauses,
+  "invoices.json": platform.invoices,
+  "payments.json": platform.payments,
+  "onboarding-projects.json": platform.onboardingProjects,
+  "onboarding-tasks.json": platform.onboardingTasks,
+  "health-signals.json": platform.healthSignals,
+  "support-tickets.json": platform.supportTickets,
+  "quotas.json": platform.quotas,
+  "commission-plans.json": platform.commissionPlans,
+  "approvals.json": platform.approvals,
+  "audit-log.json": platform.auditLog,
+  "calls.json": platform.calls,
 };
 for (const [file, data] of Object.entries(files)) {
   writeFileSync(join(OUT_DIR, file), JSON.stringify(data, null, 1) + "\n");
@@ -1296,6 +1330,7 @@ console.log(
     `leads:         ${leads.length}`,
     `opportunities: ${opportunities.length} (${open.length} open, $${(open.reduce((s, o) => s + o.Amount, 0) / 1e6).toFixed(2)}M pipeline)`,
     `line items:    ${lineItems.length}`,
+    `quotes:        ${quotes.length} (${quoteLineItems.length} lines) · new builds ${newBuilds.length}`,
     `campaigns:     ${campaigns.length} (${campaignMembers.length} members)`,
     `tasks:         ${tasks.length}`,
     `events:        ${events.length}`,

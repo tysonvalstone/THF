@@ -17,11 +17,12 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { APP_USERS } from "@/data/reference/users";
 import type { User } from "@/types/salesforce";
 import type { Sender } from "@/lib/content/templates";
-import type { SessionUser } from "@/lib/supabase/config";
+import { APP_ROLES, type AppRole, type SessionUser } from "@/lib/supabase/config";
 import { signOut as supabaseSignOut } from "@/lib/account/actions";
 
 const PROFILES_KEY = "harvest-signal:profiles:v1";
 const SF_KEY = "harvest-signal:salesforce-connection:v1";
+const ROLE_KEY = "harvest-signal:view-role:v1";
 
 export interface Profile {
   photo?: string;
@@ -46,6 +47,11 @@ interface AuthValue {
   mode: "supabase" | "demo";
   session: SessionUser | null;
   isAdmin: boolean;
+  isGuest: boolean;
+  /** The business role the app is showing (guests and admins can switch it) */
+  role: AppRole;
+  canSwitchRole: boolean;
+  setRole: (r: AppRole) => void;
   user: User | null;
   /** Demo users (demo mode sign-in) */
   users: User[];
@@ -90,13 +96,17 @@ export function AuthProvider({ children, initialUser, mode }: { children: React.
   const [ready, setReady] = useState(false);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [salesforce, setSf] = useState<SalesforceConnection | null>(null);
+  const [roleOverride, setRoleOverride] = useState<AppRole | null>(null);
   const session = initialUser;
+  const canSwitchRole = !!session && (!!session.guest || session.role === "admin" || session.mode === "demo");
   const userId = session?.id ?? null;
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- browser-only state loads after mount */
     setProfiles(read(PROFILES_KEY, {}));
     setSf(read(SF_KEY, null));
+    const r = read<AppRole | null>(ROLE_KEY, null);
+    setRoleOverride(r && APP_ROLES.includes(r) ? r : null);
     setReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -117,15 +127,15 @@ export function AuthProvider({ children, initialUser, mode }: { children: React.
   );
 
   const signOut = useCallback(async () => {
-    if (mode === "supabase") {
-      await supabaseSignOut();
-      return;
-    }
-    await fetch("/api/session", { method: "DELETE" }).catch(() => undefined);
-    // Full load so the server-rendered layout drops the session
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.assign("/login");
-  }, [mode]);
+    write(ROLE_KEY, null);
+    // Clears the demo/guest cookie and any Supabase session, then goes to /login
+    await supabaseSignOut();
+  }, []);
+
+  const setRole = useCallback((r: AppRole) => {
+    setRoleOverride(r);
+    write(ROLE_KEY, r);
+  }, []);
 
   const updateProfile = useCallback(
     (patch: Partial<Omit<Profile, "passwordHash">>) => {
@@ -161,6 +171,10 @@ export function AuthProvider({ children, initialUser, mode }: { children: React.
       mode,
       session,
       isAdmin: session?.role === "admin",
+      isGuest: !!session?.guest,
+      role: (canSwitchRole && roleOverride) || session?.appRole || "rep",
+      canSwitchRole,
+      setRole,
       user,
       users: APP_USERS,
       profile: (id) => profiles[id] ?? {},
@@ -172,7 +186,7 @@ export function AuthProvider({ children, initialUser, mode }: { children: React.
       salesforce,
       setSalesforce,
     };
-  }, [ready, mode, session, userId, profiles, signIn, signOut, updateProfile, setPassword, salesforce, setSalesforce]);
+  }, [ready, mode, session, userId, profiles, signIn, signOut, updateProfile, setPassword, salesforce, setSalesforce, canSwitchRole, roleOverride, setRole]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

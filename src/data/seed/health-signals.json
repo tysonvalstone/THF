@@ -1,0 +1,2312 @@
+[
+ {
+  "Id": "a0HHs0000000001AAA",
+  "AccountId": "001Hs0000000002AAC",
+  "UsageScore": 77,
+  "SupportTickets90d": 1,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000002AAA",
+  "AccountId": "001Hs0000000008AAC",
+  "UsageScore": 53,
+  "SupportTickets90d": 2,
+  "CSAT": 5.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000003AAA",
+  "AccountId": "001Hs000000000eAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 0,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 7,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000004AAA",
+  "AccountId": "001Hs000000000EAAC",
+  "UsageScore": 73,
+  "SupportTickets90d": 0,
+  "CSAT": 8.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000005AAA",
+  "AccountId": "001Hs000000000NAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 1,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000006AAA",
+  "AccountId": "001Hs000000000OAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 1,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000007AAA",
+  "AccountId": "001Hs000000000TAAC",
+  "UsageScore": 85,
+  "SupportTickets90d": 1,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000008AAA",
+  "AccountId": "001Hs000000000vAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 1,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000009AAA",
+  "AccountId": "001Hs0000000014AAC",
+  "UsageScore": 80,
+  "SupportTickets90d": 0,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 7,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000010AAA",
+  "AccountId": "001Hs0000000016AAC",
+  "UsageScore": 93,
+  "SupportTickets90d": 0,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000011AAA",
+  "AccountId": "001Hs000000001dAAC",
+  "UsageScore": 79,
+  "SupportTickets90d": 0,
+  "CSAT": 8.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000012AAA",
+  "AccountId": "001Hs000000001JAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 1,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000013AAA",
+  "AccountId": "001Hs000000001KAAC",
+  "UsageScore": 86,
+  "SupportTickets90d": 1,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000014AAA",
+  "AccountId": "001Hs000000001pAAC",
+  "UsageScore": 39,
+  "SupportTickets90d": 4,
+  "CSAT": 4.2,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000015AAA",
+  "AccountId": "001Hs000000001rAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 0,
+  "CSAT": 9.3,
+  "StakeholderChange": false,
+  "LocationsLive": 7,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000016AAA",
+  "AccountId": "001Hs000000001UAAC",
+  "UsageScore": 40,
+  "SupportTickets90d": 3,
+  "CSAT": 3.2,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000017AAA",
+  "AccountId": "001Hs000000001VAAC",
+  "UsageScore": 40,
+  "SupportTickets90d": 2,
+  "CSAT": 6.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000018AAA",
+  "AccountId": "001Hs000000001wAAC",
+  "UsageScore": 75,
+  "SupportTickets90d": 0,
+  "CSAT": 9.5,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000019AAA",
+  "AccountId": "001Hs0000000029AAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 10,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000020AAA",
+  "AccountId": "001Hs000000002AAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 0,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000021AAA",
+  "AccountId": "001Hs000000002BAAC",
+  "UsageScore": 51,
+  "SupportTickets90d": 3,
+  "CSAT": 6.7,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000022AAA",
+  "AccountId": "001Hs000000002CAAC",
+  "UsageScore": 41,
+  "SupportTickets90d": 2,
+  "CSAT": 6.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000023AAA",
+  "AccountId": "001Hs000000002DAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 0,
+  "CSAT": 9.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000024AAA",
+  "AccountId": "001Hs000000002EAAC",
+  "UsageScore": 81,
+  "SupportTickets90d": 0,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000025AAA",
+  "AccountId": "001Hs000000002FAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 0,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000026AAA",
+  "AccountId": "001Hs000000002gAAC",
+  "UsageScore": 40,
+  "SupportTickets90d": 2,
+  "CSAT": 5,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000027AAA",
+  "AccountId": "001Hs000000002GAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 7.9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000028AAA",
+  "AccountId": "001Hs000000002HAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 0,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000029AAA",
+  "AccountId": "001Hs000000002IAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 1,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000030AAA",
+  "AccountId": "001Hs000000002UAAC",
+  "UsageScore": 55,
+  "SupportTickets90d": 3,
+  "CSAT": 6.8,
+  "StakeholderChange": true,
+  "LocationsLive": 8,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000031AAA",
+  "AccountId": "001Hs000000002VAAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 1,
+  "CSAT": 8.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000032AAA",
+  "AccountId": "001Hs000000002XAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 1,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000033AAA",
+  "AccountId": "001Hs000000002yAAC",
+  "UsageScore": 70,
+  "SupportTickets90d": 0,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000034AAA",
+  "AccountId": "001Hs0000000032AAC",
+  "UsageScore": 58,
+  "SupportTickets90d": 2,
+  "CSAT": 6.7,
+  "StakeholderChange": true,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000035AAA",
+  "AccountId": "001Hs0000000035AAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 1,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000036AAA",
+  "AccountId": "001Hs000000003cAAC",
+  "UsageScore": 57,
+  "SupportTickets90d": 3,
+  "CSAT": 5.3,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000037AAA",
+  "AccountId": "001Hs000000003dAAC",
+  "UsageScore": 26,
+  "SupportTickets90d": 3,
+  "CSAT": 4.2,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000038AAA",
+  "AccountId": "001Hs000000003eAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 1,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000039AAA",
+  "AccountId": "001Hs000000003hAAC",
+  "UsageScore": 41,
+  "SupportTickets90d": 2,
+  "CSAT": 5.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000040AAA",
+  "AccountId": "001Hs000000003JAAC",
+  "UsageScore": 73,
+  "SupportTickets90d": 0,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000041AAA",
+  "AccountId": "001Hs000000003KAAC",
+  "UsageScore": 90,
+  "SupportTickets90d": 1,
+  "CSAT": 7.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000042AAA",
+  "AccountId": "001Hs000000003lAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 1,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000043AAA",
+  "AccountId": "001Hs000000003mAAC",
+  "UsageScore": 73,
+  "SupportTickets90d": 1,
+  "CSAT": 9.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000044AAA",
+  "AccountId": "001Hs000000003oAAC",
+  "UsageScore": 19,
+  "SupportTickets90d": 3,
+  "CSAT": 3.7,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000045AAA",
+  "AccountId": "001Hs000000003pAAC",
+  "UsageScore": 20,
+  "SupportTickets90d": 3,
+  "CSAT": 4.7,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000046AAA",
+  "AccountId": "001Hs000000003qAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 1,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000047AAA",
+  "AccountId": "001Hs000000003sAAC",
+  "UsageScore": 24,
+  "SupportTickets90d": 4,
+  "CSAT": 5.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000048AAA",
+  "AccountId": "001Hs000000003SAAC",
+  "UsageScore": 84,
+  "SupportTickets90d": 1,
+  "CSAT": 9.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000049AAA",
+  "AccountId": "001Hs000000003TAAC",
+  "UsageScore": 85,
+  "SupportTickets90d": 1,
+  "CSAT": 8.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000050AAA",
+  "AccountId": "001Hs000000003uAAC",
+  "UsageScore": 29,
+  "SupportTickets90d": 4,
+  "CSAT": 5.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000051AAA",
+  "AccountId": "001Hs000000003vAAC",
+  "UsageScore": 92,
+  "SupportTickets90d": 0,
+  "CSAT": 9.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000052AAA",
+  "AccountId": "001Hs000000003xAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 1,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000053AAA",
+  "AccountId": "001Hs000000003ZAAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 1,
+  "CSAT": 7.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000054AAA",
+  "AccountId": "001Hs0000000042AAC",
+  "UsageScore": 57,
+  "SupportTickets90d": 2,
+  "CSAT": 5.7,
+  "StakeholderChange": true,
+  "LocationsLive": 12,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000055AAA",
+  "AccountId": "001Hs0000000043AAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 0,
+  "CSAT": 9.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000056AAA",
+  "AccountId": "001Hs0000000044AAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 9.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000057AAA",
+  "AccountId": "001Hs0000000045AAC",
+  "UsageScore": 35,
+  "SupportTickets90d": 4,
+  "CSAT": 5,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000058AAA",
+  "AccountId": "001Hs0000000046AAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 0,
+  "CSAT": 9.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000059AAA",
+  "AccountId": "001Hs0000000047AAC",
+  "UsageScore": 84,
+  "SupportTickets90d": 0,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000060AAA",
+  "AccountId": "001Hs0000000048AAC",
+  "UsageScore": 81,
+  "SupportTickets90d": 0,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000061AAA",
+  "AccountId": "001Hs0000000049AAC",
+  "UsageScore": 40,
+  "SupportTickets90d": 3,
+  "CSAT": 5.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000062AAA",
+  "AccountId": "001Hs000000004AAAC",
+  "UsageScore": 93,
+  "SupportTickets90d": 1,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000063AAA",
+  "AccountId": "001Hs000000004BAAC",
+  "UsageScore": 54,
+  "SupportTickets90d": 2,
+  "CSAT": 6.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000064AAA",
+  "AccountId": "001Hs000000004CAAC",
+  "UsageScore": 76,
+  "SupportTickets90d": 1,
+  "CSAT": 7.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000065AAA",
+  "AccountId": "001Hs000000004DAAC",
+  "UsageScore": 86,
+  "SupportTickets90d": 0,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000066AAA",
+  "AccountId": "001Hs000000006bAAC",
+  "UsageScore": 86,
+  "SupportTickets90d": 0,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000067AAA",
+  "AccountId": "001Hs000000006dAAC",
+  "UsageScore": 41,
+  "SupportTickets90d": 2,
+  "CSAT": 5.5,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000068AAA",
+  "AccountId": "001Hs000000006GAAC",
+  "UsageScore": 92,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000069AAA",
+  "AccountId": "001Hs000000006hAAC",
+  "UsageScore": 94,
+  "SupportTickets90d": 1,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000070AAA",
+  "AccountId": "001Hs000000006iAAC",
+  "UsageScore": 85,
+  "SupportTickets90d": 0,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000071AAA",
+  "AccountId": "001Hs000000006jAAC",
+  "UsageScore": 55,
+  "SupportTickets90d": 2,
+  "CSAT": 6.1,
+  "StakeholderChange": true,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000072AAA",
+  "AccountId": "001Hs000000006kAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 1,
+  "CSAT": 7.5,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000073AAA",
+  "AccountId": "001Hs000000006lAAC",
+  "UsageScore": 95,
+  "SupportTickets90d": 1,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000074AAA",
+  "AccountId": "001Hs000000006QAAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 0,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000075AAA",
+  "AccountId": "001Hs000000006RAAC",
+  "UsageScore": 52,
+  "SupportTickets90d": 3,
+  "CSAT": 5.5,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000076AAA",
+  "AccountId": "001Hs000000006tAAC",
+  "UsageScore": 77,
+  "SupportTickets90d": 1,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000077AAA",
+  "AccountId": "001Hs000000006VAAC",
+  "UsageScore": 79,
+  "SupportTickets90d": 0,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000078AAA",
+  "AccountId": "001Hs000000006wAAC",
+  "UsageScore": 79,
+  "SupportTickets90d": 1,
+  "CSAT": 9.5,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000079AAA",
+  "AccountId": "001Hs000000006xAAC",
+  "UsageScore": 26,
+  "SupportTickets90d": 3,
+  "CSAT": 2.9,
+  "StakeholderChange": true,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000080AAA",
+  "AccountId": "001Hs000000006zAAC",
+  "UsageScore": 96,
+  "SupportTickets90d": 0,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000081AAA",
+  "AccountId": "001Hs0000000072AAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 1,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000082AAA",
+  "AccountId": "001Hs0000000075AAC",
+  "UsageScore": 23,
+  "SupportTickets90d": 4,
+  "CSAT": 5,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000083AAA",
+  "AccountId": "001Hs000000007bAAC",
+  "UsageScore": 77,
+  "SupportTickets90d": 1,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000084AAA",
+  "AccountId": "001Hs000000007cAAC",
+  "UsageScore": 90,
+  "SupportTickets90d": 1,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 9,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000085AAA",
+  "AccountId": "001Hs000000007CAAC",
+  "UsageScore": 42,
+  "SupportTickets90d": 3,
+  "CSAT": 6.7,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000086AAA",
+  "AccountId": "001Hs000000007EAAC",
+  "UsageScore": 43,
+  "SupportTickets90d": 2,
+  "CSAT": 5.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000087AAA",
+  "AccountId": "001Hs000000007FAAC",
+  "UsageScore": 71,
+  "SupportTickets90d": 1,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000088AAA",
+  "AccountId": "001Hs000000007gAAC",
+  "UsageScore": 62,
+  "SupportTickets90d": 2,
+  "CSAT": 5.3,
+  "StakeholderChange": false,
+  "LocationsLive": 9,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000089AAA",
+  "AccountId": "001Hs000000007hAAC",
+  "UsageScore": 37,
+  "SupportTickets90d": 3,
+  "CSAT": 4.7,
+  "StakeholderChange": true,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000090AAA",
+  "AccountId": "001Hs000000007JAAC",
+  "UsageScore": 75,
+  "SupportTickets90d": 1,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000091AAA",
+  "AccountId": "001Hs000000007kAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 1,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 14,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000092AAA",
+  "AccountId": "001Hs000000007OAAC",
+  "UsageScore": 25,
+  "SupportTickets90d": 4,
+  "CSAT": 3.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000093AAA",
+  "AccountId": "001Hs000000007PAAC",
+  "UsageScore": 42,
+  "SupportTickets90d": 2,
+  "CSAT": 5.4,
+  "StakeholderChange": true,
+  "LocationsLive": 12,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000094AAA",
+  "AccountId": "001Hs000000007RAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 1,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000095AAA",
+  "AccountId": "001Hs000000007sAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 0,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000096AAA",
+  "AccountId": "001Hs000000007tAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 0,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 10,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000097AAA",
+  "AccountId": "001Hs000000007UAAC",
+  "UsageScore": 60,
+  "SupportTickets90d": 3,
+  "CSAT": 6.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000098AAA",
+  "AccountId": "001Hs000000007WAAC",
+  "UsageScore": 42,
+  "SupportTickets90d": 3,
+  "CSAT": 4.6,
+  "StakeholderChange": true,
+  "LocationsLive": 16,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000099AAA",
+  "AccountId": "001Hs000000007yAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 1,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000100AAA",
+  "AccountId": "001Hs000000008aAAC",
+  "UsageScore": 57,
+  "SupportTickets90d": 3,
+  "CSAT": 6.8,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000101AAA",
+  "AccountId": "001Hs000000008bAAC",
+  "UsageScore": 92,
+  "SupportTickets90d": 1,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000102AAA",
+  "AccountId": "001Hs000000008cAAC",
+  "UsageScore": 84,
+  "SupportTickets90d": 1,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 15,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000103AAA",
+  "AccountId": "001Hs000000008dAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 1,
+  "CSAT": 9.4,
+  "StakeholderChange": false,
+  "LocationsLive": 11,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000104AAA",
+  "AccountId": "001Hs000000008HAAC",
+  "UsageScore": 20,
+  "SupportTickets90d": 4,
+  "CSAT": 5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000105AAA",
+  "AccountId": "001Hs000000008IAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 0,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 10,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000106AAA",
+  "AccountId": "001Hs000000008JAAC",
+  "UsageScore": 57,
+  "SupportTickets90d": 2,
+  "CSAT": 5,
+  "StakeholderChange": true,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000107AAA",
+  "AccountId": "001Hs000000008nAAC",
+  "UsageScore": 57,
+  "SupportTickets90d": 3,
+  "CSAT": 5.3,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000108AAA",
+  "AccountId": "001Hs000000008oAAC",
+  "UsageScore": 70,
+  "SupportTickets90d": 0,
+  "CSAT": 8.9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000109AAA",
+  "AccountId": "001Hs000000008SAAC",
+  "UsageScore": 80,
+  "SupportTickets90d": 0,
+  "CSAT": 9.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000110AAA",
+  "AccountId": "001Hs000000008uAAC",
+  "UsageScore": 75,
+  "SupportTickets90d": 1,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000111AAA",
+  "AccountId": "001Hs000000008vAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000112AAA",
+  "AccountId": "001Hs000000008VAAC",
+  "UsageScore": 78,
+  "SupportTickets90d": 0,
+  "CSAT": 8.9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000113AAA",
+  "AccountId": "001Hs000000008yAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 0,
+  "CSAT": 9.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000114AAA",
+  "AccountId": "001Hs000000008zAAC",
+  "UsageScore": 90,
+  "SupportTickets90d": 0,
+  "CSAT": 8.9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000115AAA",
+  "AccountId": "001Hs000000008ZAAC",
+  "UsageScore": 44,
+  "SupportTickets90d": 3,
+  "CSAT": 6.2,
+  "StakeholderChange": true,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000116AAA",
+  "AccountId": "001Hs0000000097AAC",
+  "UsageScore": 79,
+  "SupportTickets90d": 1,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000117AAA",
+  "AccountId": "001Hs0000000099AAC",
+  "UsageScore": 85,
+  "SupportTickets90d": 0,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000118AAA",
+  "AccountId": "001Hs000000009BAAC",
+  "UsageScore": 41,
+  "SupportTickets90d": 2,
+  "CSAT": 6.2,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000119AAA",
+  "AccountId": "001Hs000000009dAAC",
+  "UsageScore": 43,
+  "SupportTickets90d": 2,
+  "CSAT": 5.2,
+  "StakeholderChange": true,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000120AAA",
+  "AccountId": "001Hs000000009EAAC",
+  "UsageScore": 81,
+  "SupportTickets90d": 0,
+  "CSAT": 9.3,
+  "StakeholderChange": false,
+  "LocationsLive": 15,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000121AAA",
+  "AccountId": "001Hs000000009FAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 1,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 5,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000122AAA",
+  "AccountId": "001Hs000000009gAAC",
+  "UsageScore": 71,
+  "SupportTickets90d": 1,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000123AAA",
+  "AccountId": "001Hs000000009GAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 1,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000124AAA",
+  "AccountId": "001Hs000000009jAAC",
+  "UsageScore": 50,
+  "SupportTickets90d": 2,
+  "CSAT": 5.8,
+  "StakeholderChange": true,
+  "LocationsLive": 21,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000125AAA",
+  "AccountId": "001Hs000000009lAAC",
+  "UsageScore": 44,
+  "SupportTickets90d": 3,
+  "CSAT": 3.6,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000126AAA",
+  "AccountId": "001Hs000000009LAAC",
+  "UsageScore": 54,
+  "SupportTickets90d": 2,
+  "CSAT": 6.1,
+  "StakeholderChange": true,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000127AAA",
+  "AccountId": "001Hs000000009NAAC",
+  "UsageScore": 28,
+  "SupportTickets90d": 3,
+  "CSAT": 4.1,
+  "StakeholderChange": true,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000128AAA",
+  "AccountId": "001Hs000000009SAAC",
+  "UsageScore": 78,
+  "SupportTickets90d": 0,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 5,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000129AAA",
+  "AccountId": "001Hs000000009tAAC",
+  "UsageScore": 94,
+  "SupportTickets90d": 0,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000130AAA",
+  "AccountId": "001Hs000000009uAAC",
+  "UsageScore": 75,
+  "SupportTickets90d": 0,
+  "CSAT": 8.1,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000131AAA",
+  "AccountId": "001Hs000000009UAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 1,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 28,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000132AAA",
+  "AccountId": "001Hs000000009vAAC",
+  "UsageScore": 60,
+  "SupportTickets90d": 2,
+  "CSAT": 5.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000133AAA",
+  "AccountId": "001Hs000000009wAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 0,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000134AAA",
+  "AccountId": "001Hs000000009WAAC",
+  "UsageScore": 61,
+  "SupportTickets90d": 2,
+  "CSAT": 5.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000135AAA",
+  "AccountId": "001Hs000000009XAAC",
+  "UsageScore": 94,
+  "SupportTickets90d": 0,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000136AAA",
+  "AccountId": "001Hs000000009zAAC",
+  "UsageScore": 77,
+  "SupportTickets90d": 0,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000137AAA",
+  "AccountId": "001Hs000000009ZAAC",
+  "UsageScore": 93,
+  "SupportTickets90d": 0,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 32,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000138AAA",
+  "AccountId": "001Hs00000000A6AAC",
+  "UsageScore": 71,
+  "SupportTickets90d": 1,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000139AAA",
+  "AccountId": "001Hs00000000A7AAC",
+  "UsageScore": 92,
+  "SupportTickets90d": 1,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000140AAA",
+  "AccountId": "001Hs00000000A8AAC",
+  "UsageScore": 61,
+  "SupportTickets90d": 2,
+  "CSAT": 5.3,
+  "StakeholderChange": true,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000141AAA",
+  "AccountId": "001Hs00000000AAAAC",
+  "UsageScore": 51,
+  "SupportTickets90d": 3,
+  "CSAT": 6.5,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000142AAA",
+  "AccountId": "001Hs00000000AkAAC",
+  "UsageScore": 78,
+  "SupportTickets90d": 1,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000143AAA",
+  "AccountId": "001Hs00000000AlAAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 7,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000144AAA",
+  "AccountId": "001Hs00000000AOAAC",
+  "UsageScore": 34,
+  "SupportTickets90d": 4,
+  "CSAT": 4.7,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000145AAA",
+  "AccountId": "001Hs00000000ApAAC",
+  "UsageScore": 49,
+  "SupportTickets90d": 3,
+  "CSAT": 6.9,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000146AAA",
+  "AccountId": "001Hs00000000AQAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 0,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000147AAA",
+  "AccountId": "001Hs00000000ArAAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 0,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000148AAA",
+  "AccountId": "001Hs00000000ATAAC",
+  "UsageScore": 52,
+  "SupportTickets90d": 3,
+  "CSAT": 5.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000149AAA",
+  "AccountId": "001Hs00000000AvAAC",
+  "UsageScore": 86,
+  "SupportTickets90d": 1,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 7,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000150AAA",
+  "AccountId": "001Hs00000000AyAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 1,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 26,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000151AAA",
+  "AccountId": "001Hs00000000AZAAC",
+  "UsageScore": 24,
+  "SupportTickets90d": 4,
+  "CSAT": 5,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000152AAA",
+  "AccountId": "001Hs00000000B4AAC",
+  "UsageScore": 20,
+  "SupportTickets90d": 3,
+  "CSAT": 3.4,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000153AAA",
+  "AccountId": "001Hs00000000B5AAC",
+  "UsageScore": 73,
+  "SupportTickets90d": 1,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000154AAA",
+  "AccountId": "001Hs00000000B6AAC",
+  "UsageScore": 46,
+  "SupportTickets90d": 2,
+  "CSAT": 5.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000155AAA",
+  "AccountId": "001Hs00000000B7AAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 0,
+  "CSAT": 9.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000156AAA",
+  "AccountId": "001Hs00000000BHAAC",
+  "UsageScore": 95,
+  "SupportTickets90d": 0,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000157AAA",
+  "AccountId": "001Hs00000000BiAAC",
+  "UsageScore": 40,
+  "SupportTickets90d": 2,
+  "CSAT": 6.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000158AAA",
+  "AccountId": "001Hs00000000BkAAC",
+  "UsageScore": 52,
+  "SupportTickets90d": 2,
+  "CSAT": 6.8,
+  "StakeholderChange": true,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000159AAA",
+  "AccountId": "001Hs00000000BKAAC",
+  "UsageScore": 84,
+  "SupportTickets90d": 0,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000160AAA",
+  "AccountId": "001Hs00000000BlAAC",
+  "UsageScore": 77,
+  "SupportTickets90d": 0,
+  "CSAT": 7.9,
+  "StakeholderChange": false,
+  "LocationsLive": 27,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000161AAA",
+  "AccountId": "001Hs00000000BnAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 0,
+  "CSAT": 7.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000162AAA",
+  "AccountId": "001Hs00000000BoAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000163AAA",
+  "AccountId": "001Hs00000000BrAAC",
+  "UsageScore": 95,
+  "SupportTickets90d": 1,
+  "CSAT": 7.9,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000164AAA",
+  "AccountId": "001Hs00000000BSAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 0,
+  "CSAT": 9.4,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000165AAA",
+  "AccountId": "001Hs00000000BtAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000166AAA",
+  "AccountId": "001Hs00000000BwAAC",
+  "UsageScore": 96,
+  "SupportTickets90d": 0,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 10,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000167AAA",
+  "AccountId": "001Hs00000000BzAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 0,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 5,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000168AAA",
+  "AccountId": "001Hs00000000BZAAC",
+  "UsageScore": 23,
+  "SupportTickets90d": 4,
+  "CSAT": 4,
+  "StakeholderChange": true,
+  "LocationsLive": 26,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000169AAA",
+  "AccountId": "001Hs00000000C0AAC",
+  "UsageScore": 94,
+  "SupportTickets90d": 1,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000170AAA",
+  "AccountId": "001Hs00000000CCAAC",
+  "UsageScore": 92,
+  "SupportTickets90d": 1,
+  "CSAT": 7.4,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000171AAA",
+  "AccountId": "001Hs00000000CeAAC",
+  "UsageScore": 78,
+  "SupportTickets90d": 1,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000172AAA",
+  "AccountId": "001Hs00000000CHAAC",
+  "UsageScore": 18,
+  "SupportTickets90d": 4,
+  "CSAT": 5,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000173AAA",
+  "AccountId": "001Hs00000000ClAAC",
+  "UsageScore": 88,
+  "SupportTickets90d": 0,
+  "CSAT": 7.4,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000174AAA",
+  "AccountId": "001Hs00000000CLAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 0,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000175AAA",
+  "AccountId": "001Hs00000000CoAAC",
+  "UsageScore": 55,
+  "SupportTickets90d": 3,
+  "CSAT": 5.3,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000176AAA",
+  "AccountId": "001Hs00000000CqAAC",
+  "UsageScore": 22,
+  "SupportTickets90d": 3,
+  "CSAT": 2.9,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000177AAA",
+  "AccountId": "001Hs00000000CRAAC",
+  "UsageScore": 53,
+  "SupportTickets90d": 2,
+  "CSAT": 6.2,
+  "StakeholderChange": true,
+  "LocationsLive": 11,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000178AAA",
+  "AccountId": "001Hs00000000CUAAC",
+  "UsageScore": 95,
+  "SupportTickets90d": 0,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000179AAA",
+  "AccountId": "001Hs00000000CXAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 1,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000180AAA",
+  "AccountId": "001Hs00000000CYAAC",
+  "UsageScore": 50,
+  "SupportTickets90d": 3,
+  "CSAT": 5.7,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000181AAA",
+  "AccountId": "001Hs00000000CzAAC",
+  "UsageScore": 54,
+  "SupportTickets90d": 2,
+  "CSAT": 5.6,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000182AAA",
+  "AccountId": "001Hs00000000CZAAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 0,
+  "CSAT": 7.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000183AAA",
+  "AccountId": "001Hs00000000DaAAC",
+  "UsageScore": 91,
+  "SupportTickets90d": 0,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000184AAA",
+  "AccountId": "001Hs00000000DIAAC",
+  "UsageScore": 76,
+  "SupportTickets90d": 0,
+  "CSAT": 9.1,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000185AAA",
+  "AccountId": "001Hs00000000DjAAC",
+  "UsageScore": 76,
+  "SupportTickets90d": 0,
+  "CSAT": 8.9,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000186AAA",
+  "AccountId": "001Hs00000000DKAAC",
+  "UsageScore": 71,
+  "SupportTickets90d": 0,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000187AAA",
+  "AccountId": "001Hs00000000DlAAC",
+  "UsageScore": 90,
+  "SupportTickets90d": 1,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 8,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000188AAA",
+  "AccountId": "001Hs00000000DNAAC",
+  "UsageScore": 74,
+  "SupportTickets90d": 1,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000189AAA",
+  "AccountId": "001Hs00000000DSAAC",
+  "UsageScore": 58,
+  "SupportTickets90d": 3,
+  "CSAT": 5.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000190AAA",
+  "AccountId": "001Hs00000000DVAAC",
+  "UsageScore": 33,
+  "SupportTickets90d": 3,
+  "CSAT": 4.6,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000191AAA",
+  "AccountId": "001Hs00000000DwAAC",
+  "UsageScore": 74,
+  "SupportTickets90d": 0,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-22"
+ },
+ {
+  "Id": "a0HHs0000000192AAA",
+  "AccountId": "001Hs00000000DyAAC",
+  "UsageScore": 71,
+  "SupportTickets90d": 1,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000193AAA",
+  "AccountId": "001Hs00000000DzAAC",
+  "UsageScore": 32,
+  "SupportTickets90d": 3,
+  "CSAT": 3.1,
+  "StakeholderChange": true,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000194AAA",
+  "AccountId": "001Hs00000000E5AAC",
+  "UsageScore": 50,
+  "SupportTickets90d": 3,
+  "CSAT": 5.5,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000195AAA",
+  "AccountId": "001Hs00000000E9AAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 1,
+  "CSAT": 7.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000196AAA",
+  "AccountId": "001Hs00000000EaAAC",
+  "UsageScore": 73,
+  "SupportTickets90d": 1,
+  "CSAT": 9,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000197AAA",
+  "AccountId": "001Hs00000000EAAAC",
+  "UsageScore": 90,
+  "SupportTickets90d": 0,
+  "CSAT": 8.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000198AAA",
+  "AccountId": "001Hs00000000EhAAC",
+  "UsageScore": 83,
+  "SupportTickets90d": 1,
+  "CSAT": 8.2,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000199AAA",
+  "AccountId": "001Hs00000000EjAAC",
+  "UsageScore": 86,
+  "SupportTickets90d": 1,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 9,
+  "AsOfDate": "2026-09-16"
+ },
+ {
+  "Id": "a0HHs0000000200AAA",
+  "AccountId": "001Hs00000000EmAAC",
+  "UsageScore": 41,
+  "SupportTickets90d": 4,
+  "CSAT": 4.3,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000201AAA",
+  "AccountId": "001Hs00000000ERAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000202AAA",
+  "AccountId": "001Hs00000000EtAAC",
+  "UsageScore": 51,
+  "SupportTickets90d": 3,
+  "CSAT": 5.3,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000203AAA",
+  "AccountId": "001Hs00000000ETAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000204AAA",
+  "AccountId": "001Hs00000000EuAAC",
+  "UsageScore": 71,
+  "SupportTickets90d": 0,
+  "CSAT": 9.7,
+  "StakeholderChange": false,
+  "LocationsLive": 10,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000205AAA",
+  "AccountId": "001Hs00000000EUAAC",
+  "UsageScore": 54,
+  "SupportTickets90d": 3,
+  "CSAT": 6.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-15"
+ },
+ {
+  "Id": "a0HHs0000000206AAA",
+  "AccountId": "001Hs00000000EwAAC",
+  "UsageScore": 90,
+  "SupportTickets90d": 0,
+  "CSAT": 9.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000207AAA",
+  "AccountId": "001Hs00000000ExAAC",
+  "UsageScore": 57,
+  "SupportTickets90d": 3,
+  "CSAT": 5.5,
+  "StakeholderChange": true,
+  "LocationsLive": 5,
+  "AsOfDate": "2026-09-28"
+ },
+ {
+  "Id": "a0HHs0000000208AAA",
+  "AccountId": "001Hs00000000EYAAC",
+  "UsageScore": 93,
+  "SupportTickets90d": 1,
+  "CSAT": 7.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000209AAA",
+  "AccountId": "001Hs00000000F9AAC",
+  "UsageScore": 44,
+  "SupportTickets90d": 2,
+  "CSAT": 5.6,
+  "StakeholderChange": false,
+  "LocationsLive": 5,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000210AAA",
+  "AccountId": "001Hs00000000FIAAC",
+  "UsageScore": 28,
+  "SupportTickets90d": 3,
+  "CSAT": 4.9,
+  "StakeholderChange": true,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000211AAA",
+  "AccountId": "001Hs00000000FkAAC",
+  "UsageScore": 95,
+  "SupportTickets90d": 0,
+  "CSAT": 8.7,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000212AAA",
+  "AccountId": "001Hs00000000FPAAC",
+  "UsageScore": 61,
+  "SupportTickets90d": 3,
+  "CSAT": 5.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-17"
+ },
+ {
+  "Id": "a0HHs0000000213AAA",
+  "AccountId": "001Hs00000000FqAAC",
+  "UsageScore": 75,
+  "SupportTickets90d": 0,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000214AAA",
+  "AccountId": "001Hs00000000FQAAC",
+  "UsageScore": 93,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 8,
+  "AsOfDate": "2026-09-20"
+ },
+ {
+  "Id": "a0HHs0000000215AAA",
+  "AccountId": "001Hs00000000GcAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 0,
+  "CSAT": 8.1,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000216AAA",
+  "AccountId": "001Hs00000000GGAAC",
+  "UsageScore": 72,
+  "SupportTickets90d": 1,
+  "CSAT": 9.6,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000217AAA",
+  "AccountId": "001Hs00000000GhAAC",
+  "UsageScore": 74,
+  "SupportTickets90d": 1,
+  "CSAT": 8.5,
+  "StakeholderChange": false,
+  "LocationsLive": 6,
+  "AsOfDate": "2026-09-23"
+ },
+ {
+  "Id": "a0HHs0000000218AAA",
+  "AccountId": "001Hs00000000GHAAC",
+  "UsageScore": 93,
+  "SupportTickets90d": 1,
+  "CSAT": 8.6,
+  "StakeholderChange": false,
+  "LocationsLive": 8,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000219AAA",
+  "AccountId": "001Hs00000000GqAAC",
+  "UsageScore": 94,
+  "SupportTickets90d": 0,
+  "CSAT": 8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000220AAA",
+  "AccountId": "001Hs00000000GRAAC",
+  "UsageScore": 79,
+  "SupportTickets90d": 0,
+  "CSAT": 9.5,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000221AAA",
+  "AccountId": "001Hs00000000GSAAC",
+  "UsageScore": 20,
+  "SupportTickets90d": 4,
+  "CSAT": 4.2,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000222AAA",
+  "AccountId": "001Hs00000000GuAAC",
+  "UsageScore": 82,
+  "SupportTickets90d": 1,
+  "CSAT": 7.7,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-18"
+ },
+ {
+  "Id": "a0HHs0000000223AAA",
+  "AccountId": "001Hs00000000GWAAC",
+  "UsageScore": 47,
+  "SupportTickets90d": 3,
+  "CSAT": 6.7,
+  "StakeholderChange": false,
+  "LocationsLive": 13,
+  "AsOfDate": "2026-09-27"
+ },
+ {
+  "Id": "a0HHs0000000224AAA",
+  "AccountId": "001Hs00000000GXAAC",
+  "UsageScore": 85,
+  "SupportTickets90d": 1,
+  "CSAT": 7.5,
+  "StakeholderChange": false,
+  "LocationsLive": 6,
+  "AsOfDate": "2026-09-25"
+ },
+ {
+  "Id": "a0HHs0000000225AAA",
+  "AccountId": "001Hs00000000GzAAC",
+  "UsageScore": 40,
+  "SupportTickets90d": 3,
+  "CSAT": 4.2,
+  "StakeholderChange": true,
+  "LocationsLive": 3,
+  "AsOfDate": "2026-09-24"
+ },
+ {
+  "Id": "a0HHs0000000226AAA",
+  "AccountId": "001Hs00000000GZAAC",
+  "UsageScore": 87,
+  "SupportTickets90d": 0,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000227AAA",
+  "AccountId": "001Hs00000000H2AAC",
+  "UsageScore": 89,
+  "SupportTickets90d": 0,
+  "CSAT": 8.3,
+  "StakeholderChange": false,
+  "LocationsLive": 4,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000228AAA",
+  "AccountId": "001Hs00000000H4AAC",
+  "UsageScore": 76,
+  "SupportTickets90d": 1,
+  "CSAT": 8.4,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-21"
+ },
+ {
+  "Id": "a0HHs0000000229AAA",
+  "AccountId": "001Hs00000000H5AAC",
+  "UsageScore": 22,
+  "SupportTickets90d": 3,
+  "CSAT": 3.6,
+  "StakeholderChange": false,
+  "LocationsLive": 14,
+  "AsOfDate": "2026-09-26"
+ },
+ {
+  "Id": "a0HHs0000000230AAA",
+  "AccountId": "001Hs00000000HAAAC",
+  "UsageScore": 70,
+  "SupportTickets90d": 1,
+  "CSAT": 7.8,
+  "StakeholderChange": false,
+  "LocationsLive": 1,
+  "AsOfDate": "2026-09-19"
+ },
+ {
+  "Id": "a0HHs0000000231AAA",
+  "AccountId": "001Hs00000000HRAAC",
+  "UsageScore": 41,
+  "SupportTickets90d": 2,
+  "CSAT": 5.6,
+  "StakeholderChange": false,
+  "LocationsLive": 2,
+  "AsOfDate": "2026-09-26"
+ }
+]

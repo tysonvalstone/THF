@@ -42,7 +42,7 @@ export function LoginScreen() {
   if (!ready) return <div className="min-h-full bg-background" />;
 
   return (
-    <AuthCard title={pendingUser ? "Sign in" : "Select user"} subtitle="Demo mode">
+    <AuthCard title={pendingUser ? "Sign in" : "Select user"} subtitle="Demo mode" guest>
       {!pendingUser ? (
         <>
           <ul className="space-y-2">

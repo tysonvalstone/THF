@@ -22,6 +22,8 @@ import { opportunityHref } from "@/lib/links";
 import { addDays, parseDate, toISODate } from "@/lib/dates";
 import { OPEN_STAGES, SEGMENTS, type Account, type Opportunity, type RegionId, type Segment } from "@/types/salesforce";
 import type { SourceKind } from "@/lib/ai/types";
+import { searchCalls } from "@/lib/call-desk/search";
+import { USERS } from "@/data/reference/users";
 
 export interface ToolContext {
   data: DataSnapshot;
@@ -147,6 +149,22 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "search_calls",
+    description:
+      "Search past sales calls from Call Desk: call transcripts, the rep's notes and AI Notes (summary, pain points, objections, budget, decision maker, timeline, competitors, next steps, sentiment). Use for questions like what an account said about budget, competitors or timing, or which calls mentioned a topic. Returns up to `limit` calls (newest first) with date, account, rep, call type, sentiment, summary, qualification and matching transcript snippets.",
+    input_schema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Words or phrase to find, e.g. budget, scale tickets, HarvestCore. Omit to list calls." },
+        account: { type: "string", description: "Account name or part of it, e.g. Kettle River." },
+        date_from: { type: "string", description: "Calls on or after, YYYY-MM-DD (resolve 'last month' from the current date)." },
+        date_to: { type: "string", description: "Calls on or before, YYYY-MM-DD." },
+        limit: { type: "integer", description: "Calls to return, 1-25. Default 10." },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
     name: "run_soql",
     description:
       "Run one read-only SOQL SELECT against the connected Salesforce org (live mode only). Use only when the other tools cannot answer. Results are capped at 200 rows. Standard objects: Account, Opportunity, Contact, Task, Event, Campaign, CampaignMember.",
@@ -172,6 +190,7 @@ export const TOOL_STATUS: Record<ToolName, string> = {
   get_season_status: "Checking the crop calendar",
   run_soql: "Querying Salesforce",
   search_help: "Searching help",
+  search_calls: "Searching call notes",
 };
 
 /* ---------------------------------------------------------------- helpers */
@@ -650,7 +669,58 @@ async function runSoql(input: Record<string, unknown>, ctx: ToolContext) {
 
 /* ---------------------------------------------------------------- dispatch */
 
-const PLATFORM_ONLY = new Set<string>(["get_segment_stats", "get_season_status", "search_help"]);
+const PLATFORM_ONLY = new Set<string>(["get_segment_stats", "get_season_status", "search_help", "search_calls"]);
+
+/* ------------------------------------------------------------ call desk */
+
+/** The account a name refers to: exact, then prefix, then substring (top-level accounts first) */
+export function findAccountByName(data: DataSnapshot, name: string | undefined): Account | undefined {
+  const n = name?.trim().toLowerCase();
+  if (!n) return undefined;
+  const list = [...data.accounts].sort((a, b) => Number(!!a.ParentId) - Number(!!b.ParentId));
+  return (
+    list.find((a) => a.Name.toLowerCase() === n) ??
+    list.find((a) => a.Name.toLowerCase().startsWith(n)) ??
+    list.find((a) => a.Name.toLowerCase().includes(n))
+  );
+}
+
+function searchCallsTool(args: Record<string, unknown>, ctx: ToolContext) {
+  const accountName = str(args.account, 120);
+  const account = findAccountByName(ctx.data, accountName);
+  if (accountName && !account) return { result: { error: `No account matches "${accountName}"`, calls: [] }, accountIds: [] };
+  const from = date(args.date_from);
+  const to = date(args.date_to) ?? ctx.asOf;
+  const hits = searchCalls(ctx.data, {
+    query: str(args.query, 120),
+    accountId: account?.Id,
+    from: from ? toISODate(from) : undefined,
+    to: toISODate(to),
+  });
+  const limit = limitOf(args.limit);
+  const users = new Map(USERS.map((u) => [u.Id, u.Name]));
+  return {
+    result: {
+      account: account ? { name: account.Name, href: `/accounts/${account.Id}` } : null,
+      total_matches: hits.length,
+      calls: hits.slice(0, limit).map((h) => ({
+        date: h.call.Start.slice(0, 10),
+        account: h.account,
+        account_href: `/accounts/${h.call.AccountId}`,
+        call_href: `/call-desk/history?call=${h.call.Id}`,
+        rep: users.get(h.call.OwnerId) ?? "",
+        type: h.call.CallType,
+        sentiment: h.call.Notes?.sentiment ?? null,
+        notes_status: h.call.NotesStatus,
+        summary: h.call.Notes?.summary.replace(/\n/g, " ") ?? null,
+        qualification: h.call.Notes?.qualification ?? null,
+        next_steps: h.call.Notes?.nextSteps.map((s) => s.text) ?? [],
+        snippets: h.snippets,
+      })),
+    },
+    accountIds: hits.slice(0, limit).map((h) => h.call.AccountId),
+  };
+}
 
 export function isToolName(name: string): name is ToolName {
   return (TOOL_NAMES as string[]).includes(name);
@@ -684,6 +754,9 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
       case "run_soql":
         out = await runSoql(args, ctx);
         break;
+      case "search_calls":
+        out = searchCallsTool(args, ctx);
+        break;
       case "search_help": {
         const query = str(args.query, 300);
         out = { result: query ? { articles: await searchHelp(query, 3) } : { error: "query is required" }, accountIds: [] };
@@ -706,3 +779,4 @@ export type AccountSearchResult = Extract<ReturnType<typeof searchAccounts>["res
 export type SegmentStatsResult = ReturnType<typeof getSegmentStats>["result"];
 export type RegionInsightsResult = Extract<ReturnType<typeof getRegionInsights>["result"], { area: string }>;
 export type SeasonStatusResult = Extract<ReturnType<typeof getSeasonStatus>["result"], { phase: string }>;
+export type CallSearchResult = Extract<ReturnType<typeof searchCallsTool>["result"], { total_matches: number }>;

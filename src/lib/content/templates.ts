@@ -126,6 +126,12 @@ export function templateCampaignContent(brief: CampaignBrief): CampaignContent {
   const regionNames = listJoin(brief.regionIds.map((r) => REGION_BY_ID[r]?.name).filter(Boolean) as string[]);
   const signature = `${brief.sender.name}\n${brief.sender.title}, ThiboLiSoft\n${brief.sender.email}${brief.sender.phone ? ` · ${brief.sender.phone}` : ""}`;
   const productList = listJoin([...new Set(m.products)]);
+  // Facilities that receive grain by truck: their Harvest Day Simulator result
+  // (mail-list columns "Harvest $ at risk" and "Harvest day link")
+  const harvestDay =
+    group === "grain" || group === "processing"
+      ? `\nSee your harvest day. On a peak October day, trucks that give up on the scale line and drive to the next elevator could cost {{Company}} {{HarvestLoss}} this harvest. Watch your own day, minute by minute, with and without ScaleTrac and GrainSight Mobile: {{HarvestLink}}\n`
+      : "";
 
   const letterBody = `Dear {{FirstName}},
 
@@ -136,7 +142,7 @@ ThiboLiSoft builds software for exactly this. With ${productList}, you get:
 ${bullets(m.outcomes)}
 
 ${m.proof}
-
+${harvestDay}
 I'd like to offer {{Company}} ${m.offer}. There's no cost and no obligation. We'll show you where the time goes today and what we'd change first.
 
 Call me directly, or reply to the email address below, and we'll find a time that works around your season.
@@ -208,12 +214,20 @@ ThiboLiSoft`,
 }
 
 /** Replace {{FirstName}} / {{Company}} / {{City}} merge fields */
-export function mergeFields(text: string, fields: { FirstName?: string; Company?: string; City?: string }): string {
+export function mergeFields(
+  text: string,
+  fields: { FirstName?: string; Company?: string; City?: string; HarvestLoss?: string; HarvestLink?: string },
+): string {
   return text
     .replace(/\{\{FirstName\}\}/g, fields.FirstName ?? "there")
     .replace(/\{\{Company\}\}/g, fields.Company ?? "your team")
-    .replace(/\{\{City\}\}/g, fields.City ?? "");
+    .replace(/\{\{City\}\}/g, fields.City ?? "")
+    .replace(/\{\{HarvestLoss\}\}/g, fields.HarvestLoss ?? "thousands of dollars")
+    .replace(/\{\{HarvestLink\}\}/g, fields.HarvestLink ?? "ask me for your link");
 }
+
+/** "$124,000" for the {{HarvestLoss}} merge field (mail-list column "Harvest $ at risk") */
+export const harvestLossText = (dollars: number) => `$${Math.round(dollars).toLocaleString("en-US")}`;
 
 export type EmailIntent = "timing" | "after-season" | "follow-up";
 

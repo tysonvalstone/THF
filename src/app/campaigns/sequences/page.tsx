@@ -1,13 +1,7 @@
-import type { Metadata } from "next";
-import { SequencesView } from "@/components/sequences/sequences-view";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "Sequences" };
-
-export default function SequencesPage() {
-  return (
-    <div className="space-y-5">
-      <h1 className="text-2xl font-semibold">Sequences</h1>
-      <SequencesView />
-    </div>
-  );
+/** Sequences moved to Outreach */
+export default async function OldSequencesPage({ searchParams }: PageProps<"/campaigns/sequences">) {
+  const q = new URLSearchParams(Object.entries(await searchParams).flatMap(([k, v]) => (Array.isArray(v) ? v.map((x) => [k, x]) : v ? [[k, v]] : [])));
+  redirect(`/outreach/sequences${q.size ? `?${q}` : ""}`);
 }

@@ -1,0 +1,91 @@
+---
+title: Customer Success & Renewals
+summary: Score customer health, run onboarding checklists that go live before planting, catch renewals at risk early, and turn happy multi-location co-ops into expansion deals.
+order: 12
+related: [contracts, finance, home-dashboard]
+---
+
+Customer success lives under **Customers** in the top navigation, with three tabs: **Health**, **Onboarding** and **Renewals**. Reps see the customers they own; managers, finance, legal and admins see the whole team.
+
+Every change is saved as a Salesforce-style change (HealthSignal, SupportTicket, OnboardingProject, OnboardingTask and Opportunity records). In live Salesforce mode changes stay in the app and are tagged **Local change, not synced**.
+
+## Health score
+
+Each customer gets a score from 0 to 100, added up from five parts:
+
+| Part | Points | How it is scored |
+| --- | --- | --- |
+| Usage | 30 | Usage score (0 to 100) times 0.3 |
+| Support tickets | 20 | 20 minus 2.5 per unit of ticket load in the last 90 days. Low counts 0.5, Normal 1, High 2 and Urgent 3, and a ticket that is still open counts a quarter more |
+| CSAT | 25 | CSAT (0 to 10) times 2.5 |
+| Payments | 15 | 15 minus 4, 8 or 12 when the oldest overdue invoice is 1 to 29, 30 to 59 or 60 or more days late, 2 for each extra overdue invoice, and 1.5 for each invoice paid more than 10 days late in the past year |
+| Stakeholders | 10 | 0 when a key contact (GM, controller) changed recently |
+
+The score falls into a band, always shown with a label and an icon:
+
+- **Healthy**: 70 or more (check mark)
+- **Watch**: 45 to 69 (triangle)
+- **At Risk**: below 45 (octagon)
+
+**Trend** compares today's score with the score 90 days earlier, using the tickets and invoices as they stood then. A change of 5 points or more shows as improving or declining.
+
+Scores use the app date, so time travel changes them.
+
+## The Health tab
+
+**Customers → Health** lists every customer with ARR, health score and band, trend, usage, CSAT, tickets in the last 90 days, overdue amount, stakeholder change and the next renewal date.
+
+- **Summary tiles**: customers, the count in each band and ARR at risk. Click a tile to filter.
+- **Filters**: band, segment, renewal within 30, 60, 90 or 180 days, and **Expansion candidates**.
+- Click a row to open the customer panel.
+
+<Screenshot caption="Customer health list with the score breakdown panel open" />
+
+### The customer panel
+
+The panel shows each part of the score, what went into it and the points it earned, plus ARR, renewal date and locations live. Quick actions:
+
+- **Log ticket** records a support ticket (subject, priority, status, product). **Close** closes an open ticket.
+- **Update CSAT / usage** edits the usage score, CSAT, locations live and the stakeholder flag.
+- **Flag stakeholder change** (or **Clear stakeholder change**) toggles the stakeholder flag in one click.
+- **Start expansion** appears for expansion candidates. See below.
+
+## Onboarding
+
+Signing a contract creates an onboarding project with a five-step checklist: Kickoff, Data migration, Configuration, Training and Go-live.
+
+- **Target go-live** is set before the customer's next spring planting, with two weeks to spare. When spring is too close, it moves to before harvest instead. Ethanol plants, feed mills and processors run year-round, so they target the first of the month about 90 days out.
+- **Signed in the fall**: work starts after harvest, since elevators and co-ops don't take projects during harvest.
+- **Due dates** work back from go-live: Training two weeks before, Configuration five weeks before, Data migration about two months before. Kickoff is a week after work starts.
+
+**Customers → Onboarding** lists projects with account, contract, owner, status, target go-live, progress, next task and days to go-live. Overdue tasks show in red. **New project** creates one for a signed contract that doesn't have one yet.
+
+Open a project to work its checklist:
+
+- Check a task off. The project moves to **In Progress** once work starts.
+- Change a due date right in the list, or **Edit** a task's name and phase.
+- **Add task** adds your own step. Deleting a task asks first and can be undone for a few seconds.
+- **Edit** changes the status (Not Started, In Progress, At Risk, Live), owner, start and target go-live. A warning shows when the target falls in harvest or planting.
+- **Mark Live** checks off every open task and records today as the go-live date.
+
+## Renewals
+
+Every Active contract ending within 120 days gets a renewal opportunity automatically:
+
+- Name **Renewal:** followed by the account and year, Type Add-On Business, stage Qualification
+- Amount is ARR plus the contract's yearly price increase
+- Close date is the notice deadline (contract end minus notice days)
+- Owner is the contract owner
+- Forecast category is Best Case for Healthy customers, Pipeline otherwise
+
+It runs again whenever the date or data changes and never creates a second opportunity for the same contract. **Create renewal opportunities** on the Renewals tab runs it on demand.
+
+**Customers → Renewals** lists Active contracts ending in the next 180 days, at-risk renewals first: account, contract end, ARR, the renewal opportunity's stage, health, notice deadline and a risk flag. A renewal is at risk when the customer is At Risk, on Watch and declining or within 90 days of the end, the notice deadline passed with no renewal opportunity, or the renewal opportunity was lost.
+
+The **Renewals at risk** card on Home shows the same list in short form.
+
+## Expansion
+
+A customer is an expansion candidate when it is a multi-location co-op, Healthy, has CSAT of 8 or more, and has fewer locations live than it has locations.
+
+**Start expansion** in the customer panel creates an Add-On Business opportunity for the remaining locations, with one line for each per-location product the customer already uses, priced from the account's price book (the co-op book for co-ops with 5 or more locations). A toast links to the new opportunity. Once it exists, the button opens it instead.

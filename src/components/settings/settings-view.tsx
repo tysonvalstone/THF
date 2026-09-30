@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { changePassword, updateMyProfile } from "@/lib/account/actions";
 import { MIN_PASSWORD } from "@/lib/supabase/config";
 import { UsersAdmin } from "./users-admin";
+import { AuditLog } from "./audit-log";
+import { ClauseLibrary } from "@/components/contracts/clause-library";
+import { can } from "@/lib/roles";
 import { toast } from "sonner";
 import { useAuth, type SalesforceConnection } from "@/lib/auth";
 import { useStore } from "@/lib/data/store";
@@ -438,25 +441,30 @@ function SalesforceTab() {
   );
 }
 
-const TABS = ["profile", "security", "salesforce", "users"] as const;
+const TABS = ["profile", "security", "salesforce", "users", "legal", "audit"] as const;
 type Tab = (typeof TABS)[number];
 
 export function SettingsView() {
-  const { isAdmin, mode } = useAuth();
+  const { isAdmin, mode, role } = useAuth();
+  const showAudit = can(role, "admin:settings");
   const router = useRouter();
   const params = useSearchParams();
   const showUsers = isAdmin && mode === "supabase";
   const requested = params.get("tab") as Tab | null;
-  const tab: Tab = requested && TABS.includes(requested) && (requested !== "users" || showUsers) ? requested : "profile";
+  const tab: Tab =
+    requested && TABS.includes(requested) && (requested !== "users" || showUsers) && (requested !== "audit" || showAudit) ? requested : "profile";
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Settings</h1>
-      <Tabs value={tab} onValueChange={(v) => router.replace(v === "profile" ? "/settings" : `/settings?tab=${v}`, { scroll: false })}>
+      <Tabs value={tab} onValueChange={(v) => (v === "products" ? router.push("/quotes/products") : router.replace(v === "profile" ? "/settings" : `/settings?tab=${v}`, { scroll: false }))}>
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="salesforce">Salesforce</TabsTrigger>
           {showUsers && <TabsTrigger value="users">Users</TabsTrigger>}
+          <TabsTrigger value="products">Products</TabsTrigger>
+          <TabsTrigger value="legal">Legal</TabsTrigger>
+          {showAudit && <TabsTrigger value="audit">Audit log</TabsTrigger>}
         </TabsList>
         <TabsContent value="profile" className="mt-4 max-w-3xl">
           <ProfileTab />
@@ -470,6 +478,14 @@ export function SettingsView() {
         {showUsers && (
           <TabsContent value="users" className="mt-4">
             <UsersAdmin />
+          </TabsContent>
+        )}
+        <TabsContent value="legal" className="mt-4">
+          <ClauseLibrary />
+        </TabsContent>
+        {showAudit && (
+          <TabsContent value="audit" className="mt-4">
+            <AuditLog />
           </TabsContent>
         )}
       </Tabs>

@@ -4,7 +4,7 @@ import { randomBytes } from "node:crypto";
 import { headers } from "next/headers";
 import type { User as AuthUser } from "@supabase/supabase-js";
 import { createAdminClient, createClient, createStatelessClient } from "@/lib/supabase/server";
-import type { Role } from "@/lib/supabase/config";
+import { APP_ROLES, type AppRole, type Role } from "@/lib/supabase/config";
 
 /**
  * User administration. Every action re-checks that the caller is an active
@@ -18,6 +18,8 @@ export interface ManagedUser {
   name: string;
   title: string;
   role: Role;
+  /** Business role: Rep / Manager / Finance / Legal / Admin */
+  appRole: AppRole;
   sfUserId: string | null;
   status: "active" | "invited" | "disabled" | "must-change-password";
   createdAt: string;
@@ -45,6 +47,7 @@ function toManaged(u: AuthUser): ManagedUser {
     name: String(meta.full_name || ""),
     title: String(meta.title || ""),
     role: u.app_metadata?.role === "admin" ? "admin" : "user",
+    appRole: APP_ROLES.includes(u.app_metadata?.app_role) ? u.app_metadata.app_role : u.app_metadata?.role === "admin" ? "admin" : "rep",
     sfUserId: typeof meta.sf_user_id === "string" && meta.sf_user_id ? meta.sf_user_id : null,
     status: banned ? "disabled" : !u.email_confirmed_at && !u.last_sign_in_at ? "invited" : meta.must_change_password ? "must-change-password" : "active",
     createdAt: u.created_at,
@@ -95,6 +98,7 @@ export async function listUsers(): Promise<Result<{ users: ManagedUser[] }>> {
 }
 
 export interface NewUserInput {
+  appRole?: AppRole;
   email: string;
   name: string;
   title: string;
@@ -111,7 +115,7 @@ export async function createUser(input: NewUserInput): Promise<Result<{ user: Ma
   if (!input.name.trim()) return { ok: false, error: "Enter the person's name." };
   const admin = createAdminClient();
   const user_metadata = { full_name: input.name.trim(), title: input.title.trim(), sf_user_id: input.sfUserId ?? "" };
-  const app_metadata = { role: input.role === "admin" ? "admin" : "user" };
+  const app_metadata = { role: input.role === "admin" ? "admin" : "user", app_role: input.appRole && APP_ROLES.includes(input.appRole) ? input.appRole : input.role === "admin" ? "admin" : "rep" };
 
   if (input.access === "invite") {
     const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { data: user_metadata, redirectTo: `${await origin()}/auth/confirm?next=/account/password` });
@@ -134,6 +138,7 @@ export async function createUser(input: NewUserInput): Promise<Result<{ user: Ma
 }
 
 export interface UserPatch {
+  appRole?: AppRole;
   name?: string;
   title?: string;
   role?: Role;
@@ -157,7 +162,15 @@ export async function updateUser(id: string, patch: UserPatch): Promise<Result<{
   if (patch.sfUserId !== undefined) meta.sf_user_id = patch.sfUserId ?? "";
   const { data, error } = await admin.auth.admin.updateUserById(id, {
     user_metadata: meta,
-    ...(patch.role ? { app_metadata: { ...current.user.app_metadata, role: patch.role } } : {}),
+    ...(patch.role || patch.appRole
+      ? {
+          app_metadata: {
+            ...current.user.app_metadata,
+            ...(patch.role ? { role: patch.role } : {}),
+            ...(patch.appRole && APP_ROLES.includes(patch.appRole) ? { app_role: patch.appRole } : {}),
+          },
+        }
+      : {}),
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true, user: toManaged(data.user) };

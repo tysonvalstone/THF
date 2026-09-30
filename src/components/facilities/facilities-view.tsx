@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import { useStore } from "@/lib/data/store";
 import { ACCOUNT_CSV_COLUMNS, corePenetration, countyCoverage, importAccountsCsv, isCovered } from "@/lib/facilities";
 import { recordHref } from "@/lib/links";
-import { SEGMENTS } from "@/types/salesforce";
+import { SEGMENTS, type Account } from "@/types/salesforce";
+import { DataTable, type Column } from "@/components/shared/data-table";
+import { LocalChangeTag } from "@/components/shared/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { ExportCsvButton } from "@/components/shared/column-picker";
 import { Input } from "@/components/ui/input";
@@ -17,12 +19,11 @@ const ALL = "all";
 const fmtBu = (n?: number) => (n ? (n >= 1e6 ? `${(n / 1e6).toFixed(1)}M bu` : `${Math.round(n / 1000)}K bu`) : "—");
 
 export function FacilitiesView() {
-  const { ready, data, commit, readOnly } = useStore();
+  const { ready, data, commit } = useStore();
   const [state, setState] = useState<string>("core");
   const [segment, setSegment] = useState<string>(ALL);
   const [coverage, setCoverage] = useState<string>(ALL);
   const [q, setQ] = useState("");
-  const [limit, setLimit] = useState(60);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const byId = useMemo(() => new Map(data.accounts.map((a) => [a.Id, a])), [data.accounts]);
@@ -39,6 +40,48 @@ export function FacilitiesView() {
       .filter((a) => !needle || `${a.Name} ${a.County__c ?? ""} ${a.BillingCity} ${a.Railroad__c ?? ""}`.toLowerCase().includes(needle))
       .sort((a, b) => a.BillingState.localeCompare(b.BillingState) || (a.County__c ?? "").localeCompare(b.County__c ?? "") || a.Name.localeCompare(b.Name));
   }, [data.accounts, state, segment, coverage, q]);
+
+  const columns = useMemo<Column<Account>[]>(
+    () => [
+      {
+        key: "name",
+        header: "Facility",
+        sortValue: (a) => a.Name,
+        cell: (a) => {
+          const parent = a.ParentId ? byId.get(a.ParentId) : undefined;
+          return (
+            <div className="min-w-0 max-w-80">
+              <Link href={recordHref(parent?.Id ?? a.Id)} className="font-medium text-primary hover:underline">
+                {a.Name}
+              </Link>
+              <LocalChangeTag id={a.Id} />
+              <p className="text-xs text-muted-foreground">
+                {a.BillingCity}, {a.BillingState}
+                {parent ? ` · location of ${parent.Name}` : ""}
+              </p>
+            </div>
+          );
+        },
+      },
+      { key: "segment", header: "Segment", sortValue: (a) => a.Segment__c, cell: (a) => <span className="text-muted-foreground">{a.Segment__c}</span> },
+      { key: "county", header: "County", sortValue: (a) => a.County__c, cell: (a) => a.County__c ?? "—" },
+      { key: "rail", header: "Railroad", sortValue: (a) => a.Railroad__c, cell: (a) => a.Railroad__c ?? "—" },
+      { key: "river", header: "River", sortValue: (a) => Number(a.River_Access__c), cell: (a) => (a.River_Access__c ? "Yes" : "—") },
+      { key: "shuttle", header: "Shuttle", sortValue: (a) => Number(a.Shuttle_Loader__c), cell: (a) => (a.Shuttle_Loader__c ? "Yes" : "—") },
+      { key: "capacity", header: "Capacity", align: "right", sortValue: (a) => a.Storage_Capacity_Bu__c ?? 0, cell: (a) => fmtBu(a.Storage_Capacity_Bu__c) },
+      {
+        key: "status",
+        header: "Status",
+        sortValue: (a) => Number(isCovered(a)),
+        cell: (a) => (
+          <span className={cn("rounded-md border px-1.5 py-0.5 text-xs", isCovered(a) ? "border-primary/40 text-primary" : "border-border text-muted-foreground")}>
+            {isCovered(a) ? "Customer" : "Prospect"}
+          </span>
+        ),
+      },
+    ],
+    [byId],
+  );
 
   if (!ready) return <Skeleton className="h-[640px]" />;
 
@@ -88,7 +131,7 @@ export function FacilitiesView() {
             filteredRows={rows}
             filename={`accounts-${state}-${new Date().toISOString().slice(0, 10)}.csv`}
           />
-          <Button variant="outline" size="sm" className="w-full bg-card" disabled={readOnly} onClick={() => fileRef.current?.click()}>
+          <Button variant="outline" size="sm" className="w-full bg-card" onClick={() => fileRef.current?.click()}>
             Import CSV
           </Button>
           <input
@@ -139,62 +182,9 @@ export function FacilitiesView() {
           </ul>
         </section>
 
-        <section className="rounded-md border bg-card">
-          <header className="flex items-center justify-between border-b px-4 py-3">
-            <h2 className="text-base font-semibold">Facilities ({rows.length})</h2>
-          </header>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] text-sm">
-              <thead className="bg-slate-50 text-left text-xs text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-2 font-medium">Facility</th>
-                  <th className="px-4 py-2 font-medium">Segment</th>
-                  <th className="px-4 py-2 font-medium">County</th>
-                  <th className="px-4 py-2 font-medium">Railroad</th>
-                  <th className="px-4 py-2 font-medium">River</th>
-                  <th className="px-4 py-2 font-medium">Shuttle</th>
-                  <th className="px-4 py-2 text-right font-medium">Capacity</th>
-                  <th className="px-4 py-2 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {rows.slice(0, limit).map((a) => {
-                  const parent = a.ParentId ? byId.get(a.ParentId) : undefined;
-                  return (
-                    <tr key={a.Id} className="hover:bg-slate-50">
-                      <td className="max-w-80 px-4 py-2">
-                        <Link href={recordHref(parent?.Id ?? a.Id)} className="font-medium text-primary hover:underline">
-                          {a.Name}
-                        </Link>
-                        <p className="text-xs text-muted-foreground">
-                          {a.BillingCity}, {a.BillingState}
-                          {parent ? ` · location of ${parent.Name}` : ""}
-                        </p>
-                      </td>
-                      <td className="px-4 py-2 text-muted-foreground">{a.Segment__c}</td>
-                      <td className="px-4 py-2">{a.County__c ?? "—"}</td>
-                      <td className="px-4 py-2">{a.Railroad__c ?? "—"}</td>
-                      <td className="px-4 py-2">{a.River_Access__c ? "Yes" : "—"}</td>
-                      <td className="px-4 py-2">{a.Shuttle_Loader__c ? "Yes" : "—"}</td>
-                      <td className="px-4 py-2 text-right tabular">{fmtBu(a.Storage_Capacity_Bu__c)}</td>
-                      <td className="px-4 py-2">
-                        <span className={cn("rounded-md border px-1.5 py-0.5 text-xs", isCovered(a) ? "border-primary/40 text-primary" : "border-border text-muted-foreground")}>
-                          {isCovered(a) ? "Customer" : "Prospect"}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          {rows.length > limit && (
-            <div className="border-t p-3 text-center">
-              <Button variant="outline" size="sm" onClick={() => setLimit((l) => l + 100)}>
-                Show more ({rows.length - limit} remaining)
-              </Button>
-            </div>
-          )}
+        <section className="space-y-2">
+          <h2 className="text-base font-semibold">Facilities ({rows.length.toLocaleString()})</h2>
+          <DataTable rows={rows} columns={columns} rowKey={(a) => a.Id} filterKey={`${state}|${segment}|${coverage}|${q}`} minWidth={900} caption="Facilities" empty="No facilities match these filters" />
         </section>
       </div>
     </div>

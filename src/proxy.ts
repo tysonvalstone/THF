@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { SESSION_COOKIE, readSessionValue } from "@/lib/session";
-import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, supabaseConfigured } from "@/lib/supabase/config";
+import { SESSION_COOKIE, createSessionValue, readSessionValue } from "@/lib/session";
+import { GUEST_ID, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, supabaseConfigured } from "@/lib/supabase/config";
 
 /** Pages anyone can open */
-const PUBLIC = ["/login", "/auth/confirm"];
+const PUBLIC = ["/login", "/auth/confirm", "/share"];
 const isPublic = (path: string) => PUBLIC.some((p) => path === p || path.startsWith(`${p}/`));
 
 function loginUrl(request: NextRequest) {
@@ -20,10 +20,23 @@ function loginUrl(request: NextRequest) {
  * Demo mode (no Supabase env vars): checks the signed demo cookie.
  */
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
+
+  // Guest access: /demo or /?guest=1 signs in as a guest and opens Home
+  if (pathname === "/demo" || searchParams.get("guest") === "1") {
+    const { value, expires } = await createSessionValue(GUEST_ID);
+    const r = NextResponse.redirect(new URL("/", request.url));
+    r.cookies.set(SESSION_COOKIE, value, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", expires });
+    return r;
+  }
+  const cookieUser = await readSessionValue(request.cookies.get(SESSION_COOKIE)?.value);
+  if (cookieUser === GUEST_ID) {
+    if (pathname === "/login" || pathname === "/account/password") return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.next();
+  }
 
   if (!supabaseConfigured()) {
-    const userId = await readSessionValue(request.cookies.get(SESSION_COOKIE)?.value);
+    const userId = cookieUser;
     if (pathname === "/login") return userId ? NextResponse.redirect(new URL("/", request.url)) : NextResponse.next();
     if (isPublic(pathname)) return NextResponse.next();
     return userId ? NextResponse.next() : NextResponse.redirect(loginUrl(request));

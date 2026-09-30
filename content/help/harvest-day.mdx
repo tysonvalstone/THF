@@ -1,0 +1,87 @@
+---
+title: Harvest Day Simulator
+summary: Replay one peak October receiving day at a facility, see how many trucks give up on the scale line and drive to the nearest competitor, and compare it with ScaleTrac and GrainSight Mobile.
+order: 5
+related: [map, trip-planner, quotes]
+---
+
+The Harvest Day Simulator (Harvest Day section) plays a busy harvest day at one elevator, co-op location, terminal, ethanol plant or processor, from 5 am to 11 pm. Trucks line up for the scale and probe, dump at the pits and fill the bins. When a truck waits too long it leaves for the nearest competing elevator, and those bushels are lost. Run the same day with ScaleTrac and GrainSight Mobile side by side to show the difference in bushels and dollars.
+
+## Pick a facility
+
+1. Open **Harvest Day**.
+2. Search the list or page through it. Ranked prospects come first, and **$ at risk** shows the modeled (or saved) harvest-season dollars at risk. A check mark means the value was saved from the simulator.
+3. Click a row. The simulator opens and starts playing. Use **Change facility** to pick another one.
+
+Other pages can link straight to a facility: the address ends in `?account=` followed by the Salesforce Account Id.
+
+## Watch the day
+
+- **Play** or **Pause**, **Restart**, and pick a speed: 0.5×, 1×, 2× or 4×. At 1× the whole day takes about a minute.
+- Drag the timeline, or click or drag the **Trucks waiting** chart, to jump to any time.
+- In the yard, trucks come in from the county road, line up, cross the scale deck while the probe samples the load, wait for a free pit, dump and leave empty. The cab colour shows how long a truck has waited: green under 15 minutes, amber 15 to 30, red over 30.
+- A truck that gives up turns around and heads toward the competitor. The sign at the road edge names the competitor, the distance and direction, and counts the trucks lost so far. The small map shows the route.
+- The bins fill as grain is received. The percentage is today's receipts against the day's expected volume.
+- The counters show trucks waiting, the current wait at the front of the line, bushels lost and dollars lost so far.
+
+<Screenshot caption="Harvest Day Simulator at 5 pm with a long line at the scale" />
+
+## Compare with ScaleTrac and GrainSight Mobile
+
+Click **With ScaleTrac + GrainSight Mobile**. The day restarts with two yards side by side on the same clock: the same trucks arrive at the same minutes, and only the scale time changes. The green panel shows the bushels, dollars and trucks kept so far. When the pits, not the scale, are the bottleneck, automation helps less, and the comparison shows that honestly.
+
+## Settings
+
+Click **Settings** to change:
+
+- **Manual scale time**: minutes per truck at the scale and probe, including the tare crossing on the way out. Default 5.
+- **Automated scale time**: the same with ScaleTrac and GrainSight Mobile. Default 2.
+- **Trucks leave after**: the wait, in minutes, after which a driver gives up. Default 45.
+- **Handling margin**: dollars per bushel lost. Default 0.20.
+- **Harvest season**: working days used for the season total. Default 45.
+
+## End-of-day summary
+
+At 11 pm (or after **Skip to end of day**) the summary shows:
+
+- **Worst hour**: the hour with the longest line, with the most trucks waiting and the longest wait.
+- **Lost per day**: trucks, bushels and dollars lost.
+- **Harvest season**: the daily loss times the season days.
+- **Saved with automation**: the season loss with the manual scale minus the loss with ScaleTrac and GrainSight Mobile.
+
+Buttons:
+
+- **Save to account** writes the season dollars at risk (manual scale) and a timestamp to the account. Saved values replace the modeled estimate in rankings and in the mail list.
+- **Copy share link** copies a read-only link to this facility's simulator. Anyone with the link can watch the day without signing in; it shows only this facility and its competitor.
+- **Open account** opens the account record.
+
+## Ranking weight
+
+Prospect scores include a **Harvest $ at risk** factor worth up to 10 points: about 60% of the points at 50,000 dollars a season and full points at 500,000. It is added on top of the other six factors as a bonus (the total is capped at 100), so facilities without harvest pain are never pushed down. The slider (next to the summary here, and in the Prospects filters) sets its weight from 0× to 2×; at 0× the score is exactly the original six factors. Facilities without truck receiving data, and leads, get no harvest points. The weight is saved in your browser.
+
+## Mail and board packets
+
+- The direct-mail letter for elevators and processors has a short "See your harvest day" paragraph with two merge fields: HarvestLoss (season dollars at risk) and HarvestLink (the share link). The campaign mail-list CSV has matching **Harvest $ at risk** and **Harvest day link** columns. Links are signed when the recipient list is built; if a link is still blank, wait a moment and export again.
+- The co-op board packet from Quoting includes a harvest-day card with the worst hour, per-day and season losses with and without automation, the savings and the share link.
+
+## How the model works
+
+The simulator is a model, not a measurement. It is deterministic: the same facility and settings always replay the same day.
+
+**Daily volume.** For elevators, co-op locations, terminals, shuttle loaders and seed plants, a peak day is about 6% of storage: harvest receipts run about 1.5 times storage over a 45-day harvest (grain also ships out while it comes in), and a peak day is about 1.8 times an average day. A co-op parent is modeled as its main location (1.5 times its average location). Ethanol plants use annual gallons divided by 2.8 gallons per bushel and 365 days, times 1.5 for the harvest surge. Oilseed crushers, flour mills and feed mills convert annual tons to bushels. Every volume is multiplied by this year's county yield factor and capped at what the pits can take in 18 hours.
+
+**Trucks.** About 72% semis (900 to 1,100 bushels), 20% straight trucks (450 to 650) and 8% wagons (250 to 400). Farms often send two or three trucks a few minutes apart.
+
+**Arrivals.** Light at dawn, building through midday, peaking between 3 and 9 pm and tapering to 11 pm.
+
+**Scale, probe and pits.** Each scale serves one truck at a time. Scale time varies from 70% to 130% of the setting. After the scale, a truck needs a free dump pit; pit time is 1.5 minutes to pull on and open the hoppers plus bushels divided by the pit rate. Up to two trucks per pit can wait between the scale and the pits. When that space is full, the truck stays on the scale and blocks it.
+
+**Losses.** A truck still waiting for the scale when its wait passes the limit leaves for the nearest competitor. The competitor is the closest other elevator, co-op location, river terminal or shuttle loader that is not part of the same co-op, measured in a straight line. After 11 pm the elevator works off the line with no further losses.
+
+**Ranking estimate.** Rankings use the saved value when there is one, otherwise the same model with default settings. Facilities that clearly keep up at their busiest hour are skipped (they lose nothing) so the whole book scores quickly.
+
+## Tips
+
+- Start the conversation with the worst hour: "At 7 pm you had 60 trucks on the road and drivers waiting 45 minutes."
+- Change the margin and season days to match what the manager tells you, then save to the account.
+- Send the share link after a call so the manager can show the board.

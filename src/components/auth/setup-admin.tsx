@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 export function SetupAdmin() {
   const [state, action, pending] = useActionState<ActionState, FormData>(createFirstAdmin, {});
   return (
-    <AuthCard title="Set up HarvestSignal" subtitle="Create the administrator account. You'll add everyone else from Settings.">
+    <AuthCard title="Set up HarvestSignal" subtitle="Create the administrator account. You'll add everyone else from Settings." guest>
       <form action={action} className="space-y-4">
         <FormError message={state.error} />
         <div className="grid gap-1.5">

@@ -1,46 +1,68 @@
 ---
 title: New Builds Finder
-summary: The New Builds Finder is not available yet; this article shows how to find uncovered areas and new prospects with the tools that exist today.
+summary: Find new and expanding elevators, ethanol plants, feed mills and processors from public sources, then turn them into leads and accounts.
 order: 10
 related: [map, trip-planner, exports-templates]
 ---
 
-The New Builds Finder is not available in this version of HarvestSignal yet. The app does not scan for new grain or feed facility construction, and the Map has no new-builds layer. The closest tools today help you find areas and facilities where ThiboLiSoft has no customer yet.
+New Builds (Map section, New Builds tab) lists grain, ethanol, feed and processing facilities that have been announced, are in permitting, are under construction or are commissioning. A new facility has no software vendor yet, so it is one of the best times to start a conversation. Each project shows the company, town, facility type and segment, capacity, estimated investment, expected completion date and the public source it came from.
 
-## What you can do today
+## Browse and filter
 
-### Find whitespace counties
+1. Go to **Map**, then **New Builds**.
+2. The list shows projects with status **New** by default. Use the filters above the list to narrow it:
+   - **Status**: New, Converted (already a lead), Dismissed, or all statuses.
+   - **Stage**: Announced, Permitting, Under Construction or Commissioning.
+   - **Segment**: for example Ethanol Plant, Feed Mill or Rail/Shuttle Loader.
+   - **Region** and **State or province**.
+3. Search by project, company, town or source.
+4. Click a column heading to sort, for example by investment or expected completion. The list shows 10 projects per page; change **Rows** at the bottom to see 25 or 50.
 
-A whitespace county is a county that has target facilities but no ThiboLiSoft customer.
+The map next to the list shows each project as a dot coloured by stage. Choosing a region or state zooms the map to it. Click a dot to open that project.
 
-1. Go to **Map**, then the **Facilities** tab.
-2. Choose an area: Illinois + Iowa, Illinois, Iowa, or All US and Canada.
-3. Review the coverage figures (for example "12 of 132 Iowa co-op locations") and the **Whitespace Counties** list.
-4. Filter the facility table by segment or status (customers or prospects), or search by name, county or railroad.
-5. Export the list as a Salesforce-ready CSV if you want to load it elsewhere. See [Exports & Templates](/help/exports-templates).
+<Screenshot caption="New Builds list with stage and region filters and the project map" />
 
-### Browse prospects on the Map
+## Scan sources
 
-1. Go to **Map** and drill into a region or state.
-2. In the sidebar **Prospects** tab, set **Status** to Prospects and filter by commodity, size and segment.
-3. Sort by **Score** or **Est. deal size**.
-4. Click **Enroll top 25 in sequence** to start outreach to the list.
+Click **Scan sources** to check the public sources for new projects. The scan walks through each source in turn and shows what it found:
 
-The **Area** tab shows penetration (customers as a share of facilities) and the top potential customers for the area.
+- State air permit applications
+- County board minutes
+- Trade press
+- USDA grant announcements
+- Economic development releases
+- Rail spur filings
 
-### Plan visits to uncovered areas
+A scan usually finds one to three projects, which are added to the list with status New. Click **View** next to a result to open it. Scanning again on the same date finds nothing new. Change the as-of date in the header to see what a scan on another day would find.
 
-The Trip Planner gives a +6 bonus to facilities in a whitespace county, so trips lean toward areas with no customer yet. See [Trip Planner](/help/trip-planner).
+In this version the scan is simulated: it does not contact any website, and the projects it finds are generated sample data.
 
-### Add facilities you already know about
+## Work a project
 
-In mock mode you can import a CSV of accounts on the Facilities tab. New accounts are added and existing ones updated. Imported data is stored in your browser only. In live mode, add the accounts in Salesforce and click **Refresh data**.
+Click a project to open its details: the summary, stage, segment, capacity, estimated investment, announced date, expected completion and the source.
 
-## Planned
+- **Convert to lead** creates a lead with the company, town, state, facility type, segment, region and capacity filled in, lead source Web and status Open - Not Contacted. The project is marked Converted and linked to the lead, and a call task is added for the lead's owner. The lead then appears in Prospects with a score.
+- **Open lead** goes to the lead once the project is converted.
+- **Dismiss** hides a project that is not a fit. It moves to the Dismissed status, where **Restore** brings it back.
 
-The following is planned and not built yet:
+Convert and Dismiss show an **Undo** button for a few seconds.
 
-- Scan public sources for new grain elevator, co-op, ethanol, feed mill and processor construction and expansions.
-- A managed list of sources to scan (for example permits, trade press and company announcements).
-- Show new builds on the Map with the stage of construction.
-- Convert a result into a lead with one click, so it can be scored and added to campaigns and sequences.
+## Convert the lead to an account
+
+When you have talked to the company:
+
+1. Open the lead, then click **Convert to account**.
+2. Check the account name.
+3. Choose whether to create a contact from the person on the lead. New-build leads start without a named person, so add one with **Edit** first if you have a name.
+4. Optionally tick **Create an opportunity** and set its name and close date. The amount is estimated from the products that fit the facility type.
+5. Click **Convert**.
+
+The account opens. The lead is marked converted and links to the account, and its tasks and campaign memberships move to the account.
+
+## Export
+
+Click **Export CSV** to download the projects that match your filters. Choose and order the columns in the column picker, and save the setup as a preset. See [Exports & Templates](/help/exports-templates).
+
+## Local changes
+
+New projects, conversions and dismissals are stored in your browser as local changes. When HarvestSignal is connected to live Salesforce they are not written back, and changed records show a **Local change, not synced** tag.

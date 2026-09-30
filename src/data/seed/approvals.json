@@ -1,0 +1,26 @@
+[
+ {
+  "Id": "a0AHs0000009001AAC",
+  "Type": "Non-standard clause",
+  "Object": "Contract",
+  "RecordId": "800Hs0000000226AAC",
+  "RecordName": "CTR-01226 · Parkland Nutrition",
+  "ApproverRole": "legal",
+  "Status": "Pending",
+  "Detail": "Non-standard clause: Service levels and harvest support",
+  "RequestedById": "005Hs00000000005AA",
+  "RequestedDate": "2026-09-27T16:00:00.000Z"
+ },
+ {
+  "Id": "a0AHs0000009002AAC",
+  "Type": "Non-standard clause",
+  "Object": "Contract",
+  "RecordId": "800Hs0000000228AAC",
+  "RecordName": "CTR-01228 · Iron Horse Grain Co.",
+  "ApproverRole": "legal",
+  "Status": "Pending",
+  "Detail": "Non-standard clause: Limitation of liability",
+  "RequestedById": "005Hs00000000006AA",
+  "RequestedDate": "2026-09-26T16:00:00.000Z"
+ }
+]

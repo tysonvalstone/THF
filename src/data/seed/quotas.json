@@ -1,0 +1,434 @@
+[
+ {
+  "Id": "a0QHs00000000001AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2025-Q1",
+  "Amount": 315000
+ },
+ {
+  "Id": "a0QHs00000000002AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2025-Q2",
+  "Amount": 375000
+ },
+ {
+  "Id": "a0QHs00000000003AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2025-Q3",
+  "Amount": 310000
+ },
+ {
+  "Id": "a0QHs00000000004AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2025-Q4",
+  "Amount": 265000
+ },
+ {
+  "Id": "a0QHs00000000005AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2026-Q1",
+  "Amount": 390000
+ },
+ {
+  "Id": "a0QHs00000000006AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2026-Q2",
+  "Amount": 535000
+ },
+ {
+  "Id": "a0QHs00000000007AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2026-Q3",
+  "Amount": 455000
+ },
+ {
+  "Id": "a0QHs00000000008AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2026-Q4",
+  "Amount": 415000
+ },
+ {
+  "Id": "a0QHs00000000009AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2027-Q1",
+  "Amount": 545000
+ },
+ {
+  "Id": "a0QHs00000000010AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2027-Q2",
+  "Amount": 630000
+ },
+ {
+  "Id": "a0QHs00000000011AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2027-Q3",
+  "Amount": 635000
+ },
+ {
+  "Id": "a0QHs00000000012AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Period": "2027-Q4",
+  "Amount": 450000
+ },
+ {
+  "Id": "a0QHs00000000013AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2025-Q1",
+  "Amount": 515000
+ },
+ {
+  "Id": "a0QHs00000000014AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2025-Q2",
+  "Amount": 750000
+ },
+ {
+  "Id": "a0QHs00000000015AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2025-Q3",
+  "Amount": 705000
+ },
+ {
+  "Id": "a0QHs00000000016AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2025-Q4",
+  "Amount": 455000
+ },
+ {
+  "Id": "a0QHs00000000017AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2026-Q1",
+  "Amount": 890000
+ },
+ {
+  "Id": "a0QHs00000000018AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2026-Q2",
+  "Amount": 1115000
+ },
+ {
+  "Id": "a0QHs00000000019AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2026-Q3",
+  "Amount": 1110000
+ },
+ {
+  "Id": "a0QHs00000000020AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2026-Q4",
+  "Amount": 855000
+ },
+ {
+  "Id": "a0QHs00000000021AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2027-Q1",
+  "Amount": 825000
+ },
+ {
+  "Id": "a0QHs00000000022AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2027-Q2",
+  "Amount": 945000
+ },
+ {
+  "Id": "a0QHs00000000023AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2027-Q3",
+  "Amount": 980000
+ },
+ {
+  "Id": "a0QHs00000000024AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Period": "2027-Q4",
+  "Amount": 750000
+ },
+ {
+  "Id": "a0QHs00000000025AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2025-Q1",
+  "Amount": 85000
+ },
+ {
+  "Id": "a0QHs00000000026AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2025-Q2",
+  "Amount": 115000
+ },
+ {
+  "Id": "a0QHs00000000027AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2025-Q3",
+  "Amount": 110000
+ },
+ {
+  "Id": "a0QHs00000000028AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2025-Q4",
+  "Amount": 80000
+ },
+ {
+  "Id": "a0QHs00000000029AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2026-Q1",
+  "Amount": 255000
+ },
+ {
+  "Id": "a0QHs00000000030AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2026-Q2",
+  "Amount": 305000
+ },
+ {
+  "Id": "a0QHs00000000031AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2026-Q3",
+  "Amount": 260000
+ },
+ {
+  "Id": "a0QHs00000000032AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2026-Q4",
+  "Amount": 200000
+ },
+ {
+  "Id": "a0QHs00000000033AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2027-Q1",
+  "Amount": 215000
+ },
+ {
+  "Id": "a0QHs00000000034AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2027-Q2",
+  "Amount": 265000
+ },
+ {
+  "Id": "a0QHs00000000035AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2027-Q3",
+  "Amount": 225000
+ },
+ {
+  "Id": "a0QHs00000000036AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Period": "2027-Q4",
+  "Amount": 195000
+ },
+ {
+  "Id": "a0QHs00000000037AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2025-Q1",
+  "Amount": 1080000
+ },
+ {
+  "Id": "a0QHs00000000038AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2025-Q2",
+  "Amount": 1590000
+ },
+ {
+  "Id": "a0QHs00000000039AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2025-Q3",
+  "Amount": 1355000
+ },
+ {
+  "Id": "a0QHs00000000040AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2025-Q4",
+  "Amount": 1065000
+ },
+ {
+  "Id": "a0QHs00000000041AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2026-Q1",
+  "Amount": 775000
+ },
+ {
+  "Id": "a0QHs00000000042AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2026-Q2",
+  "Amount": 1105000
+ },
+ {
+  "Id": "a0QHs00000000043AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2026-Q3",
+  "Amount": 1035000
+ },
+ {
+  "Id": "a0QHs00000000044AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2026-Q4",
+  "Amount": 765000
+ },
+ {
+  "Id": "a0QHs00000000045AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2027-Q1",
+  "Amount": 825000
+ },
+ {
+  "Id": "a0QHs00000000046AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2027-Q2",
+  "Amount": 1190000
+ },
+ {
+  "Id": "a0QHs00000000047AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2027-Q3",
+  "Amount": 1135000
+ },
+ {
+  "Id": "a0QHs00000000048AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Period": "2027-Q4",
+  "Amount": 730000
+ },
+ {
+  "Id": "a0QHs00000000049AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2025-Q1",
+  "Amount": 345000
+ },
+ {
+  "Id": "a0QHs00000000050AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2025-Q2",
+  "Amount": 465000
+ },
+ {
+  "Id": "a0QHs00000000051AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2025-Q3",
+  "Amount": 375000
+ },
+ {
+  "Id": "a0QHs00000000052AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2025-Q4",
+  "Amount": 325000
+ },
+ {
+  "Id": "a0QHs00000000053AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2026-Q1",
+  "Amount": 290000
+ },
+ {
+  "Id": "a0QHs00000000054AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2026-Q2",
+  "Amount": 440000
+ },
+ {
+  "Id": "a0QHs00000000055AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2026-Q3",
+  "Amount": 345000
+ },
+ {
+  "Id": "a0QHs00000000056AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2026-Q4",
+  "Amount": 290000
+ },
+ {
+  "Id": "a0QHs00000000057AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2027-Q1",
+  "Amount": 350000
+ },
+ {
+  "Id": "a0QHs00000000058AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2027-Q2",
+  "Amount": 475000
+ },
+ {
+  "Id": "a0QHs00000000059AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2027-Q3",
+  "Amount": 430000
+ },
+ {
+  "Id": "a0QHs00000000060AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Period": "2027-Q4",
+  "Amount": 285000
+ },
+ {
+  "Id": "a0QHs00000000061AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2025-Q1",
+  "Amount": 510000
+ },
+ {
+  "Id": "a0QHs00000000062AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2025-Q2",
+  "Amount": 640000
+ },
+ {
+  "Id": "a0QHs00000000063AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2025-Q3",
+  "Amount": 565000
+ },
+ {
+  "Id": "a0QHs00000000064AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2025-Q4",
+  "Amount": 445000
+ },
+ {
+  "Id": "a0QHs00000000065AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2026-Q1",
+  "Amount": 450000
+ },
+ {
+  "Id": "a0QHs00000000066AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2026-Q2",
+  "Amount": 595000
+ },
+ {
+  "Id": "a0QHs00000000067AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2026-Q3",
+  "Amount": 555000
+ },
+ {
+  "Id": "a0QHs00000000068AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2026-Q4",
+  "Amount": 450000
+ },
+ {
+  "Id": "a0QHs00000000069AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2027-Q1",
+  "Amount": 585000
+ },
+ {
+  "Id": "a0QHs00000000070AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2027-Q2",
+  "Amount": 730000
+ },
+ {
+  "Id": "a0QHs00000000071AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2027-Q3",
+  "Amount": 685000
+ },
+ {
+  "Id": "a0QHs00000000072AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Period": "2027-Q4",
+  "Amount": 485000
+ }
+]

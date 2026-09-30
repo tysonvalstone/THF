@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useStore } from "@/lib/data/store";
-import { DEFAULT_K, DEFAULT_WEIGHTS, prioritize, WEIGHT_LABELS, type SegmentPriority, type Weights } from "@/lib/prioritization";
+import { DEFAULT_K, DEFAULT_WEIGHTS, prioritize, WEIGHT_LABELS, type OpenOppValue, type SegmentPriority, type Weights } from "@/lib/prioritization";
 import { formatRate, type RateEstimate, type Tag } from "@/lib/stats";
 import { closeDateFlags, sellingWindowAt } from "@/lib/seasonality";
 import { opportunityHref } from "@/lib/links";
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { DataTable, type Column } from "@/components/shared/data-table";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -302,6 +304,71 @@ export function SegmentPrioritization() {
   }
   const window = sellingWindowAt(asOf);
   const maxScore = Math.max(...p.segments.map((s) => s.score));
+  const rank = new Map(p.allOpen.map((v, i) => [v.opp.Id, i + 1]));
+  const dealColumns: Column<OpenOppValue>[] = [
+    { key: "rank", header: "#", sortValue: (v) => rank.get(v.opp.Id), cell: (v) => <span className="text-muted-foreground tabular">{rank.get(v.opp.Id)}</span> },
+    {
+      key: "deal",
+      header: "Deal",
+      sortValue: (v) => v.accountName,
+      cell: (v) => {
+        const href = opportunityHref(v.opp.Id, mode === "live" ? lightningBaseUrl : undefined);
+        return (
+          <div className="max-w-72">
+            <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="font-medium text-primary hover:underline">
+              {v.accountName}
+            </a>
+            <p className="truncate text-xs text-muted-foreground">{v.opp.Name.replace(`${v.accountName} - `, "")}</p>
+          </div>
+        );
+      },
+    },
+    { key: "segment", header: "Segment", sortValue: (v) => v.segment, cell: (v) => <span className="text-muted-foreground">{v.segment}</span> },
+    { key: "stage", header: "Stage", sortValue: (v) => v.opp.StageName, cell: (v) => v.opp.StageName },
+    { key: "amount", header: "Amount", align: "right", sortValue: (v) => v.opp.Amount, cell: (v) => fmtMoney(v.opp.Amount) },
+    {
+      key: "rate",
+      header: "Close rate",
+      sortValue: (v) => v.rate.rate,
+      cell: (v) => (
+        <span className="flex items-center gap-1.5">
+          <Num tip={`${v.rate.explanation} Uses the rate for ${MONTHS_SHORT[parseDate(v.opp.CreatedDate).getUTCMonth()]}-created deals in this segment.`}>{pct(v.rate.rate)}</Num>
+          <TagChip tag={v.rate.tag} />
+        </span>
+      ),
+    },
+    {
+      key: "perday",
+      header: "Expected $/day",
+      align: "right",
+      sortValue: (v) => v.expectedPerDay,
+      cell: (v) => (
+        <Num tip={`${pct(v.rate.rate)} × ${fmtMoney(v.opp.Amount, { compact: false })} = ${fmtMoney(v.expectedAmount)} expected, ÷ ${Math.round(v.medianDays)}-day median cycle.`}>
+          ${Math.round(v.expectedPerDay).toLocaleString()}
+        </Num>
+      ),
+    },
+    {
+      key: "close",
+      header: "Close date",
+      sortValue: (v) => v.opp.CloseDate,
+      cell: (v) => (
+        <>
+          <span className="tabular">{fmtShortDate(v.opp.CloseDate)}</span>
+          {closeDateFlags(v.opp, accounts.get(v.opp.AccountId), asOf).map((fl) => (
+            <Tooltip key={fl.kind}>
+              <TooltipTrigger asChild>
+                <span tabIndex={0} className="mt-1 block w-fit cursor-help rounded-md border border-amber-300 px-1.5 text-[11px] text-amber-800">
+                  {fl.kind === "board" ? "Before board" : fl.kind === "blackout" ? "In blackout" : "No econ. buyer"}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-64">{fl.message}</TooltipContent>
+            </Tooltip>
+          ))}
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
@@ -321,73 +388,22 @@ export function SegmentPrioritization() {
           ))}
         </section>
 
-        <section className="rounded-md border bg-card">
-          <header className="flex flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-base font-semibold">Top Open Deals by Expected Value</h2>
-            </div>
-
-          </header>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[860px] text-sm">
-              <thead className="bg-slate-50 text-left text-xs text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-2 font-medium">#</th>
-                  <th className="px-4 py-2 font-medium">Deal</th>
-                  <th className="px-4 py-2 font-medium">Segment</th>
-                  <th className="px-4 py-2 font-medium">Stage</th>
-                  <th className="px-4 py-2 text-right font-medium">Amount</th>
-                  <th className="px-4 py-2 font-medium">Close rate</th>
-                  <th className="px-4 py-2 text-right font-medium">Expected $/day</th>
-                  <th className="px-4 py-2 font-medium">Close date</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {p.topOpen.map((v, i) => {
-                  const flags = closeDateFlags(v.opp, accounts.get(v.opp.AccountId), asOf);
-                  const href = opportunityHref(v.opp.Id, mode === "live" ? lightningBaseUrl : undefined);
-                  return (
-                    <tr key={v.opp.Id} className="align-top hover:bg-slate-50">
-                      <td className="px-4 py-2.5 text-muted-foreground tabular">{i + 1}</td>
-                      <td className="max-w-72 px-4 py-2.5">
-                        <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="font-medium text-primary hover:underline">
-                          {v.accountName}
-                        </a>
-                        <p className="truncate text-xs text-muted-foreground">{v.opp.Name.replace(`${v.accountName} - `, "")}</p>
-                      </td>
-                      <td className="px-4 py-2.5 text-muted-foreground">{v.segment}</td>
-                      <td className="px-4 py-2.5">{v.opp.StageName}</td>
-                      <td className="px-4 py-2.5 text-right tabular">{fmtMoney(v.opp.Amount)}</td>
-                      <td className="px-4 py-2.5">
-                        <span className="flex items-center gap-1.5">
-                          <Num tip={`${v.rate.explanation} Uses the rate for ${MONTHS_SHORT[parseDate(v.opp.CreatedDate).getUTCMonth()]}-created deals in this segment.`}>{pct(v.rate.rate)}</Num>
-                          <TagChip tag={v.rate.tag} />
-                        </span>
-                      </td>
-                      <td className="px-4 py-2.5 text-right">
-                        <Num tip={`${pct(v.rate.rate)} × ${fmtMoney(v.opp.Amount, { compact: false })} = ${fmtMoney(v.expectedAmount)} expected, ÷ ${Math.round(v.medianDays)}-day median cycle.`}>
-                          ${Math.round(v.expectedPerDay).toLocaleString()}
-                        </Num>
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <span className="tabular">{fmtShortDate(v.opp.CloseDate)}</span>
-                        {flags.map((f) => (
-                          <Tooltip key={f.kind}>
-                            <TooltipTrigger asChild>
-                              <span tabIndex={0} className="mt-1 block w-fit cursor-help rounded-md border border-amber-300 px-1.5 text-[11px] text-amber-800">
-                                {f.kind === "board" ? "Before board" : f.kind === "blackout" ? "In blackout" : "No econ. buyer"}
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-64">{f.message}</TooltipContent>
-                          </Tooltip>
-                        ))}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <section className="space-y-2">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="text-base font-semibold">Open Deals by Expected Value</h2>
+            <Link href="/pipeline?sort=expected" className="text-sm text-primary hover:underline">
+              Open in Pipeline
+            </Link>
           </div>
+          <DataTable
+            rows={p.allOpen}
+            columns={dealColumns}
+            rowKey={(v) => v.opp.Id}
+            param="deals"
+            search={{ placeholder: "Search deals", text: (v) => `${v.accountName} ${v.opp.Name} ${v.segment}` }}
+            minWidth={860}
+            caption="Open deals by expected value"
+          />
         </section>
       </div>
     </div>

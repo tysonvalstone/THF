@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import type { HelpIndexEntry } from "@/lib/help/types";
 import { cn } from "@/lib/utils";
 
-function snippet(text: string, query: string): string {
+export function snippet(text: string, query: string): string {
   const q = query.trim().toLowerCase().split(/\s+/)[0] ?? "";
   const i = q ? text.toLowerCase().indexOf(q) : -1;
   if (i < 0) return text.slice(0, 140);
@@ -14,13 +14,9 @@ function snippet(text: string, query: string): string {
   return `${start ? "…" : ""}${text.slice(start, i + 110)}…`;
 }
 
-/** Client-side search over titles, summaries and body text */
-export function HelpSearch({ index, onSelect, autoFocus }: { index: HelpIndexEntry[]; onSelect: (slug: string) => void; autoFocus?: boolean }) {
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const fuse = useMemo(
+/** Fuse search over help articles (titles, summaries, body text) */
+export function useHelpFuse(index: HelpIndexEntry[]) {
+  return useMemo(
     () =>
       new Fuse(index, {
         keys: [
@@ -34,7 +30,35 @@ export function HelpSearch({ index, onSelect, autoFocus }: { index: HelpIndexEnt
       }),
     [index],
   );
-  const results = useMemo(() => (query.trim().length > 1 ? fuse.search(query.trim()).slice(0, 8) : []), [fuse, query]);
+}
+
+const DROPDOWN_LIMIT = 6;
+
+/** Client-side search over titles, summaries and body text */
+export function HelpSearch({
+  index,
+  onSelect,
+  onSeeAll,
+  autoFocus,
+}: {
+  index: HelpIndexEntry[];
+  onSelect: (slug: string) => void;
+  /** Opens the full, paginated results for the query */
+  onSeeAll?: (query: string) => void;
+  autoFocus?: boolean;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const fuse = useHelpFuse(index);
+  const all = useMemo(() => (query.trim().length > 1 ? fuse.search(query.trim()) : []), [fuse, query]);
+  const results = all.slice(0, DROPDOWN_LIMIT);
+  const seeAll = () => {
+    onSeeAll?.(query.trim());
+    setOpen(false);
+    inputRef.current?.blur();
+  };
 
   const choose = (slug: string) => {
     onSelect(slug);
@@ -68,7 +92,8 @@ export function HelpSearch({ index, onSelect, autoFocus }: { index: HelpIndexEnt
             setActive((a) => Math.max(0, a - 1));
           } else if (e.key === "Enter") {
             e.preventDefault();
-            choose(results[active].item.slug);
+            if (e.shiftKey && onSeeAll) seeAll();
+            else choose(results[active].item.slug);
           } else if (e.key === "Escape") setOpen(false);
         }}
         placeholder="Search help"
@@ -92,6 +117,13 @@ export function HelpSearch({ index, onSelect, autoFocus }: { index: HelpIndexEnt
             </li>
           ))}
           {!results.length && <li className="px-3 py-3 text-sm text-muted-foreground">No articles found</li>}
+          {onSeeAll && results.length > 0 && (
+            <li className="border-t">
+              <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={seeAll} className="block w-full px-3 py-2 text-left text-sm font-medium text-primary hover:bg-muted/40">
+                See all results ({all.length})
+              </button>
+            </li>
+          )}
         </ul>
       )}
     </div>

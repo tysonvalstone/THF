@@ -1,0 +1,71 @@
+---
+title: Forecasting & Commissions
+summary: How the Forecast page rolls up deals by category and season, how what-if inputs change the projection, and how commissions are earned, payable and paid.
+order: 13
+related: [finance, segment-prioritization, home-dashboard]
+---
+
+Forecast and Commissions live under Finance. Both are calculated for the as-of date, so time travel shows the forecast as it stood on that day: deals created later are hidden, and deals that closed later count as still open.
+
+## Who sees what
+
+- **Sales reps** see only their own deals, their own number and **My Commissions**.
+- **Sales managers** see the whole team, can filter to one rep, and can override any open deal's category.
+- **Finance** and **Administrators** see the team forecast and the commission payout report, and can edit commission plans.
+
+## Pick a period
+
+Use the **Month** or **Quarter** toggle and the arrows to move between periods. Click the period name to return to the current one. Quotas are set per quarter; a month uses one third of its quarter's quota.
+
+## The summary row
+
+- **Quota**: the sum of the reps' quotas for the period.
+- **Closed**: deals won in the period, on or before the as-of date.
+- **Commit**, **Best Case** and **Pipeline**: open deals closing in the period, by effective category, at full amount.
+- **Seasonal expected**: closed deals plus every open deal's amount times its stage probability, adjusted for the season it closes in.
+- **Attainment**: closed as a share of quota, with the seasonal expected share underneath.
+
+## Categories and overrides
+
+Each open deal has one effective category. A manager's override wins; otherwise the rep's own category counts; if neither is usable, the stage decides (Negotiation and Board Approval are Commit, Proposal is Best Case, earlier stages are Pipeline). Omitted deals stay in the list but are left out of every total.
+
+Reps change their category with the **Category** dropdown on their own deals. Managers use the **Override** column; choose **None** to remove an override. The rep's category shows struck through while an override applies. Every change is saved to the audit log.
+
+<Screenshot caption="Forecast deals table with the Category and Override dropdowns" />
+
+## Seasonal adjustment
+
+Close rates differ by the month a deal closes. For each segment, the app measures the share of decided deals that were won in each close month and compares it with the segment's overall rate. A deal's probability is multiplied by that ratio, limited to between 0.3 and 1.7, and capped at 100%. Thin months are blended toward the segment's overall rate, as on the Segments page.
+
+The note under each deal's expected value explains the adjustment, for example **Closes in harvest · co-op rate 13%**. Elevator and co-op deals that close during harvest are usually discounted, because buyers go quiet then.
+
+## By rep vs quota
+
+Each bar stacks Closed, Commit, Best Case and Pipeline from left to right. The dark tick marks quota and the diamond marks seasonal expected. Hover a rep, or tab to it, for the exact figures; the percentages on the right are attainment and expected attainment.
+
+## What-if
+
+Three sliders change the projection without changing any deal:
+
+- **Win rate** multiplies every open deal's adjusted probability.
+- **Avg deal size** multiplies open deal amounts.
+- **Slippage** removes that share of open value from the period, as if those deals were pushed out.
+
+**Projected** shows the result and the difference from seasonal expected. **Reset** puts the sliders back.
+
+## Commissions
+
+Commissions are worked out per rep per plan year from closed-won deals:
+
+- **First-year value** is the contract's annual recurring revenue plus one-time fees, or the opportunity amount when there is no contract yet.
+- **Base**: the base rate on first-year value up to the annual quota.
+- **Accelerator**: the higher rate on the part of bookings above the annual quota. Deals count in close-date order, so only the part of a deal past quota earns it.
+- **Multi-year bonus**: an extra percentage of first-year value when the term is 24 months or longer (from the contract, otherwise the accepted quote).
+
+Each deal moves through four statuses: **Awaiting invoice**, **Awaiting payment**, **Payable** once the contract's first invoice is paid, and **Paid** on the payroll at the end of the following month.
+
+<Screenshot caption="My Commissions with plan, attainment bar and statement" />
+
+## Payout report
+
+Managers, Finance and Administrators see every rep's plan, bookings, attainment, earned, payable and paid amounts for the chosen year. Click a rep to open their statement. **Export CSV** lets you choose the columns. Finance and Administrators can change a plan with **Edit plan**; a rep with no plan for the year is shown on the default plan until one is saved.

@@ -45,7 +45,7 @@ export function EmailLogin({ next }: { next?: string }) {
   }
 
   return (
-    <AuthCard title="Sign in" subtitle="Use your work email and password.">
+    <AuthCard title="Sign in" subtitle="Use your work email and password." guest>
       <form action={signIn} className="space-y-4">
         <FormError message={signInState.error} />
         <input type="hidden" name="next" value={next ?? "/"} />
@@ -62,7 +62,7 @@ export function EmailLogin({ next }: { next?: string }) {
           </div>
           <Input id="password" name="password" type="password" autoComplete="current-password" required />
         </div>
-        <Button type="submit" className="w-full" disabled={signingIn}>
+        <Button type="submit" variant="outline" className="w-full" disabled={signingIn}>
           {signingIn ? "Signing in…" : "Sign in"}
         </Button>
       </form>

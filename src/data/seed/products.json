@@ -1,0 +1,159 @@
+[
+ {
+  "Id": "01tHs00000000001AA",
+  "Name": "Ceres",
+  "ProductCode": "CERES",
+  "Family": "Financials",
+  "Description": "Ag ERP: grain accounting, producer settlements, deferred payments, patronage and equity, 1099s and Canadian tax slips.",
+  "IsActive": true,
+  "List_Price__c": 36000,
+  "Pricing_Unit__c": "per year",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Seed Processor",
+   "Feed Mill"
+  ],
+  "Product_Type__c": "a0PHs000000001AAA"
+ },
+ {
+  "Id": "01tHs00000000002AA",
+  "Name": "GrainSight",
+  "ProductCode": "GRAINSIGHT",
+  "Family": "Commodity Management",
+  "Description": "Grain management: contracts (incl. price-later / DP), real-time position, hedges, bids, bin inventory and shrink.",
+  "IsActive": true,
+  "List_Price__c": 30000,
+  "Pricing_Unit__c": "per year",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Ethanol Plant",
+   "Oilseed Crusher",
+   "Flour Mill"
+  ],
+  "Product_Type__c": "a0PHs000000002AAA"
+ },
+ {
+  "Id": "01tHs00000000003AA",
+  "Name": "ScaleTrac",
+  "ProductCode": "SCALETRAC",
+  "Family": "Grain Operations",
+  "Description": "Scale house ticketing: inbound/outbound tickets, grade and moisture capture, discounts, driver kiosks.",
+  "IsActive": true,
+  "List_Price__c": 9600,
+  "Pricing_Unit__c": "per location / year",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Ethanol Plant",
+   "Oilseed Crusher",
+   "Flour Mill",
+   "Seed Processor",
+   "Feed Mill"
+  ],
+  "Product_Type__c": "a0PHs000000003AAA"
+ },
+ {
+  "Id": "01tHs00000000004AA",
+  "Name": "GrainSight Mobile",
+  "ProductCode": "GRAINSIGHT-M",
+  "Family": "Customer Engagement",
+  "Description": "Producer app: contracts, e-signature, settlements and push bids on the grower's phone.",
+  "IsActive": true,
+  "List_Price__c": 12000,
+  "Pricing_Unit__c": "per year",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Ethanol Plant"
+  ],
+  "Product_Type__c": "a0PHs000000004AAA"
+ },
+ {
+  "Id": "01tHs00000000005AA",
+  "Name": "ScaleTrac Mobile",
+  "ProductCode": "SCALETRAC-M",
+  "Family": "Grain Operations",
+  "Description": "Mobile scale tickets and driver check-in; a quick add-on that can go live in weeks.",
+  "IsActive": true,
+  "List_Price__c": 4800,
+  "Pricing_Unit__c": "per location / year",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Feed Mill"
+  ],
+  "Product_Type__c": "a0PHs000000003AAA"
+ },
+ {
+  "Id": "01tHs00000000010AA",
+  "Name": "Implementation & Data Migration",
+  "ProductCode": "SVC-IMPL",
+  "Family": "Services",
+  "Description": "Fixed-scope implementation, historical ticket/contract migration and go-live support.",
+  "IsActive": true,
+  "List_Price__c": 25000,
+  "Pricing_Unit__c": "one-time",
+  "Best_Fit__c": [],
+  "Product_Type__c": "a0PHs000000008AAA"
+ },
+ {
+  "Id": "01tHs00000000011AA",
+  "Name": "Go-Live Training",
+  "ProductCode": "SVC-TRAIN",
+  "Family": "Services",
+  "Description": "On-site scale house and office training, scheduled outside harvest and planting.",
+  "IsActive": true,
+  "List_Price__c": 8000,
+  "Pricing_Unit__c": "one-time",
+  "Best_Fit__c": [],
+  "Product_Type__c": "a0PHs000000008AAA"
+ },
+ {
+  "Id": "01tHs00000000012AA",
+  "Name": "ScaleTrac Driver Kiosk",
+  "ProductCode": "HW-KIOSK",
+  "Family": "Grain Operations",
+  "Description": "Outdoor driver kiosk at the scale: badge or QR check-in, ticket print, no window stop. Cuts scale time per truck.",
+  "IsActive": true,
+  "List_Price__c": 6500,
+  "Pricing_Unit__c": "one-time",
+  "Unit_Label__c": "kiosk",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative",
+   "Ethanol Plant",
+   "Feed Mill"
+  ],
+  "Product_Type__c": "a0PHs000000003AAA"
+ },
+ {
+  "Id": "01tHs00000000013AA",
+  "Name": "Automated Probe Integration",
+  "ProductCode": "SVC-PROBE",
+  "Family": "Services",
+  "Description": "Connects the grain probe and moisture tester to ScaleTrac so grade and dockage post to the ticket automatically.",
+  "IsActive": true,
+  "List_Price__c": 3500,
+  "Pricing_Unit__c": "one-time",
+  "Unit_Label__c": "location",
+  "Best_Fit__c": [
+   "Grain Elevator",
+   "Cooperative"
+  ],
+  "Product_Type__c": "a0PHs000000008AAA"
+ },
+ {
+  "Id": "01tHs00000000014AA",
+  "Name": "Premium Support",
+  "ProductCode": "SVC-PREM",
+  "Family": "Services",
+  "Description": "Extended harvest-season support hours (5 am to 11 pm, seven days) and a named support lead.",
+  "IsActive": true,
+  "List_Price__c": 6000,
+  "Pricing_Unit__c": "per year",
+  "Best_Fit__c": [],
+  "Product_Type__c": "a0PHs000000008AAA"
+ }
+]

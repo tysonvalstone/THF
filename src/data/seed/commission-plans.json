@@ -1,0 +1,164 @@
+[
+ {
+  "Id": "a0CHs00000000001AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Year": 2025,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 1265000
+ },
+ {
+  "Id": "a0CHs00000000002AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Year": 2026,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 1795000
+ },
+ {
+  "Id": "a0CHs00000000003AA",
+  "OwnerId": "005Hs00000000002AA",
+  "Year": 2027,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 2260000
+ },
+ {
+  "Id": "a0CHs00000000004AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Year": 2025,
+  "BaseRatePct": 8.5,
+  "AcceleratorPct": 12.75,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 2425000
+ },
+ {
+  "Id": "a0CHs00000000005AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Year": 2026,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 3970000
+ },
+ {
+  "Id": "a0CHs00000000006AA",
+  "OwnerId": "005Hs00000000003AA",
+  "Year": 2027,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 3500000
+ },
+ {
+  "Id": "a0CHs00000000007AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Year": 2025,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 390000
+ },
+ {
+  "Id": "a0CHs00000000008AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Year": 2026,
+  "BaseRatePct": 10,
+  "AcceleratorPct": 15,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 1020000
+ },
+ {
+  "Id": "a0CHs00000000009AA",
+  "OwnerId": "005Hs00000000004AA",
+  "Year": 2027,
+  "BaseRatePct": 8,
+  "AcceleratorPct": 12,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 900000
+ },
+ {
+  "Id": "a0CHs00000000010AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Year": 2025,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 5090000
+ },
+ {
+  "Id": "a0CHs00000000011AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Year": 2026,
+  "BaseRatePct": 8.5,
+  "AcceleratorPct": 12.75,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 3680000
+ },
+ {
+  "Id": "a0CHs00000000012AA",
+  "OwnerId": "005Hs00000000005AA",
+  "Year": 2027,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 3880000
+ },
+ {
+  "Id": "a0CHs00000000013AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Year": 2025,
+  "BaseRatePct": 8.5,
+  "AcceleratorPct": 12.75,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 1510000
+ },
+ {
+  "Id": "a0CHs00000000014AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Year": 2026,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 1365000
+ },
+ {
+  "Id": "a0CHs00000000015AA",
+  "OwnerId": "005Hs00000000006AA",
+  "Year": 2027,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 1540000
+ },
+ {
+  "Id": "a0CHs00000000016AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Year": 2025,
+  "BaseRatePct": 8.5,
+  "AcceleratorPct": 12.75,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 2160000
+ },
+ {
+  "Id": "a0CHs00000000017AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Year": 2026,
+  "BaseRatePct": 9,
+  "AcceleratorPct": 13.5,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 2050000
+ },
+ {
+  "Id": "a0CHs00000000018AA",
+  "OwnerId": "005Hs00000000007AA",
+  "Year": 2027,
+  "BaseRatePct": 9.5,
+  "AcceleratorPct": 14.25,
+  "MultiYearBonusPct": 2,
+  "AnnualQuota": 2485000
+ }
+]

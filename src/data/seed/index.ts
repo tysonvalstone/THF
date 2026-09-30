@@ -12,6 +12,27 @@ import type {
   Opportunity,
   OpportunityLineItem,
   Task,
+  ProductType,
+  Product2,
+  Pricebook2,
+  PricebookEntry,
+  Quote,
+  QuoteLineItem,
+  NewBuild,
+  Contract,
+  ContractClause,
+  Clause,
+  Invoice,
+  Payment,
+  OnboardingProject,
+  OnboardingTask,
+  HealthSignal,
+  SupportTicket,
+  Quota,
+  CommissionPlan,
+  ApprovalRequest,
+  AuditEntry,
+  Call,
 } from "@/types/salesforce";
 import type { PriceSeries } from "@/types/reference";
 
@@ -25,6 +46,27 @@ import campaignMembers from "./campaign-members.json";
 import tasks from "./tasks.json";
 import events from "./events.json";
 import prices from "./prices.json";
+import productTypes from "./product-types.json";
+import products from "./products.json";
+import pricebooks from "./pricebooks.json";
+import pricebookEntries from "./pricebook-entries.json";
+import quotes from "./quotes.json";
+import quoteLineItems from "./quote-line-items.json";
+import newBuilds from "./new-builds.json";
+import contracts from "./contracts.json";
+import contractClauses from "./contract-clauses.json";
+import clauses from "./clauses.json";
+import invoices from "./invoices.json";
+import payments from "./payments.json";
+import onboardingProjects from "./onboarding-projects.json";
+import onboardingTasks from "./onboarding-tasks.json";
+import healthSignals from "./health-signals.json";
+import supportTickets from "./support-tickets.json";
+import quotas from "./quotas.json";
+import commissionPlans from "./commission-plans.json";
+import approvals from "./approvals.json";
+import auditLog from "./audit-log.json";
+import calls from "./calls.json";
 
 export const SEED = {
   accounts: accounts as unknown as Account[],
@@ -36,6 +78,27 @@ export const SEED = {
   campaignMembers: campaignMembers as unknown as CampaignMember[],
   tasks: tasks as unknown as Task[],
   events: events as unknown as Event[],
+  productTypes: productTypes as unknown as ProductType[],
+  products: products as unknown as Product2[],
+  pricebooks: pricebooks as unknown as Pricebook2[],
+  pricebookEntries: pricebookEntries as unknown as PricebookEntry[],
+  quotes: quotes as unknown as Quote[],
+  quoteLineItems: quoteLineItems as unknown as QuoteLineItem[],
+  newBuilds: newBuilds as unknown as NewBuild[],
+  contracts: contracts as unknown as Contract[],
+  contractClauses: contractClauses as unknown as ContractClause[],
+  clauses: clauses as unknown as Clause[],
+  invoices: invoices as unknown as Invoice[],
+  payments: payments as unknown as Payment[],
+  onboardingProjects: onboardingProjects as unknown as OnboardingProject[],
+  onboardingTasks: onboardingTasks as unknown as OnboardingTask[],
+  healthSignals: healthSignals as unknown as HealthSignal[],
+  supportTickets: supportTickets as unknown as SupportTicket[],
+  quotas: quotas as unknown as Quota[],
+  commissionPlans: commissionPlans as unknown as CommissionPlan[],
+  approvals: approvals as unknown as ApprovalRequest[],
+  auditLog: auditLog as unknown as AuditEntry[],
+  calls: calls as unknown as Call[],
 };
 
 export const PRICES = prices as unknown as PriceSeries[];

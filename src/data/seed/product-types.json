@@ -1,0 +1,58 @@
+[
+ {
+  "Id": "a0PHs000000001AAA",
+  "Name": "Financials",
+  "Description": "Accounting, settlements and tax reporting",
+  "IsActive": true,
+  "SortOrder": 1
+ },
+ {
+  "Id": "a0PHs000000002AAA",
+  "Name": "Commodity Management",
+  "Description": "Contracts, positions, hedging and bids",
+  "IsActive": true,
+  "SortOrder": 2
+ },
+ {
+  "Id": "a0PHs000000003AAA",
+  "Name": "Grain Operations",
+  "Description": "Scale house, tickets and receiving",
+  "IsActive": true,
+  "SortOrder": 3
+ },
+ {
+  "Id": "a0PHs000000004AAA",
+  "Name": "Customer Engagement",
+  "Description": "Producer-facing apps and portals",
+  "IsActive": true,
+  "SortOrder": 4
+ },
+ {
+  "Id": "a0PHs000000005AAA",
+  "Name": "Feed",
+  "Description": "Feed milling and delivery",
+  "IsActive": true,
+  "SortOrder": 5
+ },
+ {
+  "Id": "a0PHs000000006AAA",
+  "Name": "Agronomy",
+  "Description": "Agronomy sales and application",
+  "IsActive": true,
+  "SortOrder": 6
+ },
+ {
+  "Id": "a0PHs000000007AAA",
+  "Name": "Processing",
+  "Description": "Processing plant operations",
+  "IsActive": true,
+  "SortOrder": 7
+ },
+ {
+  "Id": "a0PHs000000008AAA",
+  "Name": "Services",
+  "Description": "Implementation, training, integration and support",
+  "IsActive": true,
+  "SortOrder": 8
+ }
+]

@@ -1,9 +1,10 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
+import { SESSION_COOKIE, createSessionValue } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { createAdminClient, createClient, createStatelessClient } from "@/lib/supabase/server";
-import { MIN_PASSWORD, supabaseConfigured } from "@/lib/supabase/config";
+import { GUEST_ID, MIN_PASSWORD, supabaseConfigured } from "@/lib/supabase/config";
 
 export interface ActionState {
   error?: string;
@@ -39,7 +40,15 @@ export async function signInWithEmail(_prev: ActionState, form: FormData): Promi
   redirect(safeNext(form.get("next")));
 }
 
+/** One click, no credentials: mock data, Demo Mode, Manager role (switchable) */
+export async function continueAsGuest(): Promise<void> {
+  const { value, expires } = await createSessionValue(GUEST_ID);
+  (await cookies()).set(SESSION_COOKIE, value, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", expires });
+  redirect("/");
+}
+
 export async function signOut(): Promise<void> {
+  (await cookies()).delete(SESSION_COOKIE);
   if (supabaseConfigured()) {
     const supabase = await createClient();
     await supabase.auth.signOut();
@@ -89,7 +98,7 @@ export async function createFirstAdmin(_prev: ActionState, form: FormData): Prom
     email,
     password,
     email_confirm: true,
-    app_metadata: { role: "admin" },
+    app_metadata: { role: "admin", app_role: "admin" },
     user_metadata: { full_name: name },
   });
   if (error) return { error: error.message };

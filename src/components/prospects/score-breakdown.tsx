@@ -12,6 +12,7 @@ export const FACTOR_COLOR: Record<FactorKey, string> = {
   displacement: "#eda100",
   engagement: "#e87ba4",
   climate: "#008300",
+  harvest: "#7a5af5",
 };
 
 /** One-line stacked bar: each factor's points on a 0–100 scale */

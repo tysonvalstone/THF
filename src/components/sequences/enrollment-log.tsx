@@ -2,117 +2,172 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { X } from "lucide-react";
+import { toast } from "sonner";
 import type { Enrollment } from "@/lib/ai/types";
-import type { DataSnapshot } from "@/lib/data/types";
+import type { DataSnapshot, Mutation } from "@/lib/data/types";
+import { useStore } from "@/lib/data/store";
 import { fmtShortDate } from "@/lib/dates";
 import { recordHref } from "@/lib/links";
-import { STEP_TYPE_LABEL, enrollmentsCollection } from "./sequence-store";
-import { ConfirmDialog } from "./parts";
+import type { Account, Contact } from "@/types/salesforce";
+import { STEP_TYPE_LABEL, enrollmentTaskIds, enrollmentsCollection } from "./sequence-store";
+import { DataTable, type Column } from "@/components/shared/data-table";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
+interface Row {
+  e: Enrollment;
+  account?: Account;
+  contact?: Contact;
+  next?: Enrollment["steps"][number];
+}
+
 export function EnrollmentLog({ enrollments, data, asOfISO }: { enrollments: Enrollment[]; data: DataSnapshot; asOfISO: string }) {
-  const [open, setOpen] = useState<string | null>(null);
+  const { commit, undo, changeLog, localOnly } = useStore();
+  const [openId, setOpenId] = useState<string | null>(null);
   const [removing, setRemoving] = useState<Enrollment | null>(null);
-  const rows = useMemo(() => {
+  const rows = useMemo<Row[]>(() => {
     const acc = new Map(data.accounts.map((a) => [a.Id, a]));
     const con = new Map(data.contacts.map((c) => [c.Id, c]));
-    return [...enrollments]
-      .sort((a, b) => b.enrolledAt.localeCompare(a.enrolledAt))
-      .map((e) => {
-        const next = e.steps.find((s) => s.date >= asOfISO);
-        return { e, account: acc.get(e.accountId), contact: e.contactId ? con.get(e.contactId) : undefined, next };
-      });
+    return enrollments.map((e) => ({ e, account: acc.get(e.accountId), contact: e.contactId ? con.get(e.contactId) : undefined, next: e.steps.find((s) => s.date >= asOfISO) }));
   }, [enrollments, data, asOfISO]);
 
-  if (!rows.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No enrollments yet</p>;
+  /** Remove the recipient: the enrollment and its scheduled tasks, with Undo */
+  const unenroll = (e: Enrollment) => {
+    const ids = enrollmentTaskIds(e, data.tasks);
+    const mutations: Mutation[] = ids.map((id) => ({ op: "delete", object: "Task", id }));
+    enrollmentsCollection.remove(e.id);
+    if (mutations.length) commit(mutations);
+    const expected = changeLog().length;
+    setOpenId(null);
+    toast.success(`Recipient removed${ids.length ? ` · ${ids.length} scheduled task${ids.length === 1 ? "" : "s"} deleted` : ""}${localOnly ? " (local change, not synced)" : ""}`, {
+      duration: 5000,
+      action: {
+        label: "Undo",
+        onClick: () => {
+          if (mutations.length && changeLog().length !== expected) {
+            toast.error("Can't undo: other changes were made since");
+            return;
+          }
+          if (mutations.length) undo(mutations.length);
+          enrollmentsCollection.save(e);
+        },
+      },
+    });
+  };
+
+  const columns: Column<Row>[] = [
+    {
+      key: "recipient",
+      header: "Recipient",
+      sortValue: (r) => r.contact?.Name ?? r.account?.Name,
+      cell: (r) => (
+        <div className="min-w-0 max-w-64">
+          <p className="truncate font-medium">{r.contact?.Name ?? r.account?.Name ?? r.e.accountId}</p>
+          <p className="truncate text-xs text-muted-foreground">{r.contact ? r.account?.Name : "Account only"}</p>
+        </div>
+      ),
+    },
+    { key: "sequence", header: "Sequence", hideBelow: "sm", sortValue: (r) => r.e.sequenceName, cell: (r) => <span className="block max-w-56 truncate">{r.e.sequenceName}</span> },
+    {
+      key: "next",
+      header: "Next step",
+      sortValue: (r) => r.next?.date ?? "9999",
+      cell: (r) =>
+        r.next ? (
+          <span className="whitespace-nowrap">
+            {STEP_TYPE_LABEL[r.next.type]} · <span className="tabular">{fmtShortDate(r.next.date)}</span>
+          </span>
+        ) : (
+          <span className="text-muted-foreground">Complete</span>
+        ),
+    },
+    { key: "steps", header: "Steps", align: "right", hideBelow: "md", sortValue: (r) => r.e.steps.length, cell: (r) => r.e.steps.length },
+    { key: "enrolled", header: "Enrolled", hideBelow: "lg", sortValue: (r) => r.e.enrolledAt, cell: (r) => <span className="text-muted-foreground tabular">{fmtShortDate(r.e.startDate)}</span> },
+    {
+      key: "remove",
+      header: <span className="sr-only">Remove</span>,
+      align: "right",
+      cell: (r) => (
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          aria-label={`Remove ${r.contact?.Name ?? r.account?.Name ?? "recipient"}`}
+          onClick={(ev) => {
+            ev.stopPropagation();
+            setRemoving(r.e);
+          }}
+        >
+          <X />
+        </Button>
+      ),
+    },
+  ];
+
+  const open = openId ? rows.find((r) => r.e.id === openId) : undefined;
 
   return (
-    <div className="overflow-hidden rounded-md border bg-card">
-      <div className="hidden grid-cols-[1rem_minmax(0,1.5fr)_minmax(0,1.3fr)_minmax(0,1.2fr)_5rem] gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs font-medium text-muted-foreground md:grid">
-        <span />
-        <span>Recipient</span>
-        <span>Sequence</span>
-        <span>Next step</span>
-        <span className="text-right">Steps</span>
-      </div>
-      <ul className="divide-y">
-        {rows.map(({ e, account, contact, next }) => {
-          const expanded = open === e.id;
-          return (
-            <li key={e.id}>
-              <button
-                type="button"
-                onClick={() => setOpen(expanded ? null : e.id)}
-                aria-expanded={expanded}
-                className="grid w-full grid-cols-[1rem_minmax(0,1fr)] gap-x-3 gap-y-0.5 px-4 py-2.5 text-left text-sm hover:bg-muted/30 md:grid-cols-[1rem_minmax(0,1.5fr)_minmax(0,1.3fr)_minmax(0,1.2fr)_5rem] md:items-center"
-              >
-                {expanded ? <ChevronDown className="size-3.5 text-muted-foreground" /> : <ChevronRight className="size-3.5 text-muted-foreground" />}
-                <span className="min-w-0">
-                  <span className="block truncate font-medium">{contact?.Name ?? account?.Name ?? e.accountId}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{contact ? account?.Name : "Account only"}</span>
-                </span>
-                <span className="col-start-2 truncate text-muted-foreground md:col-start-auto md:text-foreground">{e.sequenceName}</span>
-                <span className="col-start-2 text-xs md:col-start-auto md:text-sm">
-                  {next ? (
-                    <>
-                      {STEP_TYPE_LABEL[next.type]} · <span className="tabular">{fmtShortDate(next.date)}</span>
-                    </>
-                  ) : (
-                    <span className="text-muted-foreground">Complete</span>
-                  )}
-                </span>
-                <span className="col-start-2 text-xs text-muted-foreground tabular md:col-start-auto md:text-right md:text-sm">{e.steps.length} steps</span>
-              </button>
-              {expanded && (
-                <div className="space-y-2 border-t bg-muted/20 px-4 py-3">
-                  <ol className="space-y-1.5">
-                    {e.steps.map((s, i) => {
-                      const past = s.date < asOfISO;
-                      return (
-                        <li key={`${s.stepId}-${i}`} className="grid grid-cols-[4.5rem_6.5rem_minmax(0,1fr)_auto] items-baseline gap-2 text-sm">
-                          <span className="text-muted-foreground tabular">{fmtShortDate(s.date)}</span>
-                          <span className="text-muted-foreground">{STEP_TYPE_LABEL[s.type]}</span>
-                          <span className="min-w-0 truncate">
-                            {s.subject ?? s.body.split("\n")[0]}
-                            {s.originalDate && <span className="text-xs text-muted-foreground"> · moved from {fmtShortDate(s.originalDate)}</span>}
-                          </span>
-                          <span className="text-xs text-muted-foreground">{past ? "Simulated" : "Scheduled"}</span>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                  <div className="flex items-center justify-between gap-2 pt-1 text-xs text-muted-foreground">
-                    <span>
-                      Enrolled {fmtShortDate(e.startDate)}
-                      {account && (
-                        <>
-                          {" · "}
-                          <Link href={recordHref(account.Id)} className="text-primary hover:underline">
-                            Open account
-                          </Link>
-                        </>
-                      )}
+    <>
+      <DataTable
+        rows={rows}
+        columns={columns}
+        rowKey={(r) => r.e.id}
+        param="ep"
+        search={{ placeholder: "Search recipients or sequences", text: (r) => `${r.contact?.Name ?? ""} ${r.account?.Name ?? ""} ${r.e.sequenceName}` }}
+        defaultSort={{ key: "enrolled", dir: "desc" }}
+        onRowClick={(r) => setOpenId(r.e.id)}
+        empty="No enrollments yet"
+        caption="Scheduled enrollments"
+      />
+      <Sheet open={!!open} onOpenChange={(o) => !o && setOpenId(null)}>
+        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[520px]">
+          {open && (
+            <>
+              <div className="border-b px-5 py-4 pr-12">
+                <p className="text-xs text-muted-foreground">Enrollment · {open.e.sequenceName}</p>
+                <SheetTitle className="mt-0.5 text-base font-semibold">{open.contact?.Name ?? open.account?.Name ?? open.e.accountId}</SheetTitle>
+                <SheetDescription className="text-sm text-muted-foreground">
+                  {open.contact ? `${open.contact.Title} · ${open.account?.Name ?? ""}` : "Account only"} · enrolled {fmtShortDate(open.e.startDate)}
+                </SheetDescription>
+              </div>
+              <ol className="min-h-0 flex-1 space-y-2 overflow-y-auto px-5 py-4">
+                {open.e.steps.map((s, i) => (
+                  <li key={`${s.stepId}-${i}`} className="grid grid-cols-[4.5rem_6.5rem_minmax(0,1fr)] items-baseline gap-2 text-sm">
+                    <span className="text-muted-foreground tabular">{fmtShortDate(s.date)}</span>
+                    <span className="text-muted-foreground">{STEP_TYPE_LABEL[s.type]}</span>
+                    <span className="min-w-0">
+                      <span className="block truncate">{s.subject ?? s.body.split("\n")[0]}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {s.date < asOfISO ? "Simulated" : "Scheduled"}
+                        {s.originalDate ? ` · moved from ${fmtShortDate(s.originalDate)}` : ""}
+                      </span>
                     </span>
-                    <Button variant="ghost" size="xs" onClick={() => setRemoving(e)}>
-                      Unenroll
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                  </li>
+                ))}
+              </ol>
+              <div className="flex items-center gap-2 border-t px-5 py-3">
+                <Button variant="ghost" className="text-status-critical hover:text-status-critical" onClick={() => setRemoving(open.e)}>
+                  Remove recipient
+                </Button>
+                {open.account && (
+                  <Button asChild variant="outline" className="ml-auto">
+                    <Link href={recordHref(open.account.Id)}>Open account</Link>
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
       <ConfirmDialog
         open={!!removing}
         onOpenChange={(o) => !o && setRemoving(null)}
-        title="Unenroll recipient?"
-        description={removing ? `Remaining steps of "${removing.sequenceName}" won't be scheduled.` : undefined}
-        confirmLabel="Unenroll"
-        destructive
-        onConfirm={() => removing && enrollmentsCollection.remove(removing.id)}
+        title="Remove recipient?"
+        description={removing ? `The enrollment in "${removing.sequenceName}" and its scheduled tasks will be deleted. You can undo this for a few seconds afterwards.` : undefined}
+        confirmLabel="Remove"
+        onConfirm={() => removing && unenroll(removing)}
       />
-    </div>
+    </>
   );
 }

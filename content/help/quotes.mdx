@@ -1,57 +1,120 @@
 ---
 title: Quotes
-summary: Quotes are not available in this version of HarvestSignal yet; this article covers what you can see about products and pricing today and what is planned.
+summary: Build quotes from opportunities, price them from a price book, route discounts for approval, send a branded PDF or co-op board packet, and close the deal when the customer accepts.
 order: 8
-related: [product-setup, segment-prioritization, exports-templates]
+related: [product-setup, seasonality-rules, harvest-day]
 ---
 
-Building quotes is not available in this version of HarvestSignal yet. There is no quote builder, no discount approval and no quote PDF. This article explains where you can see products and prices today, and what the quote feature is planned to do.
+Quoting lives under **Quoting** in the top navigation, with three tabs: **Quotes**, **Products** and **Price books**. This article covers quotes. For the catalog and prices, see [Product Setup](/help/product-setup).
 
-## What you can do today
+Every change you make is saved as a Salesforce-style change (Quote, QuoteLineItem, Opportunity, OpportunityLineItem and Task records). In live Salesforce mode changes stay in the app and are tagged **Local change, not synced**.
 
-### See products on an opportunity
+## The quotes list
 
-1. Open an opportunity, for example from the **Top 10 Open Opportunities** table on Home or the top open deals on **Segments**.
-2. In mock mode the opportunity page shows a **Products** section with each line item, its quantity and its total price, alongside the deal amount, stage path and buying committee.
-3. On the **Map**, turn on **Recent sales** and click a yellow dot to see the products on a won deal.
+**Quoting → Quotes** lists every quote, 10 to a page.
 
-In live mode, opportunity links open the record in Salesforce, and HarvestSignal does not read line items from your org, so products are not shown in the app.
+- **Columns**: quote number, name and account, opportunity stage, status, first-year total, total contract value (TCV), expiration, owner and last update. Click a column header to sort.
+- **Filters**: status (Open shows Draft, In Review, Approved and Sent), owner (all or **My quotes**) and expiration (next 7 or 30 days, or expired).
+- **Summary tiles**: open quotes, open first-year value (USD quotes), quotes awaiting approval, and quotes expiring in 7 days. Click a tile to filter the list.
+- **Expiration**: dates within 7 days are highlighted with the days left. An open quote past its expiration date shows as **Expired**. Dates are measured against the app date, so time travel changes them.
+- **Export CSV** opens the column picker. See [Exports & Templates](/help/exports-templates).
 
-### Check list prices
+## Create a quote
 
-The price book is reference data in the app (`src/data/reference/products.ts`). Prices are illustrative.
+1. Click **New quote** on the quotes list, or on an opportunity page.
+2. Search for an open opportunity and pick it. The account and stage are shown for each match.
+3. Check the defaults, which follow the opportunity's account:
+   - **Price book**: Canadian accounts get **Canada (CAD)**; co-ops with 5 or more locations get **Multi-Location Co-op**; everyone else gets the **Standard Price Book**.
+   - **Contact**: the economic buyer, else the opportunity's primary contact.
+   - **Term** 36 months, **Billing** annual, **Payment terms** Net 45 for co-ops and Net 30 otherwise.
+   - **Go-live**: for elevators and co-ops, the next December 1 or February 1 that is at least 45 days out and after the account's harvest; for co-ops and deals in Board Approval, 45 days after the next board meeting. Year-round segments get the first of the month 45 days out. If you pick a date inside the account's harvest window you see a warning and a one-click suggestion.
+   - **Valid until**: 30 days from today. For co-ops, you are warned if the quote expires before the next board meeting.
+4. Choose where line items come from: the opportunity's products (negotiated prices become line discounts, capped at 30%), product fit for the facility type (up to three best-fit modules plus implementation), or start empty.
+5. Click **Create quote**. The quote opens in the builder as a **Draft**.
 
-| Product | Family | List price | Pricing unit |
-|---|---|---|---|
-| Ceres | Financials | $36,000 | per year |
-| GrainSight | Commodity Management | $30,000 | per year |
-| ScaleTrac | Grain Operations | $9,600 | per location / year |
-| GrainSight Mobile | Customer Engagement | $12,000 | per year |
-| ScaleTrac Mobile | Grain Operations | $4,800 | per location / year |
-| Implementation & Data Migration | Services | $25,000 | one-time |
-| Go-Live Training | Services | $8,000 | one-time |
+<Screenshot caption="New quote drawer with the go-live suggestion after harvest" />
 
-What each product does:
+## Build the quote
 
-- **Ceres**: ag ERP for grain accounting, producer settlements, deferred payments, patronage and equity, 1099s and Canadian tax slips.
-- **GrainSight**: grain management, including contracts (price-later and DP), real-time position, hedges, bids, bin inventory and shrink.
-- **ScaleTrac**: scale house ticketing, grade and moisture capture, discounts and driver kiosks.
-- **GrainSight Mobile**: the producer app for contracts, e-signature, settlements and push bids.
-- **ScaleTrac Mobile**: mobile scale tickets and driver check-in; a quick add-on that can go live in weeks.
-- **Implementation & Data Migration**: fixed-scope implementation, historical ticket and contract migration, and go-live support.
-- **Go-Live Training**: on-site scale house and office training, scheduled outside harvest and planting.
+The quote page shows the header, line items on the left, and totals, approval, board approval and activity on the right.
 
-For a per-location product, multiply the list price by the number of locations. The account page shows the number of locations and, for a co-op, its location accounts.
+### Line items
 
-### Export deal data
+- **Add product** lists the active products in the quote's price book with their type, pricing unit and price. Search by name, code or type.
+- **Quantity** defaults from the account: per-location products use the number of locations, driver kiosks use the number of truck scales, and everything else is 1. When a quantity differs from the account's value, click **Account: N** to reset it.
+- Edit **List**, **Disc.** (line discount %) and **Qty** in place; press Enter or leave the field to save. Net unit and line total update at once.
+- Lines are grouped into **Recurring · annual** and **One-time**. Use the arrows to reorder lines within a group, and the bin to remove a line (with Undo).
+- Lines can be edited while the quote is Draft, In Review, Approved or Rejected. Sent, accepted, declined and expired quotes are read-only; use **Revise** to change them.
 
-To prepare pricing outside the app, export open opportunities with the Export Template Builder. See [Exports & Templates](/help/exports-templates).
+### Totals
 
-## Planned
+| Figure | How it is calculated |
+|---|---|
+| Net unit | List price less the line discount |
+| Line total | Net unit times quantity |
+| Header discount | A percentage off all recurring lines, on top of line discounts |
+| Annual recurring (ARR) | Recurring line totals less the header discount |
+| One-time | Implementation, training, kiosks and other one-time lines |
+| Tax | Tax rate times (ARR plus one-time) |
+| First-year total | ARR plus one-time plus tax |
+| TCV | ARR times the term in years, plus one-time (before tax) |
 
-The following is planned and not built yet:
+You can change the header discount and tax rate right in the Totals panel.
 
-- Build a quote from the product catalog on an opportunity, with quantities per location, user or bushel as the product requires.
-- Apply discounts, with approval thresholds that route larger discounts for approval.
-- Export the quote as a PDF to send to the customer.
-- A simulated e-signature step.
+The **payment schedule** splits recurring fees by billing frequency (annual, quarterly or monthly) from the go-live date, puts one-time fees on the first invoice and adds tax to each invoice. A short final period is prorated.
+
+## Approvals
+
+The discount checked is the largest discount on any line, with the header discount stacked on recurring lines. For example, a 10% line discount plus a 10% header discount counts as 19%.
+
+| Discount | Approval |
+|---|---|
+| Up to 15% | Auto-approved when you submit |
+| Over 15% up to 25% | Sales manager (or administrator) |
+| Over 25%, or TCV over $500,000 | Administrator, with a written reason |
+
+CAD quotes are converted at 1.36 CAD per USD for the $500,000 check.
+
+- **Submit for approval** approves a quote within the rep limit immediately. Otherwise it goes to **In Review**, and for administrator-level quotes you enter a justification.
+- The Approval panel shows who must approve and why, the current state, and the stored reason.
+- Sales managers and administrators see **Approve** and **Reject** on quotes in review. Approving at administrator level needs a reason. The approver and date are recorded on the quote.
+- Any pricing change after submitting or approval (lines, header discount, tax, term or price book) returns the quote to **Draft**. Submit it again.
+- A rep can **Recall** a quote in review back to Draft.
+
+## Send, accept and close
+
+1. **Mark sent** on an approved quote records the sent date and logs a completed email task on the account and opportunity.
+2. When the customer signs, click **Mark accepted**. The opportunity amount becomes the quote's first-year total (before tax), and the opportunity's products are replaced with the quote's lines (recurring lines at their annual net price).
+3. You are then offered **Mark opportunity Closed Won**: stage Closed Won, probability 100%, forecast Closed, close date today.
+4. If the customer says no, click **Mark declined**. You can close the opportunity as lost at the same time and pick a loss reason.
+
+## Revise, edit and delete
+
+- **Revise** creates a new Draft version with the next number (Q-01234-v2, then v3) and a fresh 30-day expiration. The original keeps its status, and the quote page links all versions.
+- **Edit header** changes the name, contact, term, billing, payment terms, go-live, expiration, header discount, tax and price book. Changing the price book re-prices every line from the new book. On sent or expired quotes only non-pricing fields can change, so you can extend an expiration date without a new version.
+- **Delete** removes the quote and its lines after a confirmation. You can undo for a few seconds.
+
+## PDFs
+
+**PDF** downloads a branded quote: logo, quote number and dates, bill-to account and contact, lines grouped recurring and one-time with discounts, totals, the payment schedule, terms and a signature block for both parties.
+
+### Co-op board packet
+
+Multi-Location Co-op accounts and opportunities in **Board Approval** show a **Board approval** panel with the account's next board meeting (boards meet on the second Tuesday of their meeting months) and a warning if the quote expires first.
+
+**Board packet (PDF)** builds a document for the board:
+
+- A cover page for the board meeting
+- An executive summary with the recommendation, investment, timing and scope
+- The quote and its payment schedule
+- The Harvest Day summary card for the facility, with a read-only link to the simulator when available
+- An implementation timeline planned around harvest and spring planting, ending with the first harvest on the new system
+- A one-page return on investment: harvest dollars at risk per season against the annual cost, plus payback and net benefit over the term when the model shows savings from automation
+
+If the facility has no harvest-day model, the packet skips that card and the ROI page shows the investment only.
+
+<Screenshot caption="Quote builder with totals, the approval panel and the board meeting warning" />
+
+## On the opportunity page
+
+Opportunity pages list the opportunity's quotes with status, totals and expiration, and have a **New quote** button that starts a quote for that opportunity.

@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full bg-background">
-        <AuthProvider initialUser={user} mode={supabaseConfigured() ? "supabase" : "demo"}>
+        <AuthProvider initialUser={user} mode={supabaseConfigured() && !user?.guest ? "supabase" : "demo"}>
           <StoreProvider>
             <TooltipProvider delayDuration={150}>
               <AppShell>{children}</AppShell>

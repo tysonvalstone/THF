@@ -2,18 +2,18 @@ import { COLLECTION, type DataSnapshot, type Mutation, type SalesRepository } fr
 
 const STORAGE_KEY = "harvest-signal:mutations:v2";
 
-function readLog(): Mutation[] {
+function readLog(key: string): Mutation[] {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as Mutation[]) : [];
   } catch {
     return [];
   }
 }
 
-function writeLog(log: Mutation[]) {
+function writeLog(key: string, log: Mutation[]) {
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+    window.localStorage.setItem(key, JSON.stringify(log));
   } catch {
     // Storage full or blocked: changes still live in memory for this session.
   }
@@ -32,6 +32,9 @@ export function applyMutations(base: DataSnapshot, mutations: Mutation[]): DataS
     const list = next[key];
     if (m.op === "create") {
       if (!list.some((r) => r.Id === m.record.Id)) list.push(m.record);
+    } else if (m.op === "delete") {
+      const i = list.findIndex((r) => r.Id === m.id);
+      if (i >= 0) list.splice(i, 1);
     } else {
       const i = list.findIndex((r) => r.Id === m.id);
       if (i >= 0) list[i] = { ...list[i], ...m.changes };
@@ -41,23 +44,30 @@ export function applyMutations(base: DataSnapshot, mutations: Mutation[]): DataS
 }
 
 /** Server snapshot (mock seed or live Salesforce) + a mutation log in localStorage. */
-export function createLocalRepository(base: DataSnapshot): SalesRepository {
-  let log = typeof window === "undefined" ? [] : readLog();
+export function createLocalRepository(base: DataSnapshot, storageKey = STORAGE_KEY): SalesRepository {
+  let log = typeof window === "undefined" ? [] : readLog(storageKey);
   let snapshot = applyMutations(base, log);
   return {
     load: () => snapshot,
     commit(mutations) {
       log = [...log, ...mutations];
-      writeLog(log);
+      writeLog(storageKey, log);
       snapshot = applyMutations(snapshot, mutations);
       return snapshot;
     },
     reset() {
       log = [];
-      writeLog(log);
+      writeLog(storageKey, log);
       snapshot = base;
       return snapshot;
     },
+    undo(count) {
+      log = log.slice(0, Math.max(0, log.length - count));
+      writeLog(storageKey, log);
+      snapshot = applyMutations(base, log);
+      return snapshot;
+    },
+    log: () => log,
     pendingChanges: () => log.length,
   };
 }
@@ -72,6 +82,27 @@ const PREFIX: Record<string, string> = {
   CampaignMember: "00v",
   Task: "00T",
   Event: "00U",
+  ProductType: "a0P",
+  Product2: "01t",
+  Pricebook2: "01s",
+  PricebookEntry: "01u",
+  Quote: "0Q0",
+  QuoteLineItem: "0QL",
+  NewBuild: "a0N",
+  Contract: "800",
+  ContractClause: "a0C",
+  Clause: "a0L",
+  Invoice: "a0I",
+  Payment: "a0Y",
+  OnboardingProject: "a0O",
+  OnboardingTask: "a0T",
+  HealthSignal: "a0H",
+  SupportTicket: "500",
+  Quota: "a0Q",
+  CommissionPlan: "a0K",
+  ApprovalRequest: "a0A",
+  AuditEntry: "a0Z",
+  Call: "a0D",
 };
 const B62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 

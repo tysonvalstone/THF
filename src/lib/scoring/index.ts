@@ -15,11 +15,19 @@ import { busyWindows, climateFor, cropNoun, windowPositions, type WindowPosition
 import { blackoutStatus, isSeasonalSegment, sellingWindowAt } from "@/lib/seasonality";
 import { buildEngagementIndex, engagementFor, type Engagement } from "./engagement";
 import { targetFromAccount, targetFromLead, type Target } from "./target";
+import { harvestRiskFor } from "@/lib/harvest/summary";
+import { getHarvestWeight } from "@/lib/harvest/weight-store";
+import type { Account } from "@/types/salesforce";
 
 export type { Target } from "./target";
 export { sizeLabel } from "./target";
 
-export type FactorKey = "timing" | "market" | "fit" | "displacement" | "engagement" | "climate";
+export type FactorKey = "timing" | "market" | "fit" | "displacement" | "engagement" | "climate" | "harvest";
+
+/** Harvest factor points at 1× weight (scaled by the weight, 0–2×) */
+export const HARVEST_MAX = 10;
+/** Season dollars at risk that earn full harvest points */
+export const HARVEST_FULL_DOLLARS = 500_000;
 
 export const FACTOR_META: Record<FactorKey, { label: string; max: number; description: string }> = {
   timing: { label: "Season timing", max: 30, description: "Elevators and co-ops: selling window (Dec–Feb prime, late Feb–Mar implementation, Jun–Jul budget, early Aug quick wins) and harvest/planting no-contact periods. Ethanol, feed and processors: year-round, driven by margins and feeding season." },
@@ -28,9 +36,16 @@ export const FACTOR_META: Record<FactorKey, { label: string; max: number; descri
   displacement: { label: "Displacement", max: 15, description: "How replaceable their current system is: paper and legacy score highest, then competitor contracts nearing renewal." },
   engagement: { label: "Engagement", max: 15, description: "Recent touches, campaign responses and open deals. Penalized if we contacted them in the last 7 days." },
   climate: { label: "Climate", max: 5, description: "This season's regional conditions (early, wet, drought, record yields) that change timing or pain." },
+  harvest: {
+    label: "Harvest $ at risk",
+    max: HARVEST_MAX,
+    description: "Season dollars lost to trucks that give up on the scale line, from the Harvest Day Simulator (saved value, or the modeled estimate). Added to the score as a bonus, weighted 0–2× (total capped at 100).",
+  },
 };
 
 export const FACTOR_KEYS = Object.keys(FACTOR_META) as FactorKey[];
+/** The six factors that add up to 100 */
+const BASE_KEYS = FACTOR_KEYS.filter((k) => k !== "harvest");
 
 export interface Factor {
   key: FactorKey;
@@ -423,6 +438,29 @@ function climateFactor(t: Target, asOf: Date, position?: WindowPosition): Factor
 }
 
 // ---------------------------------------------------------------------------
+// Harvest $ at risk (0–10, weighted 0–2× into the total)
+// ---------------------------------------------------------------------------
+export interface HarvestRisk {
+  dollars: number;
+  /** From "Save to account" in the simulator (vs. the modeled estimate) */
+  saved: boolean;
+}
+
+const fmtK = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}K` : `${Math.round(n)}`);
+
+function harvestFactor(risk: HarvestRisk | null | undefined, weight: number): Factor {
+  const max = HARVEST_MAX;
+  if (!risk) return { key: "harvest", points: 0, max, reason: "not modeled: no truck receiving on record" };
+  const ratio = clamp(Math.log10(1 + risk.dollars / 1000) / Math.log10(1 + HARVEST_FULL_DOLLARS / 1000), 0, 1);
+  const source = risk.saved ? "Harvest Day Simulator (saved)" : "Modeled";
+  const reason =
+    risk.dollars > 0
+      ? `${source}: about ${fmtK(risk.dollars)} a harvest in bushels lost to trucks that give up on the scale line`
+      : `${source}: the scale and pits keep up on a peak harvest day`;
+  return { key: "harvest", points: round1(max * ratio), max, reason: weight === 0 ? `${reason} (weighted 0× in the total)` : reason };
+}
+
+// ---------------------------------------------------------------------------
 // Put it together
 // ---------------------------------------------------------------------------
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -440,7 +478,15 @@ function composeWhyNow(factors: Record<FactorKey, Factor>): string {
     .join(". ") + ".";
 }
 
-export function scoreTarget(t: Target, asOf: Date, engagement: Engagement): ScoredTarget {
+/**
+ * `harvest`: the account's season dollars at risk (null or omitted when not
+ * modeled, e.g. leads) and the factor weight (0–2×, default 1×). The six base
+ * factors add to 100; the weighted harvest points (0–10 x weight) are added as
+ * a bonus and the total is capped at 100, so weight 0 gives exactly the base
+ * score and facilities without harvest pain are never pushed down.
+ */
+export function scoreTarget(t: Target, asOf: Date, engagement: Engagement, harvest: { risk?: HarvestRisk | null; weight?: number } = {}): ScoredTarget {
+  const weight = clamp(harvest.weight ?? 1, 0, 2);
   const { factor: timing, position } = timingFactor(t, asOf);
   const factors: Record<FactorKey, Factor> = {
     timing,
@@ -449,8 +495,11 @@ export function scoreTarget(t: Target, asOf: Date, engagement: Engagement): Scor
     displacement: displacementFactor(t, asOf),
     engagement: engagementFactor(t, engagement, asOf),
     climate: climateFactor(t, asOf, position),
+    harvest: harvestFactor(harvest.risk, weight),
   };
-  const total = Math.round(FACTOR_KEYS.reduce((s, k) => s + factors[k].points, 0));
+  const base = BASE_KEYS.reduce((s, k) => s + factors[k].points, 0);
+  // Harvest $ at risk is a bonus on top of the base 100 (never a penalty), capped at 100
+  const total = Math.round(clamp(base + (harvest.risk ? weight * factors.harvest.points : 0), 0, 100));
   return {
     target: t,
     total,
@@ -466,17 +515,25 @@ export function scoreTarget(t: Target, asOf: Date, engagement: Engagement): Scor
  * Score every prospect Account and open Lead as of `asOf`, best first.
  * Customers are excluded (they belong to account management, not prospecting).
  */
-export function rankProspects(data: DataSnapshot, asOf: Date): ScoredTarget[] {
+export function rankProspects(data: DataSnapshot, asOf: Date, opts: { harvestWeight?: number } = {}): ScoredTarget[] {
   const engagement = buildEngagementIndex(data, asOf);
+  const weight = opts.harvestWeight ?? getHarvestWeight();
+  const accounts = new Map(data.accounts.map((a) => [a.Id, a]));
   const targets: Target[] = [
     ...data.accounts.filter((a) => a.Type !== "Customer - Direct" && !a.ParentId).map(targetFromAccount),
-    ...data.leads.filter((l) => l.Status !== "Closed - Not Converted").map(targetFromLead),
+    ...data.leads.filter((l) => l.Status !== "Closed - Not Converted" && !l.IsConverted).map(targetFromLead),
   ];
   return targets
-    .map((t) => scoreTarget(t, asOf, engagementFor(engagement, t.id)))
+    .map((t) => scoreTarget(t, asOf, engagementFor(engagement, t.id), { risk: riskOf(accounts.get(t.id)), weight }))
     .sort((a, b) => b.total - a.total || a.target.name.localeCompare(b.target.name));
 }
 
-export function scoreOne(data: DataSnapshot, t: Target, asOf: Date): ScoredTarget {
-  return scoreTarget(t, asOf, engagementFor(buildEngagementIndex(data, asOf), t.id));
+export function scoreOne(data: DataSnapshot, t: Target, asOf: Date, opts: { harvestWeight?: number } = {}): ScoredTarget {
+  const account = t.kind === "account" ? data.accounts.find((a) => a.Id === t.id) : undefined;
+  return scoreTarget(t, asOf, engagementFor(buildEngagementIndex(data, asOf), t.id), { risk: riskOf(account), weight: opts.harvestWeight ?? getHarvestWeight() });
+}
+
+/** Saved simulator result, else the engine estimate (cached per facility inputs) */
+function riskOf(a: Account | undefined): HarvestRisk | null {
+  return a ? harvestRiskFor(a) : null;
 }

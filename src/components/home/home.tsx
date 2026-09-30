@@ -1,6 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ClosedWonMix } from "./closed-won-mix";
+import { RenewalsAtRiskCard } from "@/components/success/renewals-card";
+import { TodaysCallsCard } from "@/components/call-desk/todays-calls-card";
 import Link from "next/link";
 import { useStore } from "@/lib/data/store";
 import { prioritize } from "@/lib/prioritization";
@@ -17,12 +20,43 @@ const PHASE_LABEL = { planting: "planting", growing: "growing", harvest: "harves
 
 type Change = { text: string; up: boolean | null } | null;
 
-function Kpi({ label, value, change }: { label: string; value: string; change: Change }) {
+/** When a record change (not a date change) moves a KPI, show the difference for a moment */
+function useChangeFlash(raw: number | null | undefined) {
+  const { recentIds } = useStore();
+  const [prev, setPrev] = useState(raw);
+  const [flash, setFlash] = useState<number | null>(null);
+  if (raw !== prev) {
+    setPrev(raw);
+    if (recentIds.size && raw != null && prev != null && raw !== prev) setFlash(raw - prev);
+  }
+  useEffect(() => {
+    if (flash === null) return;
+    const t = setTimeout(() => setFlash(null), 2500);
+    return () => clearTimeout(t);
+  }, [flash]);
+  return flash;
+}
+
+function Kpi({ label, value, change, raw, format = (n) => fmtMoney(n) }: { label: string; value: string; change: Change; raw?: number | null; format?: (n: number) => string }) {
+  const flash = useChangeFlash(raw);
   return (
     <div className="rounded-md border bg-card px-4 py-3">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-semibold tabular">{value}</p>
-      <p className={cn("mt-0.5 h-4 text-xs tabular", change?.up ? "text-status-good" : change?.up === false ? "text-status-critical" : "text-muted-foreground")}>{change?.text ?? ""}</p>
+      <p className="mt-1 flex items-baseline gap-2 text-2xl font-semibold tabular">
+        {value}
+        {flash !== null && flash !== 0 && (
+          <span
+            className={cn("animate-in fade-in rounded-sm px-1 text-xs font-medium", flash > 0 ? "bg-accent-soft text-primary" : "bg-status-critical/10 text-status-critical")}
+            role="status"
+          >
+            {flash > 0 ? "+" : "−"}
+            {format(Math.abs(flash))}
+          </span>
+        )}
+      </p>
+      <p className={cn("mt-0.5 h-4 text-xs tabular", change?.up ? "text-status-good" : change?.up === false ? "text-status-critical" : "text-muted-foreground")}>
+        {change?.text ?? ""}
+      </p>
     </div>
   );
 }
@@ -82,7 +116,8 @@ function MonthChart({ rows }: { rows: { key: string; label: string; amount: numb
           </>
         ) : (
           <>
-            {rows[shown].label} {rows[shown].key.slice(0, 4)} · <span className="font-medium text-foreground">{fmtMoney(rows[shown].amount)}</span> · {rows[shown].count} deal{rows[shown].count === 1 ? "" : "s"}
+            {rows[shown].label} {rows[shown].key.slice(0, 4)} · <span className="font-medium text-foreground">{fmtMoney(rows[shown].amount)}</span> · {rows[shown].count} deal
+            {rows[shown].count === 1 ? "" : "s"}
           </>
         )}
       </p>
@@ -179,11 +214,13 @@ export function Home() {
       </header>
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-5" aria-label="Key metrics">
-        <Kpi label="Open Pipeline" value={fmtMoney(view.now.total)} change={moneyChange(view.now.total, view.prev.total, "30 days ago")} />
-        <Kpi label="Weighted Pipeline" value={fmtMoney(view.now.weighted)} change={moneyChange(view.now.weighted, view.prev.weighted, "30 days ago")} />
-        <Kpi label={`Closed Won, ${view.won.quarter}`} value={fmtMoney(view.won.now)} change={moneyChange(view.won.now, view.won.prev, "last quarter")} />
+        <Kpi label="Open Pipeline" raw={view.now.total} value={fmtMoney(view.now.total)} change={moneyChange(view.now.total, view.prev.total, "30 days ago")} />
+        <Kpi label="Weighted Pipeline" raw={view.now.weighted} value={fmtMoney(view.now.weighted)} change={moneyChange(view.now.weighted, view.prev.weighted, "30 days ago")} />
+        <Kpi label={`Closed Won, ${view.won.quarter}`} raw={view.won.now} value={fmtMoney(view.won.now)} change={moneyChange(view.won.now, view.won.prev, "last quarter")} />
         <Kpi
           label="Win Rate (12 mo)"
+          raw={view.wr}
+          format={(n) => `${Math.round(n * 100)} pts`}
           value={view.wr === null ? "—" : pct(view.wr)}
           change={
             view.wr !== null && view.wrPrev !== null
@@ -194,7 +231,12 @@ export function Home() {
               : null
           }
         />
-        <Kpi label="Average Deal Size" value={view.avg === null ? "—" : fmtMoney(view.avg)} change={view.avg === null ? null : moneyChange(view.avg, view.avgPrev, "prior year")} />
+        <Kpi
+          label="Average Deal Size"
+          raw={view.avg}
+          value={view.avg === null ? "—" : fmtMoney(view.avg)}
+          change={view.avg === null ? null : moneyChange(view.avg, view.avgPrev, "prior year")}
+        />
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2" aria-label="Focus this month">
@@ -237,6 +279,8 @@ export function Home() {
         </Card>
       </section>
 
+      <ClosedWonMix />
+
       <section className="grid gap-4 lg:grid-cols-2" aria-label="Charts">
         <Card title="Pipeline by Stage">
           <HBarChart rows={view.stages.map((s) => ({ label: s.stage, value: s.amount, sub: `${s.count} deal${s.count === 1 ? "" : "s"}` }))} />
@@ -250,7 +294,7 @@ export function Home() {
         <Card
           title="Top 10 Open Opportunities"
           action={
-            <Link href="/segments" className="text-sm text-primary hover:underline">
+            <Link href="/pipeline?sort=expected" className="text-sm text-primary hover:underline">
               View all
             </Link>
           }
@@ -285,7 +329,11 @@ export function Home() {
                       <td className="px-3 py-2 whitespace-nowrap">{v.opp.StageName}</td>
                       <td className="px-3 py-2 whitespace-nowrap tabular">{fmtShortDate(v.opp.CloseDate)}</td>
                       <td className="px-4 py-2 whitespace-nowrap">
-                        {blackout ? <span className="rounded-sm bg-amber-50 px-1.5 py-0.5 text-xs text-amber-800">{blackout}</span> : <span className="text-xs text-muted-foreground">Open</span>}
+                        {blackout ? (
+                          <span className="rounded-sm bg-amber-50 px-1.5 py-0.5 text-xs text-amber-800">{blackout}</span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Open</span>
+                        )}
                       </td>
                     </tr>
                   );
@@ -302,26 +350,30 @@ export function Home() {
           </div>
         </Card>
 
-        <Card title="Upcoming">
-          <ol className="space-y-3">
-            {view.upcoming.map((u) => (
-              <li key={`${u.kind}-${u.title}`} className="grid grid-cols-[52px_minmax(0,1fr)] gap-3">
-                <span className="text-xs font-medium text-muted-foreground tabular">{fmtShortDate(u.date)}</span>
-                <span className="min-w-0">
-                  {u.href ? (
-                    <Link href={u.href} className="block truncate text-sm font-medium hover:text-primary hover:underline">
-                      {u.title}
-                    </Link>
-                  ) : (
-                    <span className="block truncate text-sm font-medium">{u.title}</span>
-                  )}
-                  <span className="text-xs text-muted-foreground">{u.detail}</span>
-                </span>
-              </li>
-            ))}
-            {!view.upcoming.length && <li className="text-sm text-muted-foreground">Nothing in the next 120 days</li>}
-          </ol>
-        </Card>
+        <div className="min-w-0 space-y-4">
+          <Card title="Upcoming">
+            <ol className="space-y-3">
+              {view.upcoming.map((u) => (
+                <li key={`${u.kind}-${u.title}`} className="grid grid-cols-[52px_minmax(0,1fr)] gap-3">
+                  <span className="text-xs font-medium text-muted-foreground tabular">{fmtShortDate(u.date)}</span>
+                  <span className="min-w-0">
+                    {u.href ? (
+                      <Link href={u.href} className="block truncate text-sm font-medium hover:text-primary hover:underline">
+                        {u.title}
+                      </Link>
+                    ) : (
+                      <span className="block truncate text-sm font-medium">{u.title}</span>
+                    )}
+                    <span className="text-xs text-muted-foreground">{u.detail}</span>
+                  </span>
+                </li>
+              ))}
+              {!view.upcoming.length && <li className="text-sm text-muted-foreground">Nothing in the next 120 days</li>}
+            </ol>
+          </Card>
+          <TodaysCallsCard />
+          <RenewalsAtRiskCard limit={4} />
+        </div>
       </div>
     </div>
   );

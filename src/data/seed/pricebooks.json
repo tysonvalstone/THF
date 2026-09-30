@@ -1,0 +1,26 @@
+[
+ {
+  "Id": "01sHs0000000001AAA",
+  "Name": "Standard Price Book",
+  "Description": "List prices, US dollars.",
+  "IsActive": true,
+  "IsStandard": true,
+  "CurrencyIsoCode": "USD"
+ },
+ {
+  "Id": "01sHs0000000002AAA",
+  "Name": "Multi-Location Co-op",
+  "Description": "Per-location modules 15% below list for co-ops with 5 or more locations.",
+  "IsActive": true,
+  "IsStandard": false,
+  "CurrencyIsoCode": "USD"
+ },
+ {
+  "Id": "01sHs0000000003AAA",
+  "Name": "Canada (CAD)",
+  "Description": "List prices in Canadian dollars.",
+  "IsActive": true,
+  "IsStandard": false,
+  "CurrencyIsoCode": "CAD"
+ }
+]

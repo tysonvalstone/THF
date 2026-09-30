@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react";
+import { ChevronRight, Plus, Search } from "lucide-react";
 import { REGIONS, REGION_BY_ID } from "@/data/reference/regions";
 import { STATE_NAMES } from "@/data/reference/geo";
 import { useStore } from "@/lib/data/store";
@@ -22,11 +22,14 @@ import { OutreachButtons } from "@/components/outreach/outreach-buttons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { DataTable, type Column } from "@/components/shared/data-table";
+import { LocalChangeTag } from "@/components/shared/confirm-dialog";
+import { AccountDrawer, LeadDrawer } from "@/components/records/forms";
+import { HarvestWeightSlider } from "@/components/harvest/weight-slider";
 import { Slider } from "@/components/ui/slider";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 type SortKey = "total" | "name" | FactorKey;
 
@@ -63,6 +66,7 @@ function useFilterState() {
       if (v === null || v === ALL || v === "") next.delete(k);
       else next.set(k, v);
     }
+    next.delete("page");
     router.replace(`/prospects${next.toString() ? `?${next}` : ""}`, { scroll: false });
   };
   return {
@@ -80,12 +84,17 @@ function useFilterState() {
 }
 
 export function ProspectList() {
-  const { ready, ranked, asOf } = useStore();
+  const { ready, ranked: allRanked, asOf, data } = useStore();
   const f = useFilterState();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [emailFor, setEmailFor] = useState<ScoredTarget | null>(null);
-  const [limit, setLimit] = useState(50);
+  const [creating, setCreating] = useState<"account" | "lead" | null>(null);
   const [query, setQuery] = useState(f.q);
+  // Converted leads live on as accounts; hide the lead
+  const ranked = useMemo(() => {
+    const converted = new Set(data.leads.filter((l) => l.IsConverted).map((l) => l.Id));
+    return converted.size ? allRanked.filter((s) => !converted.has(s.target.id)) : allRanked;
+  }, [allRanked, data.leads]);
   const { set: setParams, q: urlQ } = f;
   useEffect(() => {
     if (query === urlQ) return;
@@ -135,7 +144,106 @@ export function ProspectList() {
   const hot = filtered.filter((s) => s.tier === "Hot").length;
   const pipeline = filtered.reduce((sum, s) => sum + s.engagement.openPipeline, 0);
 
-  const sortBy = (k: SortKey) => f.set({ sort: k, dir: f.sort === k && f.dir === "desc" ? "asc" : "desc" });
+  const open = expanded ? filtered.find((s) => s.target.id === expanded) : undefined;
+  const columns: Column<ScoredTarget>[] = [
+    {
+      key: "total",
+      header: "Score",
+      className: "w-20",
+      sortValue: (s) => s.total,
+      cell: (s) => (
+        <div>
+          <ScorePill score={s.total} />
+          <TierLabel tier={s.tier} className="mt-1.5" />
+        </div>
+      ),
+    },
+    {
+      key: "name",
+      header: "Prospect",
+      sortValue: (s) => s.target.name,
+      cell: (s) => {
+        const t = s.target;
+        return (
+          <div className="min-w-0 max-w-72">
+            <div className="flex items-center gap-1.5">
+              <Link href={recordHref(t.id)} className="font-medium hover:underline" onClick={(e) => e.stopPropagation()}>
+                {t.name}
+              </Link>
+              {t.kind === "lead" && (
+                <Badge variant="outline" className="h-5 px-1.5 text-[10px]">
+                  Lead
+                </Badge>
+              )}
+              <LocalChangeTag id={t.id} />
+            </div>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {t.facilityType} · {t.city}, {t.state} · {sizeLabel(t)}
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {t.software} · {userName(t.ownerId)}
+            </p>
+          </div>
+        );
+      },
+    },
+    {
+      key: "why",
+      header: "Why Now",
+      hideBelow: "md",
+      className: "align-top",
+      cell: (s) => <p className="line-clamp-3 text-foreground/85">{s.whyNow}</p>,
+    },
+    {
+      key: "last",
+      header: "Last Activity",
+      hideBelow: "lg",
+      className: "w-36",
+      sortValue: (s) => s.engagement.lastTouch?.getTime(),
+      cell: (s) =>
+        s.engagement.lastTouch ? (
+          <div className="text-xs">
+            <span className="block text-foreground">{fmtRelative(s.engagement.lastTouch, asOf).replace(/^./, (c) => c.toUpperCase())}</span>
+            <span className="block max-w-36 truncate text-muted-foreground" title={s.engagement.lastTouchSubject}>
+              {(s.engagement.lastTouchSubject ?? "").split(":")[0]} · Salesforce
+            </span>
+          </div>
+        ) : (
+          <span className="text-xs text-muted-foreground">None</span>
+        ),
+    },
+    {
+      key: "actions",
+      header: <span className="sr-only">Actions</span>,
+      align: "right",
+      className: "w-32",
+      cell: (s) => (
+        <div className="flex items-center justify-end gap-1">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setEmailFor(s);
+            }}
+          >
+            Email
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpanded(s.target.id);
+            }}
+            aria-label={`Show details for ${s.target.name}`}
+          >
+            <ChevronRight />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
@@ -215,6 +323,7 @@ export function ProspectList() {
               <Slider value={[f.min]} min={0} max={90} step={5} onValueChange={([v]) => f.set({ min: v ? String(v) : null })} className="flex-1" aria-label="Minimum score" />
               <span className="w-6 text-sm font-medium tabular">{f.min}</span>
             </div>
+            <HarvestWeightSlider />
             <div className="flex flex-wrap gap-2">
               {hasFilters && (
                 <Button variant="ghost" size="sm" onClick={() => {
@@ -263,147 +372,62 @@ export function ProspectList() {
         </p>
       </div>
 
-      {/* Desktop table */}
-      <div className="hidden overflow-hidden rounded-lg border bg-card md:block">
-        <table className="w-full text-sm">
-          <thead className="border-b bg-muted/50 text-left text-xs text-muted-foreground">
-            <tr>
-              <th className="w-20 px-3 py-2.5 font-medium">
-                <button type="button" onClick={() => sortBy("total")} className="inline-flex items-center gap-1 hover:text-foreground">
-                  Score <SortIcon k="total" sort={f.sort} dir={f.dir} />
-                </button>
-              </th>
-              <th className="px-3 py-2.5 font-medium">
-                <button type="button" onClick={() => sortBy("name")} className="inline-flex items-center gap-1 hover:text-foreground">
-                  Prospect <SortIcon k="name" sort={f.sort} dir={f.dir} />
-                </button>
-              </th>
-              <th className="px-3 py-2.5 font-medium">Why Now</th>
-              <th className="w-36 px-3 py-2.5 font-medium">Last Activity</th>
-              <th className="w-32 px-3 py-2.5 font-medium" />
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.slice(0, limit).map((s) => {
-              const t = s.target;
-              const open = expanded === t.id;
-              return (
-                <Fragment key={t.id}>
-                  <tr className={cn("border-b align-top last:border-0 hover:bg-muted/30", open && "bg-muted/30")}>
-                    <td className="px-3 py-3">
-                      <ScorePill score={s.total} />
-                      <TierLabel tier={s.tier} className="mt-1.5" />
-                    </td>
-                    <td className="max-w-64 px-3 py-3">
-                      <div className="flex items-center gap-1.5">
-                        <Link href={recordHref(t.id)} className="font-medium hover:underline">
-                          {t.name}
-                        </Link>
-                        {t.kind === "lead" && (
-                          <Badge variant="outline" className="h-5 px-1.5 text-[10px]">
-                            Lead
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {t.facilityType} · {t.city}, {t.state} · {sizeLabel(t)}
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {t.software} · {userName(t.ownerId)}
-                      </p>
-                    </td>
-                    <td className="px-3 py-3 text-foreground/85">
-                      <p className="line-clamp-3">{s.whyNow}</p>
-                    </td>
-                    <td className="px-3 py-3 text-xs">
-                      {s.engagement.lastTouch ? (
-                        <>
-                          <span className="block text-foreground">{fmtRelative(s.engagement.lastTouch, asOf).replace(/^./, (c) => c.toUpperCase())}</span>
-                          <span className="block truncate text-muted-foreground" title={s.engagement.lastTouchSubject}>
-                            {(s.engagement.lastTouchSubject ?? "").split(":")[0]} · Salesforce
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-muted-foreground">None</span>
-                      )}
-                    </td>
-                    <td className="px-2 py-2.5">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button variant="outline" size="sm" onClick={() => setEmailFor(s)}>
-                          Email
-                        </Button>
-                        <Button variant="ghost" size="icon-sm" onClick={() => setExpanded(open ? null : t.id)} aria-expanded={open} aria-label={`${open ? "Hide" : "Show"} details for ${t.name}`}>
-                          <ChevronDown className={cn("transition-transform", open && "rotate-180")} />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                  {open && (
-                    <tr className="border-b bg-muted/30">
-                      <td colSpan={5} className="px-4 pt-1 pb-5">
-                        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                          <ScoreBreakdown s={s} />
-                          <div className="space-y-3">
-                            <MiniBreakdown s={s} />
-                            <OutreachButtons target={s} />
-                            <p className="text-xs text-muted-foreground">
-                              Commodities: {t.commodities.join(", ")} · Region: {REGION_BY_ID[t.regionId].name}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
-              );
-            })}
-          </tbody>
-        </table>
+      <DataTable
+        rows={filtered}
+        columns={columns}
+        rowKey={(s) => s.target.id}
+        filterKey={`${query}|${f.region}|${f.state}|${f.type}|${f.commodity}|${f.kind}|${f.min}|${f.sort}|${f.dir}`}
+        defaultSort={f.sort === "total" || f.sort === "name" ? { key: f.sort, dir: f.dir as "asc" | "desc" } : undefined}
+        onRowClick={(s) => setExpanded(s.target.id)}
+        rowClassName={(s) => (s.target.id === expanded ? "bg-muted/30" : undefined)}
+        actions={
+          <>
+            <Button size="sm" variant="outline" onClick={() => setCreating("lead")}>
+              <Plus /> New lead
+            </Button>
+            <Button size="sm" onClick={() => setCreating("account")}>
+              <Plus /> New account
+            </Button>
+          </>
+        }
+        empty="No prospects match these filters."
+        caption="Prospects"
+      />
       </div>
-
-      {/* Mobile cards */}
-      <div className="space-y-3 md:hidden">
-        {filtered.slice(0, limit).map((s) => (
-          <Card key={s.target.id} className="py-4">
-            <CardContent className="space-y-3 px-4">
-              <div className="flex gap-3">
-                <ScorePill score={s.total} />
-                <div className="min-w-0">
-                  <Link href={recordHref(s.target.id)} className="font-medium hover:underline">
-                    {s.target.name}
-                  </Link>
-                  <p className="text-xs text-muted-foreground">
-                    {s.target.facilityType} · {s.target.city}, {s.target.state}
-                  </p>
-                </div>
-                <TierLabel tier={s.tier} className="ml-auto self-start" />
+      <Sheet open={!!open} onOpenChange={(o) => !o && setExpanded(null)}>
+        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[560px]">
+          {open && (
+            <>
+              <div className="border-b px-5 py-4 pr-12">
+                <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                  {open.target.kind === "lead" ? "Lead" : "Account"} · score {open.total} · <TierLabel tier={open.tier} />
+                </p>
+                <SheetTitle className="mt-0.5 text-base font-semibold">{open.target.name}</SheetTitle>
+                <SheetDescription className="text-sm text-muted-foreground">
+                  {open.target.facilityType} · {open.target.city}, {open.target.state} · {REGION_BY_ID[open.target.regionId].name}
+                </SheetDescription>
               </div>
-              <p className="text-sm">{s.whyNow}</p>
-              <OutreachButtons target={s} size="xs" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <div className="rounded-lg border border-dashed p-10 text-center text-sm text-muted-foreground">No prospects match these filters.</div>
-      )}
-      {filtered.length > limit && (
-        <div className="flex justify-center">
-          <Button variant="outline" onClick={() => setLimit((l) => l + 50)}>
-            Show more ({filtered.length - limit} remaining)
-          </Button>
-        </div>
-      )}
-      </div>
+              <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-5 py-5">
+                <p className="text-sm">{open.whyNow}</p>
+                <MiniBreakdown s={open} />
+                <ScoreBreakdown s={open} />
+                <p className="text-xs text-muted-foreground">Commodities: {open.target.commodities.join(", ")}</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 border-t px-5 py-3">
+                <OutreachButtons target={open} />
+                <Button asChild variant="ghost" size="sm" className="ml-auto">
+                  <Link href={recordHref(open.target.id)}>Open record</Link>
+                </Button>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+      <AccountDrawer open={creating === "account"} onOpenChange={(o) => !o && setCreating(null)} />
+      <LeadDrawer open={creating === "lead"} onOpenChange={(o) => !o && setCreating(null)} />
       {emailFor && <OutreachDialog s={emailFor} open onOpenChange={(o) => !o && setEmailFor(null)} tab="email" />}
     </div>
   );
-}
-
-function SortIcon({ k, sort, dir }: { k: SortKey; sort: SortKey; dir: string }) {
-  if (sort !== k) return null;
-  return dir === "desc" ? <ArrowDown className="size-3" /> : <ArrowUp className="size-3" />;
 }
 
 function router_reset(set: (p: Record<string, string | null>) => void) {

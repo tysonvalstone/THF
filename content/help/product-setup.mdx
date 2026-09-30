@@ -1,52 +1,96 @@
 ---
 title: Product Setup
-summary: Managing products and price books in the app is not available yet; this article covers the product reference data that exists today and what is planned.
+summary: Manage products, product types and price books under Quoting, including list prices, pricing units, best-fit facility types and regional price books.
 order: 9
 related: [quotes, segment-prioritization, salesforce-connection]
 ---
 
-Product setup is not available in this version of HarvestSignal yet. You cannot add, edit or remove products, product types or price books from the app. The product catalog and product fit exist as reference data in the code, and this article explains what they contain and how they are used.
+The catalog is managed under **Quoting → Products** and **Quoting → Price books**. **Settings → Products** opens the same page. Quotes and the opportunities created from outreach read the catalog, so a change here applies to new work right away.
 
-## What you can do today
+Changes are saved as Salesforce-style Product2, ProductType, Pricebook2 and PricebookEntry records. In live Salesforce mode they stay in the app and are tagged **Local change, not synced**.
 
-### Review the product catalog
+## Products
 
-The catalog is in `src/data/reference/products.ts`. It has five modules and two services:
+The **Products** table lists each product's name and description, code, type, pricing unit, list price (from the standard price book), status, best-fit facility types and how many quote lines use it. Filter by type or status, search by name or code, and export to CSV.
 
-| Product | Code | Family | Best fit |
-|---|---|---|---|
-| Ceres | CERES | Financials | Grain Elevator, Cooperative, Seed Processor, Feed Mill |
-| GrainSight | GRAINSIGHT | Commodity Management | Grain Elevator, Cooperative, Ethanol Plant, Oilseed Crusher, Flour Mill |
-| ScaleTrac | SCALETRAC | Grain Operations | All facility types except Agronomy Retailer |
-| GrainSight Mobile | GRAINSIGHT-M | Customer Engagement | Grain Elevator, Cooperative, Ethanol Plant |
-| ScaleTrac Mobile | SCALETRAC-M | Grain Operations | Grain Elevator, Cooperative, Feed Mill |
-| Implementation & Data Migration | SVC-IMPL | Services | Any |
-| Go-Live Training | SVC-TRAIN | Services | Any |
+The starting catalog:
 
-List prices and pricing units are in [Quotes](/help/quotes). Prices are illustrative. To change the catalog, a developer edits this file.
+| Product | Code | Type | Pricing unit | List price |
+|---|---|---|---|---|
+| Ceres | CERES | Financials | per year | $36,000 |
+| GrainSight | GRAINSIGHT | Commodity Management | per year | $30,000 |
+| ScaleTrac | SCALETRAC | Grain Operations | per location / year | $9,600 |
+| GrainSight Mobile | GRAINSIGHT-M | Customer Engagement | per year | $12,000 |
+| ScaleTrac Mobile | SCALETRAC-M | Grain Operations | per location / year | $4,800 |
+| ScaleTrac Driver Kiosk | HW-KIOSK | Grain Operations | per kiosk, one-time | $6,500 |
+| Implementation & Data Migration | SVC-IMPL | Services | one-time | $25,000 |
+| Go-Live Training | SVC-TRAIN | Services | one-time | $8,000 |
+| Automated Probe Integration | SVC-PROBE | Services | per location, one-time | $3,500 |
+| Premium Support | SVC-PREM | Services | per year | $6,000 |
 
-### Review product fit by segment
+Prices are illustrative.
 
-`src/data/reference/product-fit.ts` scores how well each module fits each of the eight segments, from 0 (no fit) to 1 (core fit). For example, a Multi-Location Co-op is a core fit for all five modules, while a Feed Mill is a weak fit for GrainSight and no fit for GrainSight Mobile.
+### Add or edit a product
 
-The average fit for a segment is the **Product fit** input on the Segments page. Changing the table changes the segment ranking. See [Segment Prioritization](/help/segment-prioritization).
+1. Click **New product**, or click a row to edit it.
+2. Fill in:
+   - **Name** and **Product code** (codes must be unique).
+   - **Type**: one of the product types below.
+   - **Pricing unit**: **per year** (one subscription), **per location / year** (quantity defaults to the account's locations) or **one-time**.
+   - **Unit label** (optional): priced per unit, for example kiosk. Kiosk quantities default to the account's truck scales; a label of location defaults to its locations.
+   - **List price**: saved as the product's price in the standard price book.
+   - **Active**: inactive products can't be added to new quotes.
+   - **Best fit**: the facility types the product suits. New quotes without opportunity products use these to suggest up to three modules plus implementation.
+3. Click **Save**. A new product is added to the standard price book at its list price. Add it to other price books under **Price books**.
 
-Prospect scores on the Prospects page have their own facility-type fit, part of the **Fit & size** factor; it does not read this table.
+### Delete or deactivate
 
-### Where products appear
+Delete asks for confirmation, removes the product's prices from every price book, and can be undone for a few seconds. A product used on any quote or opportunity line can't be deleted; you are offered **Deactivate** instead, which keeps existing quotes intact and hides it from new ones.
 
-- Opportunity pages (mock mode) list line items with quantity and total price.
-- Recent sales dots on the Map list the products on a won deal.
-- The mock data generator builds line items from this catalog.
+## Product types
 
-### What live mode reads
+The **Product types** table (on the same page) lists each type's sort order, name, description, number of products and status. Types group products in the catalog and on the Add product list.
 
-When HarvestSignal is connected to Salesforce it reads Account, Contact, Opportunity, Campaign, CampaignMember, Task and Event. It does not read Product2, Pricebook2, PricebookEntry or OpportunityLineItem, so product line items are empty in live mode. See [Salesforce Connection (Admin)](/help/salesforce-connection).
+- **New type** adds one; click a row to edit its name, sort order, description or status.
+- A type used by products can't be deleted; deactivate it, or move its products to another type first.
 
-## Planned
+## Price books
 
-The following is planned and not built yet:
+**Quoting → Price books** lists each price book with its currency, number of products, number of quotes using it and status. Click a row to show its prices below.
 
-- Manage product types (families) and products in the app.
-- Maintain price books, with pricing per location, user or bushel for each module.
-- Map products to Salesforce: Product2 for products, Pricebook2 for price books and PricebookEntry for prices, so the catalog and quotes match your org.
+The starting price books:
+
+- **Standard Price Book** (USD): list prices.
+- **Multi-Location Co-op** (USD): per-location modules 15% below list, the default for co-ops with 5 or more locations.
+- **Canada (CAD)**: list prices in Canadian dollars, the default for Canadian accounts.
+
+### Maintain prices
+
+- Edit a price in the **Price** column and press Enter. The **vs. standard** column shows the difference from the standard price. Editing a price in the standard book also updates the product's list price.
+- Untick **Active** to keep a price but hide the product from new quotes on that book.
+- **Add product** adds a product that isn't in the book yet, at its standard price.
+- The bin removes a product from the book (with Undo). Existing quotes keep their lines.
+- **From Standard ±%** (non-standard books) resets every price to the standard price plus or minus a percentage, rounded to $10, and adds missing products. Use -15 for a 15% discount book, or +36 for a rough CAD conversion.
+
+Changing prices never changes existing quotes. To re-price a draft quote, change its price book in **Edit header**.
+
+### Create, edit or delete a price book
+
+1. Click **New price book**.
+2. Enter a name, currency and description. Leave **Copy prices from Standard Price Book** ticked to start from standard prices, and set an **Adjustment** percentage if you like.
+3. Click **Create price book**.
+
+Click **Edit** on a row to rename it, change its currency or description, or deactivate it. Inactive price books aren't offered on new quotes. The standard price book can't be deactivated or deleted. A price book used by quotes can't be deleted; you are offered **Deactivate** instead.
+
+## Salesforce mapping
+
+| In the app | Salesforce object |
+|---|---|
+| Product | Product2 |
+| Product type | ProductType (custom object) |
+| Price book | Pricebook2 |
+| Price | PricebookEntry |
+| Quote and line | Quote and QuoteLineItem |
+| Opportunity products | OpportunityLineItem |
+
+See [Salesforce Connection (Admin)](/help/salesforce-connection).

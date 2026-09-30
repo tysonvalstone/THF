@@ -14,7 +14,7 @@ import {
   type ManagedUser,
   type NewUserInput,
 } from "@/lib/account/admin-actions";
-import type { Role } from "@/lib/supabase/config";
+import { APP_ROLES, APP_ROLE_LABEL, type AppRole, type Role } from "@/lib/supabase/config";
 import { USERS, USER_BY_ID } from "@/data/reference/users";
 import { fmtRelative } from "@/lib/dates";
 import { Button } from "@/components/ui/button";
@@ -95,6 +95,7 @@ function UserDialog({
   const [email, setEmail] = useState(user?.email ?? "");
   const [title, setTitle] = useState(user?.title ?? "");
   const [role, setRole] = useState<Role>(user?.role ?? "user");
+  const [appRole, setAppRole] = useState<AppRole>(user?.appRole ?? "rep");
   const [sfUserId, setSfUserId] = useState<string | null>(user?.sfUserId ?? null);
   const [access, setAccess] = useState<NewUserInput["access"]>("password");
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +104,7 @@ function UserDialog({
   const submit = () =>
     start(async () => {
       setError(null);
-      const r = user ? await updateUser(user.id, { name, title, role, sfUserId }) : await createUser({ email, name, title, role, sfUserId, access });
+      const r = user ? await updateUser(user.id, { name, title, role, appRole, sfUserId }) : await createUser({ email, name, title, role, appRole, sfUserId, access });
       if (!r.ok) return setError(r.error);
       onSaved(r.user, (r as { tempPassword?: string }).tempPassword);
       onOpenChange(false);
@@ -143,6 +144,16 @@ function UserDialog({
               <select id="u-role" value={role} onChange={(e) => setRole(e.target.value as Role)} className={selectCls}>
                 <option value="user">User</option>
                 <option value="admin">Administrator</option>
+              </select>
+            </div>
+            <div className="grid gap-1.5 sm:col-span-2">
+              <Label htmlFor="u-app-role">Business role</Label>
+              <select id="u-app-role" value={appRole} onChange={(e) => setAppRole(e.target.value as AppRole)} className={selectCls}>
+                {APP_ROLES.map((r) => (
+                  <option key={r} value={r}>
+                    {APP_ROLE_LABEL[r]}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="grid gap-1.5 sm:col-span-2">
@@ -264,7 +275,10 @@ export function UsersAdmin() {
                       {u.title ? ` · ${u.title}` : ""}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5">{u.role === "admin" ? "Administrator" : "User"}</td>
+                  <td className="px-3 py-2.5">
+                    {APP_ROLE_LABEL[u.appRole]}
+                    {u.role === "admin" && u.appRole !== "admin" && <span className="block text-xs text-muted-foreground">Administrator</span>}
+                  </td>
                   <td className="px-3 py-2.5 text-muted-foreground">{u.sfUserId ? (USER_BY_ID[u.sfUserId]?.Name ?? u.sfUserId) : "—"}</td>
                   <td className={cn("px-3 py-2.5", STATUS[u.status].cls)}>{STATUS[u.status].label}</td>
                   <td className="px-3 py-2.5 text-muted-foreground tabular">{u.lastSignInAt ? fmtRelative(u.lastSignInAt, new Date()) : "Never"}</td>

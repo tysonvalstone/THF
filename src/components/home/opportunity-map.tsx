@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { setHandoff } from "@/lib/ai/handoff";
 import { usePublishCommodity } from "@/lib/ai/page-context";
 import { useStore } from "@/lib/data/store";
@@ -24,11 +24,16 @@ import { cn } from "@/lib/utils";
 import { SourceNote } from "@/components/shared/source-note";
 import { TripPlanner } from "@/components/map/trip-planner";
 import type { TripPlan } from "@/lib/trips";
-import { PRODUCT_BY_ID } from "@/data/reference/products";
 import { USER_BY_ID } from "@/data/reference/users";
 import { REGION_BY_STATE } from "@/data/reference/regions";
 import { addDays, fmtShortDate } from "@/lib/dates";
 import type { Opportunity } from "@/types/salesforce";
+import { ScheduleCallButton } from "@/components/call-desk/schedule-call";
+import { DataTable, type Column } from "@/components/shared/data-table";
+
+/** Rows per page in the sidebar lists */
+const LIST_SIZE = 5;
+const LIST_PARAM = "mp";
 
 type Range = 30 | 60 | 90 | 365;
 const RANGE_LABEL: Record<Range, string> = { 30: "Last 30 days", 60: "Last 60 days", 90: "Last 90 days", 365: "Last 12 months" };
@@ -89,9 +94,9 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
   const [sort, setSort] = useState<Sort>("score");
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [limit, setLimit] = useState(40);
-  const listRef = useRef<HTMLOListElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
   usePublishCommodity(mode === "season" ? crop : commodity === "all" ? undefined : commodity);
 
   const scoreById = useMemo(() => new Map(ranked.map((s) => [s.target.id, s.total])), [ranked]);
@@ -209,11 +214,78 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
     [colors, commodity],
   );
 
-  // Clicking a dot selects its row and scrolls it into view
-  useEffect(() => {
-    if (!selectedId) return;
-    listRef.current?.querySelector(`[data-id="${selectedId}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [selectedId]);
+  // Clicking a dot selects its row and turns the list to that row's page
+  const selectFromMap = (id: string) => {
+    setSelectedId(id);
+    setTab("prospects");
+    const i = rows.findIndex((r) => r.account.Id === id);
+    if (i < 0) return;
+    const next = new URLSearchParams(params.toString());
+    const page = Math.floor(i / LIST_SIZE) + 1;
+    if (page <= 1) next.delete(LIST_PARAM);
+    else next.set(LIST_PARAM, String(page));
+    router.replace(`${pathname}${next.toString() ? `?${next}` : ""}`, { scroll: false });
+  };
+  const productName = useMemo(() => new Map(data.products.map((p) => [p.Id, p.Name])), [data.products]);
+
+  const prospectColumns: Column<Row>[] = [
+    {
+      key: "facility",
+      header: "Facility",
+      cell: (r) => {
+        const open = selectedId === r.account.Id;
+        return (
+          <div data-id={r.account.Id} className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: colors[r.commodity] }} aria-hidden />
+              <span className="min-w-0 flex-1 truncate text-sm font-medium">{r.account.Name}</span>
+              {r.score !== null ? <span className="shrink-0 text-sm font-semibold tabular">{r.score}</span> : <span className="shrink-0 text-xs text-primary">Customer</span>}
+            </div>
+            <p className="mt-0.5 flex justify-between gap-2 pl-4.5 text-xs text-muted-foreground">
+              <span className="truncate">
+                {r.account.Segment__c} · {r.account.BillingCity}, {r.account.BillingState}
+              </span>
+              <span className="shrink-0 tabular">{fmtMoney(r.deal)}</span>
+            </p>
+            {open && (
+              <div className="mt-2 flex items-center justify-between gap-2 pl-4.5 text-xs">
+                <span className={cn(r.blackout.blocked ? "text-amber-800" : "text-muted-foreground")}>
+                  {r.account.Number_of_Locations__c} loc. · {r.blackout.text}
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <ScheduleCallButton iconOnly prefill={{ accountId: r.account.Id }} />
+                  <Link href={recordHref(r.account.Id)} className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                    Open
+                  </Link>
+                </span>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+  const winColumns: Column<Win>[] = [
+    {
+      key: "account",
+      header: "Account",
+      cell: (w) => (
+        <Link href={recordHref(w.account.Id)} className="block max-w-44 truncate hover:text-primary hover:underline">
+          {w.account.Name}
+        </Link>
+      ),
+    },
+    {
+      key: "won",
+      header: "Won",
+      align: "right",
+      cell: (w) => (
+        <span className="text-xs whitespace-nowrap text-muted-foreground tabular">
+          {fmtMoney(w.opp.Amount)} · {fmtShortDate(w.opp.CloseDate)}
+        </span>
+      ),
+    },
+  ];
 
   const crumbs: { label: string; area: Area }[] = [{ label: "North America", area: { level: "all" } }];
   if (area.regionId) crumbs.push({ label: REGION_BY_ID[area.regionId].name, area: { level: "region", regionId: area.regionId } });
@@ -335,14 +407,11 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
             onFacilityHover={setHoverId}
             onAreaClick={(code) => {
               const next = nextArea(area, code);
-              if (next) {
-                setArea(next);
-                setLimit(40);
-              }
+              if (next) setArea(next);
             }}
             onFacilityClick={(id, pt) => {
               if (id.startsWith("sale:")) setSalePop({ id, ...pt });
-              else if (!tripMode) setSelectedId(id);
+              else if (!tripMode) selectFromMap(id);
             }}
             routes={routes}
           />
@@ -368,7 +437,7 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
                 <dd>
                   {data.lineItems
                     .filter((li) => li.OpportunityId === popWin.opp.Id)
-                    .map((li) => PRODUCT_BY_ID[li.Product2Id]?.Name ?? li.Product2Id)
+                    .map((li) => productName.get(li.Product2Id) ?? li.Product2Id)
                     .join(", ") || "—"}
                 </dd>
                 <dt className="text-muted-foreground">Closed</dt>
@@ -442,57 +511,35 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
                   disabled={!rows.length}
                   onClick={() => {
                     setHandoff("enroll", { accountIds: rows.slice(0, 25).map((r) => r.account.Id), from: `Map: ${areaName(area)}` });
-                    router.push("/campaigns/sequences?enroll=1");
+                    router.push("/outreach/sequences?enroll=1");
                   }}
                 >
                   Enroll top {Math.min(25, rows.length)} in sequence
                 </Button>
               </div>
-              <ol ref={listRef} className="max-h-[460px] divide-y overflow-y-auto" onMouseLeave={() => setHoverId(null)}>
-                {rows.slice(0, limit).map((r) => {
-                  const active = activeId === r.account.Id;
-                  const open = selectedId === r.account.Id;
-                  return (
-                    <li
-                      key={r.account.Id}
-                      data-id={r.account.Id}
-                      onMouseEnter={() => setHoverId(r.account.Id)}
-                      onClick={() => setSelectedId(open ? null : r.account.Id)}
-                      className={cn("cursor-pointer px-3 py-2", active && "bg-accent-soft")}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: colors[r.commodity] }} aria-hidden />
-                        <span className="min-w-0 flex-1 truncate text-sm font-medium">{r.account.Name}</span>
-                        {r.score !== null ? <span className="shrink-0 text-sm font-semibold tabular">{r.score}</span> : <span className="shrink-0 text-xs text-primary">Customer</span>}
-                      </div>
-                      <p className="mt-0.5 flex justify-between gap-2 pl-4.5 text-xs text-muted-foreground">
-                        <span className="truncate">
-                          {r.account.Segment__c} · {r.account.BillingCity}, {r.account.BillingState}
-                        </span>
-                        <span className="shrink-0 tabular">{fmtMoney(r.deal)}</span>
-                      </p>
-                      {open && (
-                        <div className="mt-2 flex items-center justify-between gap-2 pl-4.5 text-xs">
-                          <span className={cn(r.blackout.blocked ? "text-amber-800" : "text-muted-foreground")}>
-                            {r.account.Number_of_Locations__c} loc. · {r.blackout.text}
-                          </span>
-                          <Link href={recordHref(r.account.Id)} className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
-                            Open
-                          </Link>
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-                {!rows.length && <li className="px-3 py-6 text-center text-sm text-muted-foreground">No matches</li>}
-              </ol>
-              {rows.length > limit && (
-                <div className="border-t p-2 text-center">
-                  <Button variant="ghost" size="sm" onClick={() => setLimit((l) => l + 40)}>
-                    Show more
-                  </Button>
-                </div>
-              )}
+              <div
+                className="p-3 pt-2"
+                onMouseOver={(e) => {
+                  const id = (e.target as HTMLElement).closest<HTMLElement>("[data-id]")?.dataset.id;
+                  if (id && id !== hoverId) setHoverId(id);
+                }}
+                onMouseLeave={() => setHoverId(null)}
+              >
+                <DataTable
+                  rows={rows}
+                  columns={prospectColumns}
+                  rowKey={(r) => r.account.Id}
+                  param={LIST_PARAM}
+                  pageSize={LIST_SIZE}
+                  pageSizes={[]}
+                  dense
+                  filterKey={`${area.level}|${area.regionId ?? ""}|${area.state ?? ""}|${status}|${size}|${segment}|${commodity}|${sort}`}
+                  onRowClick={(r) => setSelectedId(selectedId === r.account.Id ? null : r.account.Id)}
+                  rowClassName={(r) => (activeId === r.account.Id ? "bg-accent-soft hover:bg-accent-soft" : undefined)}
+                  empty="No matches"
+                  caption="Facilities on the map"
+                />
+              </div>
             </TabsContent>
 
             <TabsContent value="area" className="mt-0 space-y-5 p-4">
@@ -531,19 +578,19 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
                     {wins.length} · {fmtMoney(winsTotal)} · {RANGE_SHORT[range]}
                   </span>
                 </h4>
-                <ul className="mt-2 divide-y rounded-md border">
-                  {wins.slice(0, 8).map((w) => (
-                    <li key={w.opp.Id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-sm">
-                      <Link href={recordHref(w.account.Id)} className="min-w-0 truncate hover:text-primary hover:underline">
-                        {w.account.Name}
-                      </Link>
-                      <span className="shrink-0 text-xs text-muted-foreground tabular">
-                        {fmtMoney(w.opp.Amount)} · {fmtShortDate(w.opp.CloseDate)}
-                      </span>
-                    </li>
-                  ))}
-                  {!wins.length && <li className="px-2.5 py-3 text-center text-xs text-muted-foreground">No wins in this range</li>}
-                </ul>
+                <DataTable
+                  className="mt-2"
+                  rows={wins}
+                  columns={winColumns}
+                  rowKey={(w) => w.opp.Id}
+                  param="wp"
+                  pageSize={LIST_SIZE}
+                  pageSizes={[]}
+                  dense
+                  filterKey={`${area.level}|${area.regionId ?? ""}|${area.state ?? ""}|${range}`}
+                  empty="No wins in this range"
+                  caption="Recent wins"
+                />
               </div>
               <div>
                 <h4 className="text-xs font-medium text-muted-foreground">Key Insights</h4>

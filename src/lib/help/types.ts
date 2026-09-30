@@ -23,7 +23,12 @@ export function helpSlugFor(pathname: string): string {
   const rules: [RegExp, string][] = [
     [/^\/$/, "home-dashboard"],
     [/^\/segments/, "segment-prioritization"],
-    [/^\/prospects|^\/accounts|^\/leads|^\/opportunities/, "segment-prioritization"],
+    [/^\/prospects|^\/accounts|^\/leads|^\/opportunities|^\/pipeline|^\/contacts/, "segment-prioritization"],
+    [/^\/new-builds/, "new-builds"],
+    [/^\/quotes/, "quotes"],
+    [/^\/harvest-day/, "harvest-day"],
+    [/^\/outreach\/sequences/, "campaigns-sequences"],
+    [/^\/outreach/, "exports-templates"],
     [/^\/map/, "map"],
     [/^\/facilities/, "map"],
     [/^\/campaigns/, "campaigns-sequences"],

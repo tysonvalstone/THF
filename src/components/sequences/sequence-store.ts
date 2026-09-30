@@ -124,3 +124,12 @@ export function nowStamp(asOf: Date): string {
 }
 
 export type { DataSnapshot };
+
+/** Scheduled (not completed) Salesforce tasks that an enrollment created */
+export function enrollmentTaskIds(e: Enrollment, tasks: Task[]): string[] {
+  const prefix = `Sequence step: ${e.sequenceName} — `;
+  const dates = new Set(e.steps.map((s) => s.date));
+  return tasks
+    .filter((t) => t.Status !== "Completed" && t.AccountId === e.accountId && (t.WhoId ?? undefined) === (e.contactId ?? undefined) && t.Subject.startsWith(prefix) && dates.has(t.ActivityDate))
+    .map((t) => t.Id);
+}

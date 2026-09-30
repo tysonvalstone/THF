@@ -8,7 +8,6 @@
  */
 import type { DataSnapshot, Mutation } from "@/lib/data/types";
 import { newId } from "@/lib/data/local-repository";
-import { PRODUCTS } from "@/data/reference/products";
 import type {
   Account,
   Campaign,
@@ -147,13 +146,14 @@ function newTask(ctx: ActionContext, r: Resolved, fields: Partial<Task> & Pick<T
   };
 }
 
-function estimateOpportunity(ctx: ActionContext, account: Account, nextStep: string, stage: OpportunityStage): { opp: Opportunity; lines: Mutation[] } {
+export function estimateOpportunity(ctx: ActionContext, account: Account, nextStep: string, stage: OpportunityStage): { opp: Opportunity; lines: Mutation[] } {
   const oppId = newId("Opportunity");
-  const fits = PRODUCTS.filter((p) => p.Best_Fit__c.includes(account.Facility_Type__c)).slice(0, 2);
-  const impl = PRODUCTS.find((p) => p.ProductCode === "SVC-IMPL")!;
+  const products = ctx.data.products.filter((p) => p.IsActive);
+  const fits = products.filter((p) => p.Best_Fit__c.includes(account.Facility_Type__c)).slice(0, 2);
+  const impl = products.find((p) => p.ProductCode === "SVC-IMPL");
   const lines: Mutation[] = [];
   let amount = 0;
-  for (const p of [...fits, impl]) {
+  for (const p of impl ? [...fits, impl] : fits) {
     const qty = p.Pricing_Unit__c === "per location / year" ? account.Number_of_Locations__c : 1;
     const unit = p.Pricing_Unit__c === "one-time" ? p.List_Price__c : p.List_Price__c * 3;
     amount += unit * qty;
@@ -515,4 +515,64 @@ export function createCampaign(
       ],
     },
   };
+}
+
+// ---------------------------------------------------------------------------
+// Stage changes (pipeline, opportunity page)
+// ---------------------------------------------------------------------------
+export const LOSS_REASONS = [
+  "Chose competitor (HarvestCore 360)",
+  "Incumbent offered a discounted upgrade",
+  "Timing: harvest started before a decision",
+  "Went dark during harvest",
+  "Budget frozen after margin squeeze",
+  "No decision: board deferred",
+];
+
+/** Default probability and forecast category for a stage */
+export function stageDefaults(stage: OpportunityStage): Pick<Opportunity, "Probability" | "ForecastCategoryName"> {
+  if (stage === "Closed Won") return { Probability: 100, ForecastCategoryName: "Closed" };
+  if (stage === "Closed Lost") return { Probability: 0, ForecastCategoryName: "Omitted" };
+  return { Probability: PROBABILITY[stage] ?? 10, ForecastCategoryName: FORECAST[stage] ?? "Pipeline" };
+}
+
+/**
+ * Why a deal can't move to `target`, or null when it can. A deal can't leave
+ * Prospecting (to a later open stage or Closed Won) until the economic buyer
+ * is identified; Closed Lost is always allowed.
+ */
+export function stageBlockedReason(opp: Opportunity, target: OpportunityStage): string | null {
+  if (target === opp.StageName || target === "Closed Lost" || target === "Prospecting") return null;
+  const leavingProspecting = opp.StageName === "Prospecting" || (opp.IsClosed && !opp.Economic_Buyer_Identified__c);
+  if (leavingProspecting && !opp.Economic_Buyer_Identified__c) return ECONOMIC_BUYER_GATE;
+  return null;
+}
+
+/**
+ * Move a deal to another stage. Closed Won sets IsClosed/IsWon, 100%,
+ * forecast Closed and the close date to the as-of date; Closed Lost needs a
+ * loss reason. Reopening clears the closed flags.
+ */
+export function changeStage(
+  ctx: ActionContext,
+  opp: Opportunity,
+  target: OpportunityStage,
+  opts: { lossReason?: string } = {},
+): ActionResult & { blocked?: string } {
+  const blocked = stageBlockedReason(opp, target);
+  if (blocked) return { mutations: [], summary: [blocked], blocked };
+  if (target === "Closed Lost" && !opts.lossReason?.trim()) return { mutations: [], summary: ["Loss reason is required"], blocked: "Loss reason is required" };
+  const closed = target === "Closed Won" || target === "Closed Lost";
+  const changes: Partial<Opportunity> = {
+    StageName: target,
+    ...stageDefaults(target),
+    IsClosed: closed,
+    IsWon: target === "Closed Won",
+    LastModifiedDate: stamp(ctx.asOf),
+    ...(closed ? { CloseDate: toISODate(ctx.asOf) } : {}),
+    ...(target === "Closed Lost" ? { Loss_Reason__c: opts.lossReason!.trim() } : opp.Loss_Reason__c ? { Loss_Reason__c: "" } : {}),
+  };
+  const summary =
+    target === "Closed Won" ? [`Closed won: ${opp.Name}`] : target === "Closed Lost" ? [`Closed lost: ${opp.Name}`] : [`${opp.Name} moved to ${target}`];
+  return { mutations: [{ op: "update", object: "Opportunity", id: opp.Id, changes }], summary };
 }

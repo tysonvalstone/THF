@@ -275,3 +275,41 @@ export function upcoming(data: DataSnapshot, asOf: Date, limit = 5): UpcomingIte
 }
 
 export const REGION_NAME = (id: string) => REGION_BY_ID[id as keyof typeof REGION_BY_ID]?.name ?? REGIONS.find((r) => r.id === id)?.name ?? id;
+
+/* ------------------------------------------------------ closed won mix */
+
+export interface MixRow {
+  key: string;
+  label: string;
+  value: number;
+  count: number;
+}
+
+/** Closed-won dollars in the trailing `days` by rep, product, commodity and region */
+export function closedWonMix(data: DataSnapshot, asOf: Date, users: Record<string, { Name: string }>, days = 365) {
+  const since = addDays(asOf, -days);
+  const won = data.opportunities.filter((o) => o.IsWon && parseDate(o.CloseDate) > since && parseDate(o.CloseDate) <= asOf);
+  const byAccount = new Map(data.accounts.map((a) => [a.Id, a]));
+  const productName = new Map(data.products.map((p) => [p.Id, p.Name]));
+  const add = (m: Map<string, MixRow>, key: string, label: string, value: number) => {
+    const r = m.get(key) ?? { key, label, value: 0, count: 0 };
+    r.value += value;
+    r.count += 1;
+    m.set(key, r);
+  };
+  const rep = new Map<string, MixRow>();
+  const product = new Map<string, MixRow>();
+  const commodity = new Map<string, MixRow>();
+  const region = new Map<string, MixRow>();
+  const wonIds = new Set(won.map((o) => o.Id));
+  for (const o of won) {
+    add(rep, o.OwnerId, users[o.OwnerId]?.Name ?? "Other", o.Amount);
+    const a = byAccount.get(o.AccountId);
+    const c = a?.Primary_Commodities__c[0];
+    add(commodity, c ?? "Other", c ?? "Other", o.Amount);
+    if (a) add(region, a.Region__c, REGION_NAME(a.Region__c), o.Amount);
+  }
+  for (const li of data.lineItems) if (wonIds.has(li.OpportunityId)) add(product, li.Product2Id, productName.get(li.Product2Id) ?? "Other", li.TotalPrice);
+  const sorted = (m: Map<string, MixRow>) => [...m.values()].sort((x, y) => y.value - x.value);
+  return { total: won.reduce((s, o) => s + o.Amount, 0), deals: won.length, rep: sorted(rep), product: sorted(product), commodity: sorted(commodity), region: sorted(region) };
+}

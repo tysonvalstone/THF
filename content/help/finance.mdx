@@ -1,0 +1,132 @@
+---
+title: Finance & Billing
+summary: Revenue metrics (ARR, NRR, payback), the ARR bridge, the one-click Board Report, invoices and payments, aging and reminders, harvest payment terms, and the optional read-only NetSuite connection.
+order: 11
+related: [contracts, customer-success, exports-templates]
+---
+
+Finance lives under **Finance** in the top navigation: **Revenue**, **Invoices**, **Forecast** and **Commissions**. This article covers Revenue and Invoices.
+
+Finance, sales managers and admins can open Finance. Other roles see a short "You don't have access" message. Only Finance and admins can change invoices; managers see them read-only.
+
+Everything is measured against the app date, so time travel changes every number on these pages. Amounts are shown in US dollars; Canadian-dollar contracts are converted at a fixed planning rate of 0.73.
+
+## Revenue dashboard
+
+**Finance → Revenue** shows the business at a glance for the period you pick: **Month**, **Quarter** or **Year to date**, each ending on the app date.
+
+<Screenshot caption="Revenue dashboard with KPIs, the ARR bridge and bookings, billings and revenue" />
+
+### Metric definitions
+
+- **ARR (annual recurring revenue)**: the yearly subscription value of every contract in force on the app date. A contract is in force once it is signed and its start date has passed, until its end date (or termination date). Draft, in-review and unsigned contracts never count. Each contract's yearly price increase is applied for the contract year it is in, so a 5% increase shows up on the contract's anniversary. The tile also compares ARR with the same date a year earlier.
+- **MRR**: ARR divided by 12.
+- **NRR (net revenue retention)**: take every customer that had ARR twelve months ago. NRR is their ARR today divided by their ARR then. Upsells and price increases push it up; downgrades and churn pull it down. New customers are not included.
+- **GRR (gross revenue retention)**: the same group, but each customer counts at most at its ARR from a year ago, so expansion is ignored. GRR shows how much revenue you keep.
+- **ACV (average contract value)**: the average yearly subscription value of contracts signed in the last 12 months, calculated as total contract value minus one-time fees, divided by the term in years.
+- **Payback**: how many months of gross margin from new and expansion ARR it takes to earn back sales and marketing cost. See the assumptions below.
+- **Bookings**: contracts signed in the period. The bar shows total contract value (TCV); the hover readout adds first-year value (first-year ARR plus one-time fees).
+- **Billings**: invoices issued in the period, excluding Draft and Void.
+- **Revenue**: what was earned in the period. Subscriptions are earned evenly per day across the contract; one-time fees (implementation, training) are earned at go-live, taken from the onboarding project's go-live date, or the contract start date when there is no onboarding project.
+- **Deferred revenue**: invoiced but not yet earned, on the app date. Annual invoices paid up front create most of it.
+- **Cash collected**: payments received in the period.
+
+### Payback assumptions
+
+Payback uses a simple, stated proxy for sales and marketing cost, because the app doesn't hold the general ledger:
+
+- Sales and marketing cost for the last 12 months = number of quota-carrying reps (owners of deals closed in that time) times a fully loaded cost of 240,000 dollars per rep per year, covering salary, commission and programs.
+- Gross margin on software is assumed to be 80%.
+- New ARR is new plus expansion ARR from the ARR bridge over the last 12 months.
+- Payback in months = cost divided by (new ARR times gross margin), times 12.
+
+The tile shows the rep count and the cost used, so you can sanity-check it.
+
+### ARR bridge
+
+The ARR bridge (a waterfall chart) explains how ARR moved in the period, customer by customer:
+
+- **Opening**: ARR the day before the period started.
+- **New**: customers with no ARR at the start and ARR at the end.
+- **Expansion**: customers whose ARR went up, from an upsell, a renewal at a higher price or a yearly price increase.
+- **Contraction**: customers whose ARR went down but didn't reach zero.
+- **Churn**: customers whose ARR went to zero (contract expired without renewal, or terminated).
+- **Closing**: ARR at the end of the period. Opening plus new and expansion, minus contraction and churn, always equals closing.
+
+Hover a bar to see the amount and the number of customers. When the movements are small next to total ARR, the axis starts above zero so they stay visible; the chart says so.
+
+### Top wins, renewals and at-risk ARR
+
+**Top wins** lists the largest opportunities closed won in the period. **Renewals and at-risk ARR** shows ARR renewing in the next 120 days, the renewals that look at risk (from the customer health score, see [Customer Success](/help/customer-success)) and overdue receivables, which link to the invoices list.
+
+## Board Report
+
+Click **Board Report** on the Revenue page to download a PDF for the current app month (month to date). It contains:
+
+- A cover with the logo and month, and KPI tiles: ARR, MRR, NRR, GRR, ACV, payback, bookings and cash collected.
+- The ARR bridge waterfall for the month.
+- Bookings, billings, revenue, deferred revenue and cash collected.
+- Pipeline and forecast for the quarter (quota, closed, commit, best case, pipeline and the seasonally expected number), from the Forecast page.
+- Top wins, renewals at risk and receivables aging.
+
+Time travel to the end of a past month first to produce that month's report.
+
+<Screenshot caption="Board Report cover page with KPI tiles" />
+
+## Invoices
+
+**Finance → Invoices** lists every invoice, 10 to a page.
+
+- **Columns**: invoice number, account, contract, service period, issue date, due date, total, amount paid, status, days overdue and a **Harvest** tag for harvest payment terms.
+- **Statuses**: **Draft** (not sent yet), **Sent**, **Paid**, **Overdue** (sent and past its due date with a balance left) and **Void**. A partly paid invoice stays Sent or Overdue until the balance reaches zero.
+- **Filters**: status (including **Open** for anything with a balance), aging bucket, payment terms (harvest or standard) and account. Search matches the invoice number, account and contract.
+- **Export CSV** opens the column picker. See [Exports & Templates](/help/exports-templates).
+
+Click a row to open the invoice: amounts, service period, reminders and the payments recorded against it. The actions are also in each row's menu.
+
+### Actions
+
+- **Send** (Draft only): issues the invoice today, recalculates the due date from the payment terms and logs the email as a completed Email task on the account.
+- **Edit draft**: change dates, amounts, tax and the harvest terms flag before sending.
+- **Record payment**: enter the amount (the open balance by default), date, method (ACH, check, wire or card) and a reference such as the check number. The invoice becomes **Paid** when the balance reaches zero.
+- **Send reminder**: previews and sends the next payment reminder to the account's billing contact (the controller or accounting contact, else the economic buyer), logs it as an Email task and counts it on the invoice.
+- **Void**: for sent invoices with no payments. The invoice stays on record with a zero balance.
+- **Delete draft**: removes a draft after you confirm.
+
+Every change can be undone from the confirmation message for a few seconds.
+
+### How invoices are created
+
+When a contract is signed, its first invoice is created automatically:
+
+- **Sent** right away when the service period has started and the payment terms are standard (Net 30 or Net 45, or due on receipt).
+- **Draft** when the contract starts in the future, or has harvest terms or Net 60 terms, so Finance can review it before sending.
+
+After that, each contract bills on its schedule: annually, quarterly or monthly from the start date, with one-time fees on the first invoice and the yearly price increase applied from each contract anniversary. Invoices come due after the contract's payment terms (Net 30, 45 or 60). Invoices are issued automatically on their issue date while the contract is active, and a sent invoice that passes its due date turns **Overdue**.
+
+## Aging
+
+The **Aging** section above the list totals open balances by how far past due they are: **Not yet due**, **0–30**, **31–60**, **61–90** and **90+** days. Each bucket shows the balance, the number of invoices and its share of all open receivables. Click a bucket to filter the list to it; click it again to clear the filter.
+
+## Payment reminders
+
+Reminders follow a three-step **Payment reminders** sequence: a friendly note, a second notice and a final notice, chosen by how many reminders the invoice has already had. The emails use the same merge fields as other sequences (contact first name, account name, sender name) plus the invoice number, balance, due date and days overdue.
+
+To change the wording, create a sequence named **Payment reminders** under **Outreach → Sequences** with up to three email steps; reminders use its steps instead of the built-in text. See [Campaigns & Sequences](/help/campaigns-sequences).
+
+## Harvest payment terms
+
+Many elevators and co-ops are cash-tight until the crop is sold, so contracts can carry **harvest payment terms**:
+
+- The contract bills once a year, whatever the billing frequency says.
+- Each invoice is due **December 15** after harvest (the next December 15 at least two weeks after the invoice date).
+- Harvest terms and Net 60 need Finance approval on the quote or contract, and the first invoice starts as a Draft for Finance to review.
+- Invoices on harvest terms carry a **Harvest** tag in the list and on the invoice.
+
+Filter the list by **Harvest terms** in November and December to see what is coming due after harvest.
+
+## NetSuite (optional, read-only)
+
+When your administrator connects NetSuite, the Invoices page shows a **Live NetSuite** badge and lists NetSuite customer invoices alongside the app's own, marked **NS**. NetSuite invoices are read-only: HarvestSignal never writes to NetSuite. Their payments show on the invoice, and customers are matched to accounts by name.
+
+The connection reads invoices and payments from the last 24 months and refreshes every 10 minutes. Without the connection, or in Demo Mode, the page uses the app's own invoices.

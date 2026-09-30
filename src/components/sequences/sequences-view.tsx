@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import type { ChatContext, Sequence } from "@/lib/ai/types";
@@ -21,12 +21,20 @@ import { ConfirmDialog } from "./parts";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { DataTable, type Column } from "@/components/shared/data-table";
 
 const VISIT_SEQUENCE = "seq-visiting-next-week";
 
 export function SequencesView() {
-  const { ready, data, asOf, asOfISO, readOnly, commit } = useStore();
+  return (
+    <Suspense fallback={<Skeleton className="h-[32rem]" />}>
+      <SequencesInner />
+    </Suspense>
+  );
+}
+
+function SequencesInner() {
+  const { ready, data, asOf, asOfISO, commit } = useStore();
   const sender = useSender();
   const userId = useUserId();
   const ai = useAiStatus();
@@ -50,7 +58,7 @@ export function SequencesView() {
   const dirty = !!working && (!saved || fingerprint(working) !== fingerprint(saved));
   const isNew = !!working && !saved;
 
-  const aiContext: ChatContext = useMemo(() => ({ asOf: asOfISO, page: "/campaigns/sequences", pageTitle: "Sequences" }), [asOfISO]);
+  const aiContext: ChatContext = useMemo(() => ({ asOf: asOfISO, page: "/outreach/sequences", pageTitle: "Sequences" }), [asOfISO]);
 
   // One-shot hand-off from chat, map or trip planner: open Enroll with those accounts
   const took = useRef(false);
@@ -132,10 +140,7 @@ export function SequencesView() {
   const enroll = (sequence: Sequence, recipients: Recipient[], skipped: EnrollRow[] = []) => {
     const list = recipients.map((r) => enrollmentFor(sequence, r.account, r.contact, { sender, asOf, data, enrolledBy: userId }));
     list.forEach((e) => enrollmentsCollection.save(e));
-    if (!readOnly) {
-      const stamp = nowStamp(asOf);
-      commit(list.flatMap((e) => enrollmentTasks(e, sequence, userId, stamp)));
-    }
+    commit(list.flatMap((e) => enrollmentTasks(e, sequence, userId, nowStamp(asOf))));
     const steps = list.reduce((n, e) => n + e.steps.length, 0);
     toast.success(`Enrolled ${list.length} recipient${list.length === 1 ? "" : "s"} · ${steps} steps scheduled`, {
       description: skipped.length
@@ -143,14 +148,38 @@ export function SequencesView() {
             .slice(0, 5)
             .map((x) => `${recipientName(x.r)} (${x.label.toLowerCase()})`)
             .join(", ")}${skipped.length > 5 ? ", …" : ""}`
-        : readOnly
-          ? "Read-only: no Salesforce tasks created"
-          : "Steps logged as Salesforce tasks. Nothing is sent.",
+        : "Steps logged as Salesforce tasks. Nothing is sent.",
       duration: 6000,
     });
   };
 
   if (!ready) return <Skeleton className="h-[32rem]" />;
+
+  const listRows: Sequence[] = isNew && working ? [working, ...items] : items;
+  const listColumns: Column<Sequence>[] = [
+    {
+      key: "name",
+      header: "Sequence",
+      cell: (x) => {
+        const unsaved = isNew && x.id === working?.id;
+        const shown = x.id === activeId && working ? working : x;
+        const count = enrollCounts.get(x.id) ?? 0;
+        return (
+          <div className="min-w-0 max-w-[13rem]" aria-current={x.id === activeId ? "true" : undefined}>
+            <span className="flex items-center gap-2">
+              <span className="min-w-0 flex-1 truncate text-sm font-medium">{shown.name || "Untitled sequence"}</span>
+              {x.prebuilt && <span className="shrink-0 rounded-sm bg-muted px-1.5 py-px text-[11px] text-muted-foreground">Prebuilt</span>}
+            </span>
+            <span className="block truncate text-xs text-muted-foreground">
+              {unsaved
+                ? `Unsaved · ${shown.steps.length} steps`
+                : `${shown.steps.length} steps${shown.segment ? ` · ${shown.segment}` : ""}${shown.month ? ` · ${MONTHS[shown.month - 1].slice(0, 3)}` : ""} · ${count} enrolled`}
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
 
   const enrollSeq = items.find((x) => x.id === (enrollSeqId ?? activeId)) ?? (saved ? saved : items[0]);
   const recipient = picked && picked.seqId === activeId ? picked.r : working ? defaultRecipient(data, working.segment) : null;
@@ -188,40 +217,19 @@ export function SequencesView() {
 
       <TabsContent value="sequences" className="mt-0">
         <div className="grid gap-4 lg:grid-cols-[15rem_minmax(0,1fr)]">
-          <ul className="h-fit divide-y overflow-hidden rounded-md border bg-card" aria-label="Sequences">
-            {isNew && working && (
-              <li>
-                <button type="button" className="block w-full bg-accent-soft px-3 py-2.5 text-left">
-                  <span className="block truncate text-sm font-medium">{working.name || "Untitled sequence"}</span>
-                  <span className="block text-xs text-muted-foreground">Unsaved · {working.steps.length} steps</span>
-                </button>
-              </li>
-            )}
-            {items.map((s) => {
-              const active = s.id === activeId;
-              const count = enrollCounts.get(s.id) ?? 0;
-              const shown = active && working ? working : s;
-              return (
-                <li key={s.id}>
-                  <button
-                    type="button"
-                    onClick={() => select(s.id)}
-                    aria-current={active ? "true" : undefined}
-                    className={cn("block w-full px-3 py-2.5 text-left hover:bg-muted/40", active && "bg-accent-soft hover:bg-accent-soft")}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="min-w-0 flex-1 truncate text-sm font-medium">{shown.name}</span>
-                      {s.prebuilt && <span className="shrink-0 rounded-sm bg-muted px-1.5 py-px text-[11px] text-muted-foreground">Prebuilt</span>}
-                    </span>
-                    <span className="block truncate text-xs text-muted-foreground">
-                      {shown.steps.length} steps{shown.segment ? ` · ${shown.segment}` : ""}
-                      {shown.month ? ` · ${MONTHS[shown.month - 1].slice(0, 3)}` : ""} · {count} enrolled
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <DataTable
+            className="h-fit"
+            rows={listRows}
+            columns={listColumns}
+            rowKey={(x) => x.id}
+            param="sp"
+            dense
+            pageSizes={[]}
+            onRowClick={(x) => (isNew && x.id === working?.id ? undefined : select(x.id))}
+            rowClassName={(x) => (x.id === activeId ? "bg-accent-soft hover:bg-accent-soft" : undefined)}
+            empty="No sequences"
+            caption="Sequences"
+          />
 
           {working ? (
             <div className="min-w-0 space-y-4">

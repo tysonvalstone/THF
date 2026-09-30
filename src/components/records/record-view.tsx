@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CalendarCheck, Check, Clock, ListTodo, Mail, Mailbox, Phone } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CalendarCheck, Check, Clock, ListTodo, Mail, Mailbox, Pencil, Phone, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { blackoutStatus, closeDateFlags, harvestWindowFor, nextBoardMeeting } from "@/lib/seasonality";
 import { StagePath } from "./opportunity-view";
 import { useStore } from "@/lib/data/store";
@@ -10,7 +12,6 @@ import { contactName, contactsFor, findAccount, findLead, opportunitiesFor, time
 import { scoreOne, sizeLabel, type ScoredTarget } from "@/lib/scoring";
 import { targetFromAccount, targetFromLead } from "@/lib/scoring/target";
 import { nextBestAction, type NextBestAction } from "@/lib/nba";
-import { PRODUCT_BY_ID } from "@/data/reference/products";
 import { VENDOR_BY_NAME } from "@/data/reference/software";
 import { fmtDate, fmtMonthYear, fmtRelative, fmtShortDate, toISODate } from "@/lib/dates";
 import { fmtMoney, fmtNumber } from "@/lib/format";
@@ -25,13 +26,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DocTitle } from "@/components/shared/doc-title";
+import { DataTable, type Column } from "@/components/shared/data-table";
+import { ConfirmDialog, LocalChangeTag } from "@/components/shared/confirm-dialog";
+import { useCrud } from "@/lib/data/crud";
 import { cn } from "@/lib/utils";
+import { AccountDrawer, ContactDrawer, LeadDrawer, OpportunityDrawer } from "./forms";
+import { TasksPanel } from "./tasks-panel";
+import { ScheduleCallButton } from "@/components/call-desk/schedule-call";
+import { ConvertLeadDialog } from "./convert-lead-dialog";
+import { accountDeletePlan, contactDeletePlan, leadDeletePlan, type DeletePlan } from "./delete-rules";
 
 export function RecordView({ id }: { id: string }) {
   const { ready, data, asOf } = useStore();
+  const { remove } = useCrud();
+  const router = useRouter();
   const [tab, setTab] = useState<OutreachTab | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [converting, setConverting] = useState(false);
+  const [deleting, setDeleting] = useState<DeletePlan | null>(null);
+  const [gone, setGone] = useState(false);
 
-  if (!ready) {
+  if (!ready || gone) {
     return (
       <div className="space-y-4">
         <Skeleton className="h-28" />
@@ -64,8 +79,19 @@ export function RecordView({ id }: { id: string }) {
   const timeline = timelineFor(data, id);
   const openTasks = timeline.filter((i) => i.kind === "task" && i.record.Status !== "Completed").map((i) => i.record as never);
   const nba = nextBestAction(scored, { contacts, openOpps, openTasks, asOf });
+  const openTasksAll = data.tasks.filter((t) => t.Status !== "Completed" && (account ? t.AccountId === account.Id : t.WhoId === lead!.Id));
   const children = account ? data.accounts.filter((c) => c.ParentId === account.Id) : [];
   const parent = account?.ParentId ? findAccount(data, account.ParentId) : undefined;
+
+  const askDelete = () => {
+    const plan = account ? accountDeletePlan(data, account.Id) : leadDeletePlan(data, lead!.Id);
+    if (plan.blocked) {
+      toast.error("Can't delete this account", { description: plan.blocked });
+      return;
+    }
+    setDeleting(plan);
+  };
+  const convertedTo = lead?.IsConverted && lead.ConvertedAccountId ? findAccount(data, lead.ConvertedAccountId) : undefined;
 
   return (
     <div className="space-y-5">
@@ -74,7 +100,32 @@ export function RecordView({ id }: { id: string }) {
         Prospects
       </Link>
 
-      <Highlights account={account} lead={lead} scored={scored} onAction={setTab} parent={parent} locations={children.length + 1} />
+      {lead?.IsConverted && (
+        <p className="rounded-md border bg-accent-soft px-4 py-2.5 text-sm">
+          Converted{lead.ConvertedDate ? ` ${fmtDate(lead.ConvertedDate)}` : ""}
+          {convertedTo ? (
+            <>
+              {" "}
+              to{" "}
+              <Link href={`/accounts/${convertedTo.Id}`} className="font-medium text-primary hover:underline">
+                {convertedTo.Name}
+              </Link>
+            </>
+          ) : null}
+        </p>
+      )}
+
+      <Highlights
+        account={account}
+        lead={lead}
+        scored={scored}
+        onAction={setTab}
+        parent={parent}
+        locations={children.length + 1}
+        onEdit={() => setEditing(true)}
+        onDelete={askDelete}
+        onConvert={lead && !lead.IsConverted ? () => setConverting(true) : undefined}
+      />
 
       <div className="grid gap-5 lg:grid-cols-12">
         <div className="min-w-0 space-y-5 lg:col-span-8">
@@ -91,6 +142,7 @@ export function RecordView({ id }: { id: string }) {
           <Tabs defaultValue="activity">
             <TabsList className="w-full justify-start overflow-x-auto sm:w-auto">
               <TabsTrigger value="activity">Activity ({timeline.filter((i) => i.date <= asOf || i.kind === "event" || i.record.Status !== "Completed").length})</TabsTrigger>
+              <TabsTrigger value="tasks">Tasks ({openTasksAll.length})</TabsTrigger>
               {account && <TabsTrigger value="contacts">Contacts ({contacts.length})</TabsTrigger>}
               {account && <TabsTrigger value="opps">Opportunities ({opps.length})</TabsTrigger>}
               {account && children.length > 0 && <TabsTrigger value="locations">Locations ({children.length + 1})</TabsTrigger>}
@@ -100,14 +152,17 @@ export function RecordView({ id }: { id: string }) {
             <TabsContent value="activity">
               <ActivityTimeline items={timeline} />
             </TabsContent>
+            <TabsContent value="tasks">
+              {account ? <TasksPanel accountId={account.Id} param="tp" /> : <TasksPanel leadId={lead!.Id} param="tp" />}
+            </TabsContent>
             {account && (
               <TabsContent value="contacts">
-                <ContactsList contacts={contacts} />
+                <ContactsList contacts={contacts} accountId={account.Id} />
               </TabsContent>
             )}
             {account && (
               <TabsContent value="opps">
-                <OppList opps={opps} />
+                <OppList opps={opps} accountId={account.Id} />
               </TabsContent>
             )}
             {account && children.length > 0 && (
@@ -165,6 +220,40 @@ export function RecordView({ id }: { id: string }) {
       </div>
 
       <OutreachDialog s={scored} open={tab !== null} onOpenChange={(o) => !o && setTab(null)} tab={tab ?? "email"} />
+      {account ? (
+        <AccountDrawer
+          open={editing}
+          onOpenChange={setEditing}
+          record={account}
+          onDelete={() => {
+            setEditing(false);
+            askDelete();
+          }}
+        />
+      ) : (
+        <LeadDrawer
+          open={editing}
+          onOpenChange={setEditing}
+          record={lead}
+          onDelete={() => {
+            setEditing(false);
+            askDelete();
+          }}
+        />
+      )}
+      {lead && !lead.IsConverted && <ConvertLeadDialog key={lead.Id} lead={lead} open={converting} onOpenChange={setConverting} />}
+      <ConfirmDialog
+        open={!!deleting}
+        onOpenChange={(o) => !o && setDeleting(null)}
+        title={`Delete ${target.name}?`}
+        description={[deleting?.detail, "You can undo this for a few seconds afterwards."].filter(Boolean).join(" ")}
+        onConfirm={() => {
+          if (!deleting) return;
+          setGone(true);
+          remove(account ? "Account" : "Lead", id, account ? "Account" : "Lead", deleting.cascade);
+          router.push("/prospects");
+        }}
+      />
     </div>
   );
 }
@@ -185,6 +274,9 @@ function Highlights({
   onAction,
   parent,
   locations,
+  onEdit,
+  onDelete,
+  onConvert,
 }: {
   account?: Account;
   lead?: Lead;
@@ -192,6 +284,9 @@ function Highlights({
   onAction: (t: OutreachTab) => void;
   parent?: Account;
   locations: number;
+  onEdit: () => void;
+  onDelete: () => void;
+  onConvert?: () => void;
 }) {
   const t = scored.target;
   const vendor = VENDOR_BY_NAME[t.software];
@@ -210,7 +305,10 @@ function Highlights({
               <p className="text-xs font-medium text-muted-foreground">
                 {lead ? `Lead · ${lead.Status} · ${lead.Rating}` : account!.Type === "Customer - Direct" ? "Account · Customer" : "Account · Prospect"}
               </p>
-              <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">{t.name}</h1>
+              <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                {t.name}
+                <LocalChangeTag id={t.id} />
+              </h1>
               <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
                 <span>{t.facilityType}</span>
                 <span aria-hidden>·</span>
@@ -223,13 +321,30 @@ function Highlights({
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            <Button size="icon-sm" variant="outline" onClick={onEdit} aria-label="Edit" title="Edit">
+              <Pencil />
+            </Button>
+            <Button size="icon-sm" variant="outline" onClick={onDelete} aria-label="Delete" title="Delete">
+              <Trash2 />
+            </Button>
+            {onConvert && (
+              <Button size="sm" variant="outline" onClick={onConvert}>
+                Convert to account
+              </Button>
+            )}
+            {account && (
+              <Button size="sm" variant="outline" asChild>
+                <Link href={`/harvest-day?account=${account.Id}`}>Open in Harvest Day Simulator</Link>
+              </Button>
+            )}
             <Button size="sm" variant="outline" onClick={() => onAction("email")}>
               Email
             </Button>
             <Button size="sm" variant="outline" onClick={() => onAction("call")}>
               Log call
             </Button>
+            {account && <ScheduleCallButton prefill={{ accountId: account.Id }} />}
             <Button size="sm" onClick={() => onAction("campaign")}>
               Add to campaign
             </Button>
@@ -383,37 +498,100 @@ function ActivityTimeline({ items }: { items: TimelineItem[] }) {
   );
 }
 
-function ContactsList({ contacts }: { contacts: Contact[] }) {
+function ContactsList({ contacts, accountId }: { contacts: Contact[]; accountId: string }) {
+  const { remove } = useCrud();
+  const [editing, setEditing] = useState<Contact | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [deleting, setDeleting] = useState<Contact | null>(null);
+  const columns: Column<Contact>[] = [
+    {
+      key: "name",
+      header: "Name",
+      sortValue: (c) => c.LastName,
+      cell: (c) => (
+        <div className="min-w-0">
+          <p className="font-medium">
+            {c.Name}
+            <LocalChangeTag id={c.Id} />
+          </p>
+          <p className="text-xs text-muted-foreground">{c.Title}</p>
+        </div>
+      ),
+    },
+    {
+      key: "role",
+      header: "Buying role",
+      sortValue: (c) => c.Buying_Role__c,
+      cell: (c) => (
+        <span className="whitespace-nowrap text-muted-foreground">
+          {c.Buying_Role__c}
+          {c.HasOptedOutOfEmail ? " · opted out" : ""}
+        </span>
+      ),
+    },
+    { key: "email", header: "Email", hideBelow: "md", cell: (c) => <span className="text-muted-foreground">{c.Email}</span> },
+    { key: "phone", header: "Phone", hideBelow: "lg", cell: (c) => <span className="whitespace-nowrap text-muted-foreground tabular">{c.MobilePhone ?? c.Phone}</span> },
+  ];
   return (
-    <Card className="py-0">
-      <ul className="divide-y">
-        {contacts.map((c) => (
-          <li key={c.Id} className="flex flex-col gap-1 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-medium">
-                {c.Name} <span className="font-normal text-muted-foreground">· {c.Title}</span>
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {c.Buying_Role__c}
-                {c.HasOptedOutOfEmail ? " · email opt-out" : ""}
-              </p>
-            </div>
-            <div className="flex flex-col text-sm sm:items-end">
-              <span className="text-muted-foreground">{c.Email}</span>
-              <span className="text-muted-foreground tabular">{c.MobilePhone ?? c.Phone}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
+    <>
+      <DataTable
+        rows={contacts}
+        columns={columns}
+        rowKey={(c) => c.Id}
+        param="cp"
+        dense
+        search={contacts.length > 10 ? { placeholder: "Search contacts", text: (c) => `${c.Name} ${c.Title} ${c.Email}` } : undefined}
+        onRowClick={setEditing}
+        empty="No contacts"
+        actions={
+          <Button size="sm" variant="outline" onClick={() => setCreating(true)}>
+            <Plus /> New contact
+          </Button>
+        }
+      />
+      <ContactDrawer
+        open={creating || !!editing}
+        onOpenChange={(o) => {
+          if (!o) {
+            setCreating(false);
+            setEditing(null);
+          }
+        }}
+        record={editing ?? undefined}
+        defaults={creating ? { AccountId: accountId } : undefined}
+        onDelete={
+          editing
+            ? () => {
+                setDeleting(editing);
+                setEditing(null);
+              }
+            : undefined
+        }
+      />
+      <ConfirmDialog
+        open={!!deleting}
+        onOpenChange={(o) => !o && setDeleting(null)}
+        title={`Delete ${deleting?.Name ?? "contact"}?`}
+        description={`${contactDeletePlan().detail} You can undo this for a few seconds afterwards.`}
+        onConfirm={() => deleting && remove("Contact", deleting.Id, "Contact", contactDeletePlan().cascade)}
+      />
+    </>
   );
 }
 
-function OppList({ opps }: { opps: Opportunity[] }) {
+function OppList({ opps, accountId }: { opps: Opportunity[]; accountId: string }) {
   const { data, asOf } = useStore();
-  if (!opps.length) return <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No opportunities</p>;
+  const [creating, setCreating] = useState(false);
+  const productName = new Map(data.products.map((p) => [p.Id, p.Name]));
+  const account = findAccount(data, accountId);
   return (
     <div className="space-y-3">
+      <div className="flex justify-end">
+        <Button size="sm" variant="outline" onClick={() => setCreating(true)}>
+          <Plus /> New opportunity
+        </Button>
+      </div>
+      {!opps.length && <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No opportunities</p>}
       {opps.map((o) => {
         const lines = data.lineItems.filter((l) => l.OpportunityId === o.Id);
         return (
@@ -424,6 +602,7 @@ function OppList({ opps }: { opps: Opportunity[] }) {
                   <Link href={`/opportunities/${o.Id}`} className="font-medium text-primary hover:underline">
                     {o.Name}
                   </Link>
+                  <LocalChangeTag id={o.Id} />
                   <p className="text-xs text-muted-foreground">
                     {o.Type} · {o.ForecastCategoryName} · {o.Probability}% · close {fmtShortDate(o.CloseDate)} · {userName(o.OwnerId)}
                   </p>
@@ -451,7 +630,7 @@ function OppList({ opps }: { opps: Opportunity[] }) {
                   {lines.map((l) => (
                     <li key={l.Id} className="flex justify-between gap-3 px-3 py-1.5">
                       <span>
-                        {PRODUCT_BY_ID[l.Product2Id]?.Name ?? l.Product2Id}
+                        {productName.get(l.Product2Id) ?? l.Product2Id}
                         {l.Quantity > 1 ? <span className="text-muted-foreground"> × {l.Quantity}</span> : null}
                         {l.Description ? <span className="text-muted-foreground"> · {l.Description}</span> : null}
                       </span>
@@ -464,6 +643,16 @@ function OppList({ opps }: { opps: Opportunity[] }) {
           </Card>
         );
       })}
+      <OpportunityDrawer
+        open={creating}
+        onOpenChange={setCreating}
+        defaults={{
+          AccountId: accountId,
+          Name: account ? `${account.Name} - ` : "",
+          Type: account?.Type === "Customer - Direct" ? "Add-On Business" : "New Business",
+          OwnerId: account?.OwnerId,
+        }}
+      />
     </div>
   );
 }

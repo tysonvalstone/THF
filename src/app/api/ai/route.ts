@@ -1,6 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { BetaContentBlock, BetaContentBlockParam, BetaMessageParam, BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages";
+import { cookies } from "next/headers";
 import { loadAppData } from "@/lib/data/server";
+import { applyMutations } from "@/lib/data/local-repository";
+import type { Mutation } from "@/lib/data/types";
+import { getSessionUser } from "@/lib/supabase/session";
+import { createSessionValue, readSessionValue } from "@/lib/session";
 import { PRODUCTS } from "@/data/reference/products";
 import { REGIONS } from "@/data/reference/regions";
 import { EXPORT_FIELDS, fieldCatalogText } from "@/lib/exports/fields";
@@ -32,6 +37,8 @@ import {
   type StepVariant,
   type TripParseRequest,
   type TripParseResponse,
+  type CallBriefResponse,
+  type CallNotesResponse,
   type VariantRule,
 } from "@/lib/ai/types";
 
@@ -40,7 +47,8 @@ import {
  * - kind "chat": NDJSON stream of ChatEvent lines. Without ANTHROPIC_API_KEY
  *   (or when the API fails before any text), answers come from the offline
  *   intent matcher over the same read-only tools.
- * - kinds "export-spec", "draft-sequence", "rewrite-step", "trip-parse":
+ * - kinds "export-spec", "draft-sequence", "rewrite-step", "trip-parse",
+ *   "call-brief", "call-notes" (Call Desk):
  *   one structured-output call each; `{ ok: false, reason }` without a key.
  */
 
@@ -52,9 +60,25 @@ const MAX_ITERATIONS = 8;
 const MAX_HISTORY = 20;
 const MAX_ACCOUNT_IDS = 100;
 
-function client(): Anthropic | null {
-  if (!process.env.ANTHROPIC_API_KEY) return null;
+function client(allowed = true): Anthropic | null {
+  if (!allowed || !process.env.ANTHROPIC_API_KEY) return null;
   return new Anthropic({ timeout: 55_000, maxRetries: 1 });
+}
+
+/** Guests get about 30 AI requests per session; after that the offline answers take over */
+const GUEST_AI_LIMIT = 30;
+const GUEST_AI_COOKIE = "hs_ai_guest";
+
+async function aiAllowed(): Promise<boolean> {
+  if (!process.env.ANTHROPIC_API_KEY) return false;
+  const user = await getSessionUser();
+  if (!user?.guest) return true;
+  const store = await cookies();
+  const used = Number((await readSessionValue(store.get(GUEST_AI_COOKIE)?.value))?.slice(1) ?? 0) || 0;
+  if (used >= GUEST_AI_LIMIT) return false;
+  const { value, expires } = await createSessionValue(`n${used + 1}`);
+  store.set(GUEST_AI_COOKIE, value, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", expires });
+  return true;
 }
 
 function errorReason(error: unknown): string {
@@ -79,12 +103,17 @@ function normalizeContext(c: unknown): ChatContext {
     commodity: clip(x.commodity, 40) || undefined,
     page: clip(x.page, 200) || "/",
     pageTitle: clip(x.pageTitle, 120) || undefined,
+    demo: x.demo === true,
+    mutations: Array.isArray(x.mutations) ? x.mutations : undefined,
   };
 }
 
+/** Server data (mock in Demo Mode) with the browser's local changes applied on top */
 async function toolContext(ctx: ChatContext): Promise<ToolContext> {
-  const app = await loadAppData();
-  return { data: app.snapshot, asOf: parseDate(ctx.asOf), mode: app.mode, lightningBaseUrl: app.lightningBaseUrl, commodity: ctx.commodity };
+  const app = await loadAppData({ forceMock: !!ctx.demo });
+  const mutations = Array.isArray(ctx.mutations) ? (ctx.mutations.slice(-5000) as Mutation[]).filter((m) => m && typeof m === "object" && "op" in m && "object" in m) : [];
+  const data = mutations.length ? applyMutations(app.snapshot, mutations) : app.snapshot;
+  return { data, asOf: parseDate(ctx.asOf), mode: app.mode, lightningBaseUrl: app.lightningBaseUrl, commodity: ctx.commodity };
 }
 
 /* ------------------------------------------------------------------- chat */
@@ -110,6 +139,7 @@ How to answer:
 - Link every account and opportunity name with the href the tool returned, as a markdown link: [Name](href).
 - Format money like $1.2M or $85K and dates like Oct 14.
 - No emoji. Do not add a sources line; the app shows sources.
+- For what a customer said on calls (budget, competitors, timing, objections), call search_calls and quote briefly from the notes or snippets, with the call date.
 - For how-to questions about using HarvestSignal, call search_help and link the matching article(s) as markdown links, e.g. [Trip Planner](/help/trip-planner).
 - Use web search only for outside information (market news, weather, company background), never for pipeline or account data.${mode === "live" ? "\n- run_soql is a last resort for questions the other tools can't answer; keep queries small." : ""}`;
 }
@@ -258,7 +288,7 @@ async function runChat(anthropic: Anthropic, history: ChatMessage[], ctx: ChatCo
   return answer;
 }
 
-function chatResponse(body: ChatRequest, req: Request): Response {
+function chatResponse(body: ChatRequest, req: Request, allowed: boolean): Response {
   const history = cleanHistory(body.messages);
   const ctx = normalizeContext(body.context);
   const question = [...history].reverse().find((m) => m.role === "user")?.content ?? "";
@@ -296,7 +326,7 @@ function chatResponse(body: ChatRequest, req: Request): Response {
         return close();
       }
 
-      const anthropic = client();
+      const anthropic = client(allowed);
       try {
         if (!anthropic || !question) {
           await streamOffline(question, tctx, emit);
@@ -654,6 +684,147 @@ ${prompt.slice(0, 1000)}
   return { ok: true, trip: { destination, startDate, stops, segment, ...(startCity ? { startCity } : {}) } };
 }
 
+/* -------------------------------------------------------------- call desk */
+
+const STR_LIST = { type: "array", items: { type: "string" } };
+const OBJECTIONS = {
+  type: "array",
+  items: { type: "object", additionalProperties: false, required: ["objection", "response"], properties: { objection: { type: "string" }, response: { type: "string" } } },
+};
+const nullable = (t: string, extra: Record<string, unknown> = {}) => ({ anyOf: [{ type: t, ...extra }, { type: "null" }] });
+
+const CALL_BRIEF_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["summary", "questions", "talkingPoints", "objections"],
+  properties: { summary: STR_LIST, questions: STR_LIST, talkingPoints: STR_LIST, objections: OBJECTIONS },
+};
+
+const CALL_NOTES_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["summary", "keyPoints", "painPoints", "objections", "qualification", "nextSteps", "sentiment", "followUpEmail", "updates"],
+  properties: {
+    summary: STR_LIST,
+    keyPoints: STR_LIST,
+    painPoints: STR_LIST,
+    objections: OBJECTIONS,
+    qualification: {
+      type: "object",
+      additionalProperties: false,
+      required: ["budget", "decisionMaker", "timeline", "competitors", "locations"],
+      properties: { budget: nullable("string"), decisionMaker: nullable("string"), timeline: nullable("string"), competitors: nullable("string"), locations: nullable("integer") },
+    },
+    nextSteps: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["text", "owner", "ownerName", "due"],
+        properties: { text: { type: "string" }, owner: { type: "string", enum: ["rep", "customer"] }, ownerName: { type: "string" }, due: nullable("string", { format: "date" }) },
+      },
+    },
+    sentiment: { type: "string", enum: ["Positive", "Neutral", "Concerned"] },
+    followUpEmail: { type: "object", additionalProperties: false, required: ["subject", "body"], properties: { subject: { type: "string" }, body: { type: "string" } } },
+    updates: {
+      type: "object",
+      additionalProperties: false,
+      required: ["stage", "closeDate", "economicBuyerName"],
+      properties: {
+        stage: nullable("string", { enum: ["Prospecting", "Qualification", "Needs Analysis", "Proposal", "Negotiation", "Board Approval"] }),
+        closeDate: nullable("string", { format: "date" }),
+        economicBuyerName: nullable("string"),
+      },
+    },
+  },
+};
+
+const strList = (v: unknown, max: number, len = 300) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && !!x.trim()).slice(0, max).map((x) => x.trim().slice(0, len)) : []);
+const objList = (v: unknown) =>
+  Array.isArray(v)
+    ? v
+        .filter((o): o is { objection: string; response: string } => !!o && typeof o.objection === "string" && typeof o.response === "string")
+        .slice(0, 4)
+        .map((o) => ({ objection: o.objection.slice(0, 300), response: o.response.slice(0, 400) }))
+    : [];
+
+async function callBrief(anthropic: Anthropic, digest: string, ctx: ChatContext): Promise<CallBriefResponse> {
+  const system = `You prepare ThiboLiSoft sales reps for customer calls. ThiboLiSoft sells grain accounting (Ceres), grain management (GrainSight), scale-house ticketing (ScaleTrac) and mobile apps to grain elevators, co-ops, ethanol plants, feed mills and processors. The rep has about 60 seconds to read the brief.
+
+${COPY_RULES}`;
+  const user = `Today is ${ctx.asOf}. Using only the account data below, write:
+- summary: 2-3 short lines on where things stand and what this call must achieve.
+- questions: 5-7 specific questions for this call, tailored to the segment, deal stage, season (harvest blackouts, fiscal year end, board meetings), missing information and what was said last time. Ask about open commitments from the last call.
+- talkingPoints: 2-4 short points.
+- objections: up to 3 likely objections with a one-sentence response each.
+
+<account_data>
+${digest.slice(0, 9000)}
+</account_data>`;
+  const out = (await generateJson(anthropic, system, user, CALL_BRIEF_SCHEMA)) as Record<string, unknown> | null;
+  if (!out) return { ok: false, reason: "invalid-output" };
+  const questions = strList(out.questions, 7);
+  if (questions.length < 3) return { ok: false, reason: "invalid-output" };
+  return { ok: true, brief: { summary: strList(out.summary, 3), questions, talkingPoints: strList(out.talkingPoints, 4), objections: objList(out.objections) } };
+}
+
+async function callNotes(anthropic: Anthropic, input: { meta: string; transcript: string; repNotes: string }, ctx: ChatContext): Promise<CallNotesResponse> {
+  const system = `You are the notetaker for ThiboLiSoft sales calls (agribusiness software for grain elevators, co-ops, ethanol plants, feed mills and processors). Turn a call transcript and the rep's rough notes into structured CRM notes. Only use what was said; never invent facts, numbers or commitments.
+
+${COPY_RULES}`;
+  const user = `Today is ${ctx.asOf}. Call details:
+${input.meta.slice(0, 3000)}
+
+Write:
+- summary: 3-4 short lines.
+- keyPoints, painPoints: short bullet texts.
+- objections: each objection raised and how the rep handled it.
+- qualification: budget, decision maker / economic buyer, timeline, competitors (comma-separated names), number of locations (integer); null when not discussed.
+- nextSteps: every action item with owner ("rep" or "customer"), the person's name and a due date (YYYY-MM-DD, resolved from phrases like "by Friday" relative to the call date; null if none).
+- sentiment of the customer: Positive, Neutral or Concerned.
+- followUpEmail: a short plain-text follow-up email from the rep to the main contact, signed with the rep's name.
+- updates: suggested CRM changes only if the call supports them: the next opportunity stage (at most one step forward), a new close date, and the economic buyer's name if they were identified. Use null otherwise.
+
+<transcript>
+${input.transcript.slice(0, 30000)}
+</transcript>
+
+<rep_notes>
+${input.repNotes.slice(0, 4000)}
+</rep_notes>`;
+  const out = (await generateJson(anthropic, system, user, CALL_NOTES_SCHEMA)) as Record<string, unknown> | null;
+  if (!out) return { ok: false, reason: "invalid-output" };
+  const q = (out.qualification ?? {}) as Record<string, unknown>;
+  const u = (out.updates ?? {}) as Record<string, unknown>;
+  const email = (out.followUpEmail ?? {}) as Record<string, unknown>;
+  const date = (v: unknown) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null);
+  const text = (v: unknown, n = 300) => (typeof v === "string" && v.trim() ? v.trim().slice(0, n) : null);
+  const sentiment = out.sentiment === "Positive" || out.sentiment === "Concerned" ? out.sentiment : "Neutral";
+  return {
+    ok: true,
+    notes: {
+      summary: strList(out.summary, 4),
+      keyPoints: strList(out.keyPoints, 8),
+      painPoints: strList(out.painPoints, 6),
+      objections: objList(out.objections),
+      qualification: {
+        budget: text(q.budget),
+        decisionMaker: text(q.decisionMaker),
+        timeline: text(q.timeline),
+        competitors: text(q.competitors),
+        locations: typeof q.locations === "number" && q.locations > 0 ? Math.round(q.locations) : null,
+      },
+      nextSteps: (Array.isArray(out.nextSteps) ? out.nextSteps : [])
+        .filter((s): s is Record<string, unknown> => !!s && typeof s === "object" && typeof (s as Record<string, unknown>).text === "string")
+        .slice(0, 8)
+        .map((s) => ({ text: String(s.text).slice(0, 200), owner: s.owner === "customer" ? "customer" : "rep", ownerName: text(s.ownerName, 80) ?? "", due: date(s.due) })),
+      sentiment,
+      followUpEmail: { subject: text(email.subject, 200) ?? "Following up", body: text(email.body, 4000) ?? "" },
+      updates: { stage: text(u.stage, 40), closeDate: date(u.closeDate), economicBuyerName: text(u.economicBuyerName, 80) },
+    },
+  };
+}
+
 /* ---------------------------------------------------------------- handlers */
 
 export async function GET() {
@@ -677,7 +848,7 @@ export async function POST(req: Request) {
       if (!Array.isArray(body.messages) || !cleanHistory(body.messages).length) {
         return Response.json({ error: "Expected { kind: \"chat\", messages: [{ role, content }], context }" }, { status: 400 });
       }
-      return chatResponse(body, req);
+      return chatResponse(body, req, await aiAllowed());
     case "export-spec":
       if (typeof body.prompt !== "string" || !body.prompt.trim()) return Response.json({ error: "Expected { prompt }" }, { status: 400 });
       break;
@@ -692,11 +863,17 @@ export async function POST(req: Request) {
     case "trip-parse":
       if (typeof body.prompt !== "string" || !body.prompt.trim()) return Response.json({ error: "Expected { prompt }" }, { status: 400 });
       break;
+    case "call-brief":
+      if (typeof body.digest !== "string" || !body.digest.trim()) return Response.json({ error: "Expected { digest }" }, { status: 400 });
+      break;
+    case "call-notes":
+      if (typeof body.transcript !== "string" || typeof body.meta !== "string") return Response.json({ error: "Expected { meta, transcript, repNotes }" }, { status: 400 });
+      break;
     default:
       return Response.json({ error: "Unknown kind" }, { status: 400 });
   }
 
-  const anthropic = client();
+  const anthropic = client(await aiAllowed());
   if (!anthropic) return Response.json({ ok: false, reason: "no-api-key" });
   const ctx = normalizeContext(body.context);
   try {
@@ -709,6 +886,10 @@ export async function POST(req: Request) {
         return Response.json(await rewriteStep(anthropic, body.step, body.instruction, ctx));
       case "trip-parse":
         return Response.json(await parseTrip(anthropic, body.prompt, ctx));
+      case "call-brief":
+        return Response.json(await callBrief(anthropic, body.digest, ctx));
+      case "call-notes":
+        return Response.json(await callNotes(anthropic, { meta: body.meta, transcript: body.transcript, repNotes: String(body.repNotes ?? "") }, ctx));
     }
   } catch (error) {
     const reason = errorReason(error);

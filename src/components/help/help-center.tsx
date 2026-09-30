@@ -1,10 +1,12 @@
 "use client";
 
+import { Suspense, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { HelpArticle, HelpIndexEntry } from "@/lib/help/types";
 import { MdxArticle } from "./mdx-article";
-import { HelpSearch } from "./help-search";
+import { HelpSearch, snippet, useHelpFuse } from "./help-search";
+import { DataTable, type Column } from "@/components/shared/data-table";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/brand/logo";
 
@@ -38,7 +40,7 @@ export function HelpCenter({ index, article }: { index: HelpIndexEntry[]; articl
           Help
         </h1>
         <div className="min-w-0 flex-1">
-          <HelpSearch index={index} onSelect={(slug) => router.push(`/help/${slug}`)} />
+          <HelpSearch index={index} onSelect={(slug) => router.push(`/help/${slug}`)} onSeeAll={(q) => router.push(`/help?q=${encodeURIComponent(q)}`)} />
         </div>
       </div>
 
@@ -53,10 +55,54 @@ export function HelpCenter({ index, article }: { index: HelpIndexEntry[]; articl
         <nav className="hidden lg:sticky lg:top-24 lg:block lg:self-start" aria-label="Help articles">
           {toc}
         </nav>
-        <div className="max-w-[760px] min-w-0 rounded-md border bg-card px-5 py-6 sm:px-8">
-          <MdxArticle article={article} related={related} />
-        </div>
+        <Suspense fallback={<ArticleBody article={article} related={related} />}>
+          <ResultsOrArticle index={index} article={article} related={related} />
+        </Suspense>
       </div>
+    </div>
+  );
+}
+
+function ArticleBody({ article, related }: { article: HelpArticle; related: HelpIndexEntry[] }) {
+  return (
+    <div className="max-w-[760px] min-w-0 rounded-md border bg-card px-5 py-6 sm:px-8">
+      <MdxArticle article={article} related={related} />
+    </div>
+  );
+}
+
+/** /help?q=… shows every matching article, paginated; otherwise the article */
+function ResultsOrArticle({ index, article, related }: { index: HelpIndexEntry[]; article: HelpArticle; related: HelpIndexEntry[] }) {
+  const q = useSearchParams().get("q")?.trim() ?? "";
+  const router = useRouter();
+  const fuse = useHelpFuse(index);
+  const results = useMemo(() => (q.length > 1 ? fuse.search(q).map((r) => r.item) : []), [fuse, q]);
+  if (!q) return <ArticleBody article={article} related={related} />;
+  const columns: Column<HelpIndexEntry>[] = [
+    {
+      key: "article",
+      header: "Article",
+      cell: (a) => (
+        <div className="min-w-0 py-0.5">
+          <Link href={`/help/${a.slug}`} className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+            {a.title}
+          </Link>
+          <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{snippet(a.text, q)}</p>
+        </div>
+      ),
+    },
+  ];
+  return (
+    <div className="max-w-[760px] min-w-0 space-y-3">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="text-base font-semibold">
+          Results for &ldquo;{q}&rdquo; <span className="font-normal text-muted-foreground tabular">({results.length})</span>
+        </h2>
+        <Link href={`/help/${article.slug}`} className="text-sm text-muted-foreground hover:text-foreground">
+          Clear search
+        </Link>
+      </div>
+      <DataTable rows={results} columns={columns} rowKey={(a) => a.slug} onRowClick={(a) => router.push(`/help/${a.slug}`)} empty="No articles found" caption="Help search results" />
     </div>
   );
 }

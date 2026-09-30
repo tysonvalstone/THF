@@ -1,0 +1,103 @@
+---
+title: Contracts & Legal
+summary: Turn an accepted quote into a contract in one click, route non-standard clauses to Legal and harvest payment terms to Finance, collect an e-signature, and track renewal notice deadlines.
+order: 10
+related: [quotes, finance, customer-success]
+---
+
+Contracts live under **Quoting → Contracts**. A contract is the Order Form (customer, products, prices, term and fees) plus its clauses, copied from the clause library when the contract is created. Every change is saved as a Salesforce-style change (Contract, ContractClause, ApprovalRequest and Task records) and shows up in the audit log. In live Salesforce mode changes stay in the app and are tagged **Local change, not synced**.
+
+## Statuses
+
+A contract moves through **Draft → Legal Review → Sent for Signature → Signed → Active**, and ends as **Expired** or **Terminated**. The status path at the top of the contract page shows where it is.
+
+- **Draft**: key terms and clauses can be edited.
+- **Legal Review**: a clause differs from the library text, or someone asked Legal to review the contract. Legal approves or rejects. A rejection sends the contract back to Draft.
+- **Sent for Signature**: the customer has the contract. Terms are locked; **Recall to Draft** (in the actions menu) unlocks them.
+- **Signed**: the customer signed. The contract becomes **Active** on its start date.
+- **Active**: in force. After the end date an auto-renewing contract renews for 12 months with its yearly price increase; any other contract becomes **Expired**.
+- **Terminated**: ended early, with an effective date and a reason (logged as a completed task on the account).
+
+Status changes that depend on the date (Signed to Active, Active to Expired, auto-renewals) run automatically when the app date changes, so time travel moves contracts along too.
+
+## Create a contract from a quote
+
+When a quote is **Accepted**, open it and click **Create contract**. The new Draft contract takes everything from the quote:
+
+- customer, products, quantities and net prices (the Order Form)
+- term, start date (go-live), billing frequency, payment terms and currency
+- ARR (the quote's recurring total after discounts), one-time fees and total contract value (ARR times the term in years, plus one-time fees)
+- the default clauses from the clause library
+
+Once a contract exists, the quote shows a link to it instead. You can also click **New contract** on the contracts list and pick an accepted quote, or leave the quote empty to type in a blank contract (account, start date, term, ARR and one-time fees).
+
+<Screenshot caption="A new contract created from an accepted quote" />
+
+## The contracts list
+
+The list shows contract number, account and owner, status, ARR, TCV, start and end dates, auto-renew, the notice deadline and flags. Sales reps see only their own contracts.
+
+- **Filters**: status (including In progress and Signed or active), owner, **Ending in** 30, 60, 90 or 180 days, and **Alerts only**.
+- **Summary tiles**: ARR in force (USD contracts), contracts in progress, open alerts and contracts ending in 90 days. Click a tile to filter the list.
+- **Flags**: **Non-standard** (a clause differs from the library), **Unsigned** (out for signature more than 14 days) and **Renews** or **Expiring** (ends within 90 days).
+- **Export CSV** opens the column picker.
+
+## Alerts
+
+The top of the contracts list shows alerts, most urgent first. Each links to its contract.
+
+- **Renewal notice due**: the notice deadline (end date minus the notice period) is within 60 days. Past this date the contract renews or ends on its own terms, so this is the last day to renegotiate or give notice.
+- **Expires** or **Auto-renews**: the end date is within 90 days.
+- **Unsigned**: the contract went out for signature more than 14 days ago.
+
+Alerts marked red are urgent: a notice deadline within 14 days, a contract ending within 30 days without auto-renewal, or a contract unsigned for more than 30 days.
+
+## Key terms
+
+The **Key terms** panel on the contract page shows start and end dates, auto-renewal, notice period, yearly price increase, billing, payment terms, harvest payment terms and whether the data protection addendum (DPA) is included. Click **Edit** to change them while the contract is in Draft or Legal Review.
+
+- The end date and total contract value follow the start date, term and fees.
+- The yearly price increase is capped at 5%.
+- Turning the DPA or auto-renewal on or off adds or removes the matching clause.
+- **Harvest payment terms** put the annual invoice due on December 15, after harvest, which suits co-ops and elevators. Turning them on sends a **Payment terms** request to Finance; the terms apply once Finance approves. Finance and administrators can turn them on directly.
+
+## Clauses
+
+The clauses list shows each clause's text, category and approval state.
+
+- **Edit** changes the heading or text. Text that differs from the library marks the clause **Non-standard**, sends a **Non-standard clause** request to Legal and moves a Draft contract to Legal Review. Edits by Legal are approved at once.
+- **Revert** puts the library text back.
+- **Add clause** adds an optional clause from the library, such as termination for convenience or governing law.
+- **Remove** takes a clause off the contract (with Undo).
+
+Legal can approve or reject each clause inline, or the whole review with **Approve** and **Reject** at the top of the page. Requests also appear in the **Approvals** inbox in the header; a decision made there is applied the next time the contract is opened.
+
+## Sending and signing
+
+**Send for signature** is available once nothing is waiting for Legal or Finance and no clause is rejected. Hover the button to see what is still open.
+
+**Sign** records a simulated e-signature: the signer draws their signature with a mouse, pen or finger, and confirms their name and title. The contract becomes Signed with the drawn signature, name, title and a timestamp. Signing also creates the first invoice for Finance and the onboarding project for Customer Success, in the same change.
+
+<Screenshot caption="Signing a contract on the signature pad" />
+
+## PDFs
+
+- **Preview PDF** (before signing) is the copy for signature: the Order Form, key terms, all clauses and blank signature lines.
+- **Signed PDF** adds the drawn signature, the signer's name and title, the timestamp, and the audit line "Signed electronically by", with the contract number and document ID.
+
+## The clause library
+
+Legal and administrators maintain the library under **Settings → Legal**. Everyone else can read it.
+
+- Columns: name, category, whether it is included on new contracts by default, status, version, the number of contracts using it and when it was last updated.
+- Editing a clause's text or name creates a new version. Contracts keep the text they were signed with.
+- **Archive** hides a clause from new contracts; **Restore** brings it back.
+- **Delete** is only possible for clauses no contract uses; archive used clauses instead.
+
+## Who can do what
+
+- **Sales reps** create and edit their own contracts, send them for signature and record signatures.
+- **Sales managers** and **administrators** can work on any contract. Every role except sales reps can terminate a signed or active contract.
+- **Legal** approves non-standard clauses and edits the clause library.
+- **Finance** approves harvest payment terms. Contracts are read-only for Finance otherwise.
+- Only Draft contracts can be deleted (with Undo).

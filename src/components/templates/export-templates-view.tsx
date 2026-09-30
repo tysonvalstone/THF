@@ -67,7 +67,7 @@ export function ExportTemplatesView() {
     select(items[0]);
   }, [loaded, items, selectedId, select]);
 
-  const context = useMemo<ChatContext>(() => ({ asOf: asOfISO, page: "/templates/exports", pageTitle: "Export templates" }), [asOfISO]);
+  const context = useMemo<ChatContext>(() => ({ asOf: asOfISO, page: "/outreach/exports", pageTitle: "Export templates" }), [asOfISO]);
 
   const generate = useCallback(
     async (text: string, accountIds?: string[]) => {
