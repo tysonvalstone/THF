@@ -15,8 +15,9 @@ import { fmtMoney } from "@/lib/format";
 
 /* ---------------------------------------------------------------- KPIs */
 
+/** Open on the date (a deal created any time on the as-of day counts) */
 export const isOpenAt = (o: { CreatedDate: string; IsClosed: boolean; CloseDate: string }, d: Date) =>
-  parseDate(o.CreatedDate) <= d && !(o.IsClosed && parseDate(o.CloseDate) <= d);
+  o.CreatedDate.slice(0, 10) <= toISODate(d) && !(o.IsClosed && parseDate(o.CloseDate) <= d);
 
 export function pipelineAt(data: DataSnapshot, d: Date) {
   const open = data.opportunities.filter((o) => isOpenAt(o, d));

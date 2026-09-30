@@ -30,6 +30,10 @@ import { ScheduleCallHost } from "@/components/call-desk/schedule-call";
 import { Fragment } from "react";
 import { HelpDrawer, openHelp } from "@/components/help/help-drawer";
 import { helpSlugFor } from "@/lib/help/types";
+import { Switch } from "@/components/ui/switch";
+import { DemoBar } from "@/components/demo/demo-bar";
+import { WalkthroughDock } from "@/components/demo/walkthrough-dock";
+import { ActivitySheet } from "@/components/demo/activity-sheet";
 
 /** Top-level sections; each section's pages show as tabs under the header */
 const NAV: { href: string; label: string; tabs: [string, string][]; also: string[]; separate?: boolean }[] = [
@@ -171,8 +175,8 @@ function DataBadge() {
 }
 
 function UserMenu() {
-  const { pendingChanges, resetData, readOnly } = useStore();
-  const { user, me: profile, signOut, session, isAdmin, role, canSwitchRole, setRole } = useAuth();
+  const { pendingChanges, resetData, readOnly, demoMode, setDemoMode } = useStore();
+  const { user, me: profile, signOut, session, isAdmin, role, canSwitchRole, setRole, isGuest } = useAuth();
   if (!user) return null;
   return (
     <DropdownMenu>
@@ -196,6 +200,19 @@ function UserMenu() {
         {isAdmin && session?.mode === "supabase" && (
           <DropdownMenuItem asChild>
             <Link href="/settings?tab=users">Users</Link>
+          </DropdownMenuItem>
+        )}
+        {!isGuest && (
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              setDemoMode(!demoMode);
+              toast.success(demoMode ? "Demo Mode off" : "Demo Mode on: mock data and the guided walkthrough");
+            }}
+            className="justify-between"
+          >
+            Demo Mode
+            <Switch checked={demoMode} tabIndex={-1} aria-hidden className="pointer-events-none" />
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
@@ -297,6 +314,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <SeasonBar />
+        <DemoBar />
       </header>
       {error && (
         <div className="border-b border-status-critical/30 bg-card px-4 py-2 text-center text-sm text-status-critical" role="alert">
@@ -309,6 +327,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <HelpDrawer />
       <LifecycleAutomation />
       <ScheduleCallHost />
+      <WalkthroughDock />
+      <ActivitySheet />
     </div>
   );
 }

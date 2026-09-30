@@ -65,6 +65,7 @@ export function CampaignDetail({ id }: { id: string }) {
   }
   const members = data.campaignMembers.filter((m) => m.CampaignId === c.Id);
   const responded = members.filter((m) => m.HasResponded).length;
+  const opened = members.filter((m) => m.Status === "Opened" || m.Status === "Responded" || m.HasResponded).length;
   const content =
     c.Content__c ??
     templateCampaignContent({
@@ -168,9 +169,9 @@ export function CampaignDetail({ id }: { id: string }) {
             />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 border-t pt-4 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 border-t pt-4 sm:grid-cols-3 lg:grid-cols-6" data-demo="campaign-stats">
             <Stat label="Dates" value={`${fmtShortDate(c.StartDate)} – ${fmtShortDate(c.EndDate)}`} />
-            <Stat label="Members" value={String(members.length)} />
+            <Stat label="Members" value={String(members.length)} sub={opened ? `${opened} opened` : undefined} />
             <Stat label="Responded" value={String(responded)} sub={members.length ? fmtPct(responded / members.length, 1) : undefined} />
             <Stat label="Budget" value={fmtMoney(c.BudgetedCost)} sub={c.ActualCost ? `${fmtMoney(c.ActualCost)} spent` : "not yet spent"} />
             <Stat label="Expected pipeline" value={fmtMoney(c.ExpectedRevenue)} />

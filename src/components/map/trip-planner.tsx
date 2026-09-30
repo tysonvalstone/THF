@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -87,8 +87,11 @@ export function TripPlanner({
   onPlan,
   highlightId,
   onHover,
+  initialRequest,
 }: {
   prio: Prioritization;
+  /** Plain-English request to plan on open (?trip=… on the Map page) */
+  initialRequest?: string;
   defaultDestination: string;
   onPlan: (plan: TripPlan | null) => void;
   highlightId: string | null;
@@ -110,6 +113,17 @@ export function TripPlanner({
     [request, exclude, data, asOf, prio, ranked],
   );
   useEffect(() => onPlan(plan), [plan, onPlan]);
+
+  const planned = useRef(false);
+  useEffect(() => {
+    if (!initialRequest || planned.current) return;
+    planned.current = true;
+    const req = parseTripLocally(initialRequest, asOf, defaultDestination);
+    setText(initialRequest);
+    setForm(req);
+    setRequest(req);
+    setExclude([]);
+  }, [initialRequest, asOf, defaultDestination]);
 
   const run = (req: TripRequest, keep: string[] = []) => {
     setForm(req);

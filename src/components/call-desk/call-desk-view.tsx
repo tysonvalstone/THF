@@ -18,6 +18,7 @@ import { LiveCall } from "./live-call";
 import { CallTypeTag, Tag } from "./parts";
 import { ScheduleCallDrawer, ScheduleCallFlow, ScheduleCallHost, type ScheduleCallPrefill } from "./schedule-call";
 import { useCallScope, useSimClock, type CallScope } from "./use-call-desk";
+import { onDemo } from "@/lib/demo/state";
 
 type CallState = "next" | "upcoming" | "saved" | "pending" | "canceled";
 
@@ -169,6 +170,7 @@ export function CallDeskView() {
   const [picked, setPicked] = useState<string | null>(params.get("call"));
   const [editing, setEditing] = useState<Call | null>(null);
   const [live, setLive] = useState<string | null>(null);
+  const [autoStart, setAutoStart] = useState(false);
   const [typeFilter, setTypeFilter] = useState<"" | CallType>("");
   const [schedule, setSchedule] = useState<ScheduleCallPrefill | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -188,6 +190,24 @@ export function CallDeskView() {
     });
     router.replace("/call-desk", { scroll: false });
   }, [ready, params, router]);
+
+  // ?call=…&live=1 (Demo Mode walkthrough): open that call and start the simulated transcript
+  const liveParam = params.get("live") === "1" ? params.get("call") : null;
+  const [liveHandled, setLiveHandled] = useState<string | null>(null);
+  if (ready && liveParam && liveParam !== liveHandled) {
+    setLiveHandled(liveParam);
+    setPicked(liveParam);
+    setDateParam(null);
+    setLive(liveParam);
+    setAutoStart(true);
+  }
+  useEffect(
+    () =>
+      onDemo((s) => {
+        if (s.type === "call-close") setLive((cur) => (cur === s.callId ? null : cur));
+      }),
+    [],
+  );
 
   const visible = useMemo(() => data.calls.filter(filter(scope)), [data.calls, filter, scope]);
   const dayCalls = useMemo(
@@ -304,7 +324,7 @@ export function CallDeskView() {
         </section>
         <div ref={panelRef} className="min-w-0 scroll-mt-4">
           {selected ? (
-            <CallPanel call={selected} state={stateOf(selected, now, asOfISO, next)} team={team} onEdit={() => setEditing(selected)} onStart={() => setLive(selected.Id)} />
+            <CallPanel call={selected} state={stateOf(selected, now, asOfISO, next)} team={team} onEdit={() => setEditing(selected)} onStart={() => (setAutoStart(false), setLive(selected.Id))} />
           ) : (
             <p className="rounded-md border border-dashed px-3 py-10 text-center text-sm text-muted-foreground">Pick a call to see its brief</p>
           )}
@@ -326,7 +346,18 @@ export function CallDeskView() {
           setPicked(id);
         }}
       />
-      {liveCall && liveBrief && <LiveCall key={liveCall.Id} call={liveCall} brief={liveBrief} onClose={() => setLive(null)} />}
+      {liveCall && liveBrief && (
+        <LiveCall
+          key={liveCall.Id}
+          call={liveCall}
+          brief={liveBrief}
+          autoStart={autoStart}
+          onClose={() => {
+            setLive(null);
+            setAutoStart(false);
+          }}
+        />
+      )}
     </div>
   );
 }

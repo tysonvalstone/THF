@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import type { ChatContext, Sequence } from "@/lib/ai/types";
@@ -41,7 +42,14 @@ function SequencesInner() {
   const { items, save, remove, duplicate } = useStoredCollection(sequencesCollection, PREBUILT_SEQUENCES, "seq");
   const { items: enrollments } = useEnrollments();
 
-  const [tab, setTab] = useState("sequences");
+  // ?tab=scheduled opens the Scheduled tab (links from Demo Mode and elsewhere)
+  const tabParam = useSearchParams().get("tab");
+  const [tab, setTab] = useState(tabParam === "scheduled" ? "scheduled" : "sequences");
+  const [seenTabParam, setSeenTabParam] = useState(tabParam);
+  if (tabParam !== seenTabParam) {
+    setSeenTabParam(tabParam);
+    if (tabParam === "scheduled" || tabParam === "sequences") setTab(tabParam);
+  }
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Sequence | null>(null);
   const [pendingSelect, setPendingSelect] = useState<string | null>(null);

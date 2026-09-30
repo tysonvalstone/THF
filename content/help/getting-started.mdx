@@ -71,6 +71,39 @@ When you are away from today, the date button reads "As of" followed by the date
 
 By default the app runs on generated mock data, and changes you make (emails, calls, campaigns, CSV imports) are stored only in your browser. Choose **Reset local changes** in the avatar menu to discard them. When an administrator connects a Salesforce org, the badge changes to **Live Salesforce** and the app becomes read-only. See [Salesforce Connection (Admin)](/help/salesforce-connection).
 
+## Demo Mode
+
+Demo Mode runs the whole story on mock data: a new ethanol plant becomes a customer, and the app follows it from lead to renewal. Everything happens through the same buttons and records as normal use, so every page reflects each step.
+
+**Turn it on.** Open the avatar menu and switch on **Demo Mode**. Guests are always in Demo Mode: open `/?guest=1` (or `/demo`) to sign in as a guest, with the Sales manager role and **View as** in the avatar menu.
+
+**The Demo Mode bar** sits under the header while it's on:
+
+| Control | What it does |
+|---|---|
+| **Start demo** | Starts the guided walkthrough (or **Resume demo** where you left it) |
+| **Fast-forward 7 days** / **30 days** | Moves the as-of date forward and simulates what happens meanwhile: sequence emails go out, opens, replies and meetings, a few stage moves, wins and losses, and invoice payments. One message sums it up. |
+| **Activity** | Everything that happened in the demo, newest first, with links to the records |
+| **Reset Demo** | After you confirm, discards every demo change, puts the date back to Sep 29, 2026 and clears the walkthrough |
+
+**The walkthrough** has 13 steps. The panel at the bottom of the page shows the step and a one-line caption. Use **Next** and **Back**, **Auto-play** to advance on its own, or close it with the **X**. Each step does the real work (creates the records, moves the date, switches role where the story needs it) and then opens the page that shows the result:
+
+1. October 14: ethanol plants and feed mills rank first during harvest.
+2. The new Fort Dodge ethanol plant becomes a lead, then an account with its plant controller.
+3. An opportunity sized from product fit; open pipeline goes up.
+4. The Year-Round Ethanol and Feed campaign, with 15 contacts enrolled in the prebuilt sequence.
+5. A discovery call on the Call Desk: brief, simulated transcript, AI Notes, stage change and follow-up task.
+6. A quote from the catalog at 12% off (auto-approved), marked Sent.
+7. Fast-forward 30 days: campaign engagement, the quote accepted and the deal Closed Won.
+8. The contract: Legal approves a non-standard clause (the app views as Legal for that moment), the customer signs, and the first invoice goes out.
+9. Finance: ARR goes up and the ARR bridge shows the new customer.
+10. December 10: co-ops move to the top as the harvest blackout ends.
+11. The trip planner: "I'm going to Iowa in January, top 10 co-ops."
+12. Eleven months later: the renewal opportunity opens by itself and customer health flags an expansion.
+13. The Board Report PDF downloads. Demo complete.
+
+Going back and forward again never creates duplicates. The demo keeps its own change log, separate from your other local changes.
+
 ## Get help
 
 - Click the **?** icon in the header to open the Help Center at `/help`. Use the table of contents on the left, or search across article titles and text.

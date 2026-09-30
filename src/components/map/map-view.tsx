@@ -9,7 +9,7 @@ import type { RegionId } from "@/types/salesforce";
 import { OpportunityMap } from "@/components/home/opportunity-map";
 import { Skeleton } from "@/components/ui/skeleton";
 
-/** ?region=eastern-corn-belt or ?state=IA opens the map zoomed there */
+/** ?region=eastern-corn-belt or ?state=IA opens the map zoomed there; ?trip=… opens Plan a Trip with that request; ?sales=1 turns on recent sales */
 function areaFrom(region?: string, state?: string): Area | undefined {
   const st = state?.toUpperCase();
   if (st && REGION_BY_STATE[st]) return { level: "state", regionId: REGION_BY_STATE[st] as RegionId, state: st };
@@ -17,7 +17,7 @@ function areaFrom(region?: string, state?: string): Area | undefined {
   return undefined;
 }
 
-export function MapView({ region, state }: { region?: string; state?: string }) {
+export function MapView({ region, state, trip, sales }: { region?: string; state?: string; trip?: string; sales?: boolean }) {
   const { ready, data, asOf } = useStore();
   const prio = useMemo(() => (ready ? prioritize(data, asOf) : null), [ready, data, asOf]);
   if (!prio) {
@@ -28,5 +28,5 @@ export function MapView({ region, state }: { region?: string; state?: string }) 
       </div>
     );
   }
-  return <OpportunityMap key={`${region ?? ""}-${state ?? ""}`} prio={prio} initialArea={areaFrom(region, state)} />;
+  return <OpportunityMap key={`${region ?? ""}-${state ?? ""}-${trip ?? ""}-${sales ? 1 : 0}`} prio={prio} initialArea={areaFrom(region, state)} initialTrip={trip} initialSales={sales} />;
 }

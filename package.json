@@ -9,7 +9,7 @@
     "lint": "eslint",
     "seed": "tsx scripts/generate-seed.ts",
     "test:e2e": "playwright test",
-    "test": "tsx --test src/lib/stats.test.ts src/lib/cropCalendar.test.ts src/lib/scoring/scoring.test.ts src/lib/actions/outreach.test.ts src/lib/sequences/engine.test.ts src/lib/columns.test.ts src/lib/harvest/engine.test.ts src/lib/quotes/pricing.test.ts src/lib/success/success.test.ts src/lib/forecast/forecast.test.ts src/lib/commissions/commissions.test.ts src/lib/billing/billing.test.ts src/lib/finance/metrics.test.ts src/lib/contracts/contracts.test.ts src/lib/call-desk/call-desk.test.ts"
+    "test": "tsx --test src/lib/stats.test.ts src/lib/cropCalendar.test.ts src/lib/scoring/scoring.test.ts src/lib/actions/outreach.test.ts src/lib/sequences/engine.test.ts src/lib/columns.test.ts src/lib/harvest/engine.test.ts src/lib/quotes/pricing.test.ts src/lib/success/success.test.ts src/lib/forecast/forecast.test.ts src/lib/commissions/commissions.test.ts src/lib/billing/billing.test.ts src/lib/finance/metrics.test.ts src/lib/contracts/contracts.test.ts src/lib/call-desk/call-desk.test.ts src/lib/demo/demo.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",

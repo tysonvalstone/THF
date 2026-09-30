@@ -23,6 +23,7 @@ import {
 import type { Call, CallNotes } from "@/types/salesforce";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { emitDemo } from "@/lib/demo/state";
 import { Questions } from "./brief-view";
 import { NotesReview } from "./notes-review";
 import { CallTypeTag, Tag } from "./parts";
@@ -57,7 +58,7 @@ function speechCtor(): SpeechCtor | null {
 const LINE_MS = 1100;
 
 /** Focused call view: brief (collapsed), questions, live transcript, my notes, timer; then AI Notes review */
-export function LiveCall({ call, brief, onClose }: { call: Call; brief: CallBrief; onClose: (saved: boolean) => void }) {
+export function LiveCall({ call, brief, onClose, autoStart = false }: { call: Call; brief: CallBrief; onClose: (saved: boolean) => void; autoStart?: boolean }) {
   const { data, asOfISO, demoMode, changeLog } = useStore();
   const { available } = useAiStatus();
   const [phase, setPhase] = useState<Phase>("ready");
@@ -76,6 +77,7 @@ export function LiveCall({ call, brief, onClose }: { call: Call; brief: CallBrie
   const recog = useRef<SpeechRecognitionLike | null>(null);
   const listEnd = useRef<HTMLLIElement | null>(null);
   const micAvailable = !!speechCtor() && !demoMode;
+  const autoStarted = useRef(false);
 
   // Timer
   useEffect(() => {
@@ -94,6 +96,18 @@ export function LiveCall({ call, brief, onClose }: { call: Call; brief: CallBrie
   useEffect(() => {
     listEnd.current?.scrollIntoView({ block: "nearest" });
   }, [lines.length, interim]);
+
+  // Demo Mode walkthrough: the simulated call starts by itself and reports when the transcript is done
+  useEffect(() => {
+    if (!autoStart || autoStarted.current) return;
+    autoStarted.current = true;
+    startedAt.current = Date.now();
+    setPhase("live");
+  }, [autoStart]);
+  const streamed = phase === "live" && mode === "simulated" && script.length > 0 && lines.length >= script.length;
+  useEffect(() => {
+    if (streamed && autoStart) emitDemo({ type: "call-streamed", callId: call.Id });
+  }, [streamed, autoStart, call.Id]);
 
   // Stop the microphone when leaving
   useEffect(() => () => recog.current?.stop(), []);

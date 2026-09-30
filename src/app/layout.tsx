@@ -8,6 +8,7 @@ import { supabaseConfigured } from "@/lib/supabase/config";
 import { AppShell } from "@/components/layout/app-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { DemoProvider } from "@/components/demo/demo-provider";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -42,7 +43,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <AuthProvider initialUser={user} mode={supabaseConfigured() && !user?.guest ? "supabase" : "demo"}>
           <StoreProvider>
             <TooltipProvider delayDuration={150}>
-              <AppShell>{children}</AppShell>
+              <DemoProvider>
+                <AppShell>{children}</AppShell>
+              </DemoProvider>
               <Toaster position="bottom-right" offset={{ bottom: 84, right: 20 }} richColors closeButton />
             </TooltipProvider>
           </StoreProvider>

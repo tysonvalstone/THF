@@ -226,14 +226,24 @@ npx tsx scripts/build-geo.ts   # regenerate /public/geo map files
 
 ## 5-minute demo script
 
-**0:00 – Setup (20 s).** "Vertical Software's CEO told us harvest isn't an opportunity, it's a no-contact period. So we built the tool around that." Point at the **Mock data** badge: it runs on Salesforce-shaped history, and the same code reads a real org read-only.
+Open `/?guest=1` (guests are always in **Demo Mode**: mock data, Sales manager role, *View as* in the avatar menu) and click **Start demo** in the Demo Mode bar under the header. Each step does the real work through the app's own CRUD path (toasts, highlights, audit log, Undo) and then opens the page that shows it; **Next** / **Back** move through the steps, **Auto-play** runs them on its own, and the caption at the bottom says what just happened. The walkthrough lives in `src/components/demo/steps.ts`; the actions are pure helpers in `src/lib/demo/scenario.ts` (unit-tested end to end in `src/lib/demo/demo.test.ts`).
 
-**0:20 – October (75 s).** On **Home**, set the date to **October: harvest** and point at *Focus this month* and the Top 10 table's blackout flags. Open **Map** and click Iowa twice (region, then state): the panel lists ethanol plants and feed mills as the top potential customers, with *Harvest blackout ends Dec 1 – Dec 7* as the first insight. Then on **Segments**, **ethanol plants and feed mills** are ranked first, and elevators and co-ops drop to the bottom. Hover the co-op close rate: *7% for deals created in October*, measured, with a 95% interval. "In October the tool says call ethanol plants and feed mills." Point at the hatched months in the strip and at River Terminal's **Not enough data · blended** tag: "We never show a bare percentage we can't back up."
+| # | Time | Step | What the demo does (real records) | Where |
+|---|---|---|---|---|
+| 1 | 0:00 | **October: harvest** | Sets the date to Oct 14, 2026: ethanol plants and feed mills rank first, elevators are in blackout, the map shows the harvest band | Home → Segments → Map |
+| 2 | 0:25 | **New build → account** | Converts the new Fort Dodge, IA ethanol plant to a Lead, adds its plant controller, then converts it to an Account + Contact | New Builds → the account |
+| 3 | 0:45 | **Opportunity** | Creates the opportunity, sized from product fit; Open Pipeline flashes "+$…" | Home → the opportunity |
+| 4 | 1:00 | **Campaign + sequence** | Creates the "Year-Round Ethanol & Feed" campaign and enrolls 15 ethanol and feed contacts in the prebuilt sequence (blackout-aware schedule) | Campaign → Sequences, Scheduled |
+| 5 | 1:20 | **Call Desk** | Schedules a discovery call for today, shows the brief, streams the simulated call (~20 s; Next skips ahead), saves AI Notes with the suggested stage change and the follow-up task | Call Desk |
+| 6 | 2:00 | **Quote** | Builds a quote from the catalog at 12% off (auto-approved within the rep limit) and marks it Sent | The quote |
+| 7 | 2:15 | **Fast-forward 30 days** | Moves to Nov 13 with simulated opens, replies, meetings, stage moves, wins, losses and payments (seeded PRNG); the quote is accepted and the deal Closed Won | Campaign stats → quote → Home → Map (recent sales) |
+| 8 | 2:45 | **Contract** | Contract from the accepted quote; the rep's liability-clause edit goes to Legal; the app views as **Legal** to approve it, then back to Sales manager; simulated e-signature; the first invoice is sent and onboarding starts. Finance also approves harvest payment terms on a seeded seasonal contract in review. | The contract |
+| 9 | 3:20 | **Finance** | ARR is up; the ARR bridge counts the new customer | Finance |
+| 10 | 3:35 | **December: year-end** | Sets the date to Dec 10: co-ops move to the top, the elevator blackout is over | Segments → Home |
+| 11 | 3:55 | **Trip planner** | "I'm going to Iowa in January, top 10 co-ops": the route, day by day | Map (`/map?trip=…`) |
+| 12 | 4:15 | **Renewal + expansion** | Jumps to 11 months after the contract start: lifecycle automation opens the renewal opportunity; customer health flags an expansion opportunity | Renewals → Health → the expansion deal |
+| 13 | 4:40 | **Board Report** | Generates and downloads the Board Report PDF. "Demo complete." | Finance |
 
-**1:35 – December (60 s).** Time travel → **December: year-end**. The ranking flips: **Multi-Location Co-op moves to #1**. "In December it flips to co-ops: audits, boards, budgets." Move the **deal size** slider and **k**: the ranking updates instantly with no re-query. Scroll to the top 25 open deals and point out the "Before board" flag.
+**Controls.** **Fast-forward 7 days / 30 days** in the bar work at any time (one toast sums up the simulated activity). **Activity** opens a side panel with everything that happened in the demo, with links to the records. **Reset Demo** (after a confirmation) discards the demo change log, puts the date back to Sep 29, 2026 and clears the walkthrough state. Signed-in users switch Demo Mode on and off in the avatar menu.
 
-**2:35 – Blackout and buying committee (60 s).** Go back to October and open an Iowa co-op prospect. The header shows **Harvest blackout** to early December (later the further north). Click **Email**: *"In harvest blackout until Dec 5. Schedule for Dec 7?"* Then open a deal: stage path with **Board Approval**, and "economic buyer not identified". Log a connected call with a non-economic buyer and the deal *stays in Prospecting*.
-
-**3:35 – Facilities (30 s).** "**12 of 132 Iowa co-op locations**" covered; whitespace counties; export a Salesforce-ready CSV.
-
-**4:05 – Map (55 s).** On **Map** (Reset the map), October 12, Corn: red harvest band across Iowa and Illinois, and southern Illinois deeper than northern. Switch the dropdown to **Wheat**, then time travel to **July**: winter wheat harvest lights up Kansas and Oklahoma. Switch to **Lentils** in **August**: Saskatchewan and Montana. End: "Same data, different day, a different plan."
+**Test.** `npx playwright test tests/e2e/demo-mode.spec.ts` runs the whole walkthrough as a guest and checks the outcomes, then resets.

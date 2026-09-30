@@ -149,3 +149,10 @@
   .scrollbar-none { scrollbar-width: none; }
   .scrollbar-none::-webkit-scrollbar { display: none; }
 }
+
+/* Demo Mode walkthrough: the element a step points at */
+[data-demo-highlight] {
+  outline: 2px solid #1f5f4a;
+  outline-offset: 3px;
+  border-radius: 6px;
+}

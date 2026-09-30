@@ -76,14 +76,14 @@ function Select<T extends string>({ value, onChange, options, label }: { value: 
   );
 }
 
-export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; initialArea?: Area }) {
+export function OpportunityMap({ prio, initialArea, initialTrip, initialSales = false }: { prio: Prioritization; initialArea?: Area; initialTrip?: string; initialSales?: boolean }) {
   const { data, asOf, ranked } = useStore();
   const { colors, setColor, reset } = useCommodityColors();
   const [area, setArea] = useState<Area>(initialArea ?? { level: "all" });
-  const [sales, setSales] = useState(false);
+  const [sales, setSales] = useState(initialSales);
   const [range, setRange] = useState<Range>(90);
   const [salePop, setSalePop] = useState<{ id: string; x: number; y: number } | null>(null);
-  const [tab, setTab] = useState<"prospects" | "area" | "trip">("prospects");
+  const [tab, setTab] = useState<"prospects" | "area" | "trip">(initialTrip ? "trip" : "prospects");
   const [trip, setTrip] = useState<TripPlan | null>(null);
   const [mode, setMode] = useState<"season" | "commodity">("season");
   const [crop, setCrop] = useState<MapCommodity>("Corn");
@@ -607,6 +607,7 @@ export function OpportunityMap({ prio, initialArea }: { prio: Prioritization; in
                 prio={prio}
                 defaultDestination={area.state ?? area.regionId ?? "IL"}
                 onPlan={onTripPlan}
+                initialRequest={initialTrip}
                 highlightId={activeId}
                 onHover={setHoverId}
               />
